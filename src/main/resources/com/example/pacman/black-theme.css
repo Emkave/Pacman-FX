@@ -1,0 +1,50 @@
+/* Root styling for black mode */
+.root {
+    -fx-background-color: #000000; /* Complete black background */
+    -fx-text-fill: #ffffff;         /* White text color for contrast */
+}
+
+/* General button styling */
+.button {
+    -fx-background-color: transparent; /* Transparent button background */
+    -fx-text-fill: #ffffff;           /* White text color */
+    -fx-border-color: transparent;    /* Transparent border */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10; /* Add some padding for better visual spacing */
+}
+
+.button:hover {
+    -fx-background-color: transparent; /* Keep background transparent on hover */
+}
+
+/* Specific styling for MainMenuButton */
+.main-menu-button {
+    -fx-background-color: transparent; /* Transparent button background */
+    -fx-border-color: transparent;     /* Transparent border */
+    -fx-text-fill: #ffffff;            /* Default text color */
+    -fx-padding: 0;                    /* Remove padding */
+}
+
+.main-menu-button:hover {
+    -fx-background-color: transparent; /* No background change on hover */
+}
+
+/* Styling for labels */
+.label {
+    -fx-text-fill: #ffffff;  /* White text for labels */
+}
+
+/* Styling for text fields */
+.text-field {
+    -fx-background-color: #000000;  /* Black background */
+    -fx-text-fill: #ffffff;         /* White text */
+    -fx-border-color: #1a1a1a;      /* Light black border */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+/* Styling for other containers */
+.pane, .vbox, .hbox, .grid-pane {
+    -fx-background-color: #000000; /* Black background for containers */
+}
