@@ -1,7 +1,27 @@
+.pixel-frame {
+   -fx-padding: 20;
+    -fx-border-style: solid outside;
+    -fx-border-width: 5;
+    -fx-border-color: #333399;
+    -fx-background-color: black; /* Assuming you want a specific background color */
+    -fx-border-radius: 0; /* Remove rounded corners for pixelated effect */
+    -fx-effect: none; /* Remove shadow effects */
+}
+
+.pixel-3d-frame {
+    -fx-padding: 20;
+    -fx-border-style: solid outside;
+    -fx-border-width: 5; /* Thicker border for more pronounced effect */
+    -fx-border-color:
+        #add8e6 #4169e1 #4169e1 #add8e6; /* Light blue and dark blue for 3D effect */
+    -fx-border-radius: 0.1; /* Sharp corners for a more retro pixelated look */
+    -fx-background-radius: 0; /* Consistent with border radius */
+    -fx-effect: none; /* Removing any shadow for a cleaner retro look */
+}
+
 /* Root styling for black mode */
-.root {
-    -fx-background-color: #000000; /* Complete black background */
-    -fx-text-fill: #ffffff;         /* White text color for contrast */
+.root, .pane, .vbox, .hbox, .grid-pane {
+    -fx-background-color: transparent;
 }
 
 /* General button styling */

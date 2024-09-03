@@ -10,6 +10,7 @@ module com.example.pacman {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires javafx.media;
+    requires jdk.compiler;
 
     opens com.example.pacman to javafx.fxml;
     exports com.example.pacman;

@@ -15,13 +15,13 @@ import javafx.scene.text.Text;
 
 import java.util.Objects;
 
-public class MainMenuButton extends Button {
+public class UITextBasedButton extends Button {
     private ImageView pacmanImageView;
     private Text buttonText;
     private AudioClip hoverSound;
     private AudioClip clickSound;
 
-    public MainMenuButton(String text) {
+    public UITextBasedButton(String text) {
         this.getStyleClass().add("main-menu-button");
         this.setPrefSize(200, 50);
 
@@ -34,7 +34,7 @@ public class MainMenuButton extends Button {
 
 
     private void initializeButtonText(String text) {
-        Font arcadeFont = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/arcade_font.ttf")), 45);
+        Font arcadeFont = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/arcade_font.ttf")), 30);
         buttonText = new Text(text);
         buttonText.setFont(arcadeFont);
         buttonText.setFill(Color.BLUE);

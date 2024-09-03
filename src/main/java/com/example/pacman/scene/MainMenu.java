@@ -1,13 +1,10 @@
 package com.example.pacman.scene;
 
 import com.example.pacman.Application;
-import com.example.pacman.ui.MainMenuButton;
-import javafx.geometry.Pos;
+import com.example.pacman.ui.UITextBasedButton;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -15,78 +12,82 @@ import java.util.Objects;
 public class MainMenu {
     public MainMenu(Stage stage) {
         Application.stage = stage;
-        Application.root = new StackPane();
-        Application.root.setAlignment(Pos.CENTER);
-        this.initializeMenu();
     }
 
+    public void initializeMenu() {
+        Application.uiLayer.getChildren().clear();
 
-    private void initializeMenu() {
-        MainMenuButton exitButton = new MainMenuButton("EXIT");
+        UITextBasedButton playButton = new UITextBasedButton(Application.resourceBundle.getString("play"));
+        playButton.setOnAction(event -> {
+            playButton.getStyleClass().add("main-menu-play-pressed");
+        });
+        playButton.setTranslateY(90);
+
+        UITextBasedButton optionsButton = new UITextBasedButton(Application.resourceBundle.getString("settings"));
+        optionsButton.setOnAction(event -> {
+            optionsButton.getStyleClass().add("main-menu-options-pressed");
+            Settings settings = new Settings(Application.stage);
+            settings.initializeSettings();
+        });
+        optionsButton.setTranslateY(150);
+
+        UITextBasedButton statsButton = new UITextBasedButton(Application.resourceBundle.getString("stats"));
+        statsButton.setOnAction(event -> {
+            statsButton.getStyleClass().add("main-menu-options-pressed");
+        });
+        statsButton.setTranslateY(210);
+
+        UITextBasedButton exitButton = new UITextBasedButton(Application.resourceBundle.getString("exit"));
         exitButton.setOnAction(event -> {
             exitButton.getStyleClass().remove("main-menu-button");
             exitButton.getStyleClass().add("main-menu-exit-pressed");
             Application.stage.close();
         });
-        exitButton.setTranslateY(260);
-
-        MainMenuButton optionsButton = new MainMenuButton("OPTIONS");
-        optionsButton.setOnAction(event -> {
-            optionsButton.getStyleClass().add("main-menu-options-pressed");
-        });
-        optionsButton.setTranslateY(180);
-
-        MainMenuButton playButton = new MainMenuButton("PLAY");
-        playButton.setOnAction(event -> {
-            playButton.getStyleClass().add("main-menu-play-pressed");
-        });
-        playButton.setTranslateY(100);
-
-
+        exitButton.setTranslateY(270);
 
         Image blinkyGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/blinky_moves_right.gif")));
         ImageView blinkyGIFImageView = new ImageView(blinkyGIF);
         blinkyGIFImageView.setFitWidth(70);
         blinkyGIFImageView.setPreserveRatio(true);
-        blinkyGIFImageView.setTranslateY(-210);
+        blinkyGIFImageView.setTranslateY(-170);
         blinkyGIFImageView.setTranslateX(-148);
 
         Image inkyGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/inky_moves_right.gif")));
         ImageView inkyGIFImageView = new ImageView(inkyGIF);
         inkyGIFImageView.setFitWidth(70);
         inkyGIFImageView.setPreserveRatio(true);
-        inkyGIFImageView.setTranslateY(-210);
+        inkyGIFImageView.setTranslateY(-170);
         inkyGIFImageView.setTranslateX(-50);
 
         Image pinkyGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pinky_moves_right.gif")));
         ImageView pinkyGIFImageView = new ImageView(pinkyGIF);
         pinkyGIFImageView.setFitWidth(70);
         pinkyGIFImageView.setPreserveRatio(true);
-        pinkyGIFImageView.setTranslateY(-210);
+        pinkyGIFImageView.setTranslateY(-170);
         pinkyGIFImageView.setTranslateX(50);
 
         Image clydeGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/clyde_moves_right.gif")));
         ImageView clydeGIFImageView = new ImageView(clydeGIF);
         clydeGIFImageView.setFitWidth(70);
         clydeGIFImageView.setPreserveRatio(true);
-        clydeGIFImageView.setTranslateY(-210);
+        clydeGIFImageView.setTranslateY(-170);
         clydeGIFImageView.setTranslateX(148);
 
         Image mainLabel = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Pacman-FX.png")));
         ImageView mainLabelView = new ImageView(mainLabel);
         mainLabelView.setFitWidth(450);
         mainLabelView.setPreserveRatio(true);
-        mainLabelView.setTranslateY(-330);
+        mainLabelView.setTranslateY(-290);
 
 
-        Application.root.getChildren().addAll(clydeGIFImageView, pinkyGIFImageView, inkyGIFImageView, blinkyGIFImageView, mainLabelView, exitButton, optionsButton
-        , playButton);
+        Application.uiLayer.getChildren().addAll(clydeGIFImageView, pinkyGIFImageView, inkyGIFImageView, blinkyGIFImageView, mainLabelView, exitButton, optionsButton
+        , playButton, statsButton);
     }
 
 
     public Scene createScene() {
         Scene scene = new Scene(Application.root, Application.SCREEN_WIDHT, Application.SCREEN_HEIGHT);
-        scene.getStylesheets().add(Objects.requireNonNull(Application.class.getResource("black-theme.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Application.class.getResource("style.css")).toExternalForm());
         return scene;
     }
 }
