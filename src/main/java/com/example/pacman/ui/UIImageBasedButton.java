@@ -22,12 +22,12 @@ public class UIImageBasedButton extends Button {
 
     public UIImageBasedButton(String imagePath) {
         this.getStyleClass().add("image-button");
-        this.setPrefSize(50, 50);
 
         initializeButtonImage(imagePath);
         initializeSounds();
         setupHoverEffect();
         setupClickEffect();
+        setButtonSize(50, 50);
     }
 
 
@@ -79,5 +79,11 @@ public class UIImageBasedButton extends Button {
         this.setOnAction(e -> {
             clickSound.play();
         });
+    }
+
+
+    public void setButtonSize(double width, double height) {
+        this.setPrefSize(width, height);
+        buttonImage.setFitWidth(width - 10);
     }
 }
