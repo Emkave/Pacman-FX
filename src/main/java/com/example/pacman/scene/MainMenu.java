@@ -1,7 +1,10 @@
 package com.example.pacman.scene;
 
 import com.example.pacman.Application;
+import com.example.pacman.handler.ConfigHandler;
+import com.example.pacman.ui.UILabel;
 import com.example.pacman.ui.UITextBasedButton;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,12 +13,8 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class MainMenu {
-    public MainMenu(Stage stage) {
-        Application.stage = stage;
-    }
-
-    public void initializeMenu() {
-        Application.uiLayer.getChildren().clear();
+    public MainMenu() {
+        Application.uiLayerPane.getChildren().clear();
 
         UITextBasedButton playButton = new UITextBasedButton(Application.resourceBundle.getString("play"));
         playButton.setOnAction(event -> {
@@ -26,8 +25,7 @@ public class MainMenu {
         UITextBasedButton optionsButton = new UITextBasedButton(Application.resourceBundle.getString("settings"));
         optionsButton.setOnAction(event -> {
             optionsButton.getStyleClass().add("main-menu-options-pressed");
-            Settings settings = new Settings(Application.stage);
-            settings.initializeSettings();
+            new Settings();
         });
         optionsButton.setTranslateY(150);
 
@@ -41,7 +39,7 @@ public class MainMenu {
         exitButton.setOnAction(event -> {
             exitButton.getStyleClass().remove("main-menu-button");
             exitButton.getStyleClass().add("main-menu-exit-pressed");
-            Application.stage.close();
+            Application.window.close();
         });
         exitButton.setTranslateY(270);
 
@@ -73,21 +71,23 @@ public class MainMenu {
         clydeGIFImageView.setTranslateY(-170);
         clydeGIFImageView.setTranslateX(148);
 
-        Image mainLabel = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Pacman-FX.png")));
+        Image mainLabel = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/UI/Pacman-FX.png")));
         ImageView mainLabelView = new ImageView(mainLabel);
         mainLabelView.setFitWidth(450);
         mainLabelView.setPreserveRatio(true);
         mainLabelView.setTranslateY(-290);
 
+        UILabel scoreLabel = new UILabel(Application.resourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
+        scoreLabel.setTranslateY(-100);
+        scoreLabel.setAlignment(Pos.CENTER);
 
-        Application.uiLayer.getChildren().addAll(clydeGIFImageView, pinkyGIFImageView, inkyGIFImageView, blinkyGIFImageView, mainLabelView, exitButton, optionsButton
-        , playButton, statsButton);
+        Application.uiLayerPane.getChildren().addAll(clydeGIFImageView,
+                pinkyGIFImageView, inkyGIFImageView, scoreLabel,
+                blinkyGIFImageView, mainLabelView,
+                exitButton, optionsButton
+                , playButton, statsButton);
     }
 
 
-    public Scene createScene() {
-        Scene scene = new Scene(Application.root, Application.SCREEN_WIDHT, Application.SCREEN_HEIGHT);
-        scene.getStylesheets().add(Objects.requireNonNull(Application.class.getResource("style.css")).toExternalForm());
-        return scene;
-    }
+
 }

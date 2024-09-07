@@ -1,6 +1,7 @@
 package com.example.pacman.ui;
 
 import com.example.pacman.Application;
+import com.example.pacman.handler.SoundHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -8,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -18,8 +18,6 @@ import java.util.Objects;
 public class UITextBasedButton extends Button {
     private ImageView pacmanImageView;
     private Text buttonText;
-    private AudioClip hoverSound;
-    private AudioClip clickSound;
 
     public UITextBasedButton(String text) {
         this.getStyleClass().add("main-menu-button");
@@ -27,7 +25,6 @@ public class UITextBasedButton extends Button {
 
         initializePacmanImage();
         initializeButtonText(text);
-        initializeSounds();
         setupHoverEffect();
         setupClickEffect();
     }
@@ -42,7 +39,7 @@ public class UITextBasedButton extends Button {
         buttonText.setTranslateX(-20);
 
         HBox hBox = new HBox(pacmanImageView, buttonText);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setAlignment(Pos.CENTER);
         this.setGraphic(hBox);
     }
 
@@ -57,12 +54,6 @@ public class UITextBasedButton extends Button {
     }
 
 
-    private void initializeSounds() {
-        hoverSound = new AudioClip(Objects.requireNonNull(Application.class.getResource("Audio/hover.wav")).toExternalForm());
-        clickSound = new AudioClip(Objects.requireNonNull(Application.class.getResource("Audio/click.mp3")).toExternalForm());
-    }
-
-
     private void setupHoverEffect() {
         DropShadow dropShadow = new DropShadow();
         dropShadow.setColor(Color.CYAN);
@@ -73,7 +64,7 @@ public class UITextBasedButton extends Button {
             buttonText.setStroke(Color.WHITE);
             buttonText.setStrokeWidth(1.3);
             pacmanImageView.setVisible(true);
-            hoverSound.play();
+            SoundHandler.playSoundEffect("hover");
         });
 
         this.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
@@ -86,7 +77,7 @@ public class UITextBasedButton extends Button {
 
     private void setupClickEffect() {
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            clickSound.play();
+            SoundHandler.playSoundEffect("click");
             buttonText.setFill(Color.DARKBLUE);
         });
 
@@ -95,7 +86,7 @@ public class UITextBasedButton extends Button {
         });
 
         this.setOnAction(e -> {
-            clickSound.play();
+            SoundHandler.playSoundEffect("click");
         });
     }
 }

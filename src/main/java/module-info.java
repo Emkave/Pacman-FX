@@ -18,4 +18,6 @@ module com.example.pacman {
     opens com.example.pacman.scene to javafx.fxml;
     exports com.example.pacman.ui;
     opens com.example.pacman.ui to javafx.fxml;
+    exports com.example.pacman.handler;
+    opens com.example.pacman.handler to javafx.fxml;
 }

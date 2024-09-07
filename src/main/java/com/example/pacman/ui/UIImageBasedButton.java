@@ -1,30 +1,24 @@
 package com.example.pacman.ui;
 
 import com.example.pacman.Application;
+import com.example.pacman.handler.SoundHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import java.util.Objects;
 
 public class UIImageBasedButton extends Button {
     private ImageView buttonImage;
-    private AudioClip hoverSound;
-    private AudioClip clickSound;
 
     public UIImageBasedButton(String imagePath) {
         this.getStyleClass().add("image-button");
 
         initializeButtonImage(imagePath);
-        initializeSounds();
         setupHoverEffect();
         setupClickEffect();
         setButtonSize(50, 50);
@@ -37,16 +31,11 @@ public class UIImageBasedButton extends Button {
         buttonImage.setFitWidth(40);
         buttonImage.setPreserveRatio(true);
 
-
         StackPane stackPane = new StackPane(buttonImage);
         stackPane.setAlignment(Pos.CENTER);
         this.setGraphic(stackPane);
     }
 
-    private void initializeSounds() {
-        hoverSound = new AudioClip(Objects.requireNonNull(Application.class.getResource("Audio/hover.wav")).toExternalForm());
-        clickSound = new AudioClip(Objects.requireNonNull(Application.class.getResource("Audio/click.mp3")).toExternalForm());
-    }
 
     private void setupHoverEffect() {
         DropShadow dropShadow = new DropShadow();
@@ -56,7 +45,7 @@ public class UIImageBasedButton extends Button {
 
         this.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             buttonImage.setEffect(dropShadow);
-            hoverSound.play();
+            SoundHandler.playSoundEffect("hover");
         });
 
         this.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
@@ -64,9 +53,10 @@ public class UIImageBasedButton extends Button {
         });
     }
 
+
     private void setupClickEffect() {
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            clickSound.play();
+            SoundHandler.playSoundEffect("click");
             this.setScaleX(0.9);
             this.setScaleY(0.9);
         });
@@ -77,7 +67,7 @@ public class UIImageBasedButton extends Button {
         });
 
         this.setOnAction(e -> {
-            clickSound.play();
+            SoundHandler.playSoundEffect("click");
         });
     }
 
@@ -85,5 +75,11 @@ public class UIImageBasedButton extends Button {
     public void setButtonSize(double width, double height) {
         this.setPrefSize(width, height);
         buttonImage.setFitWidth(width - 10);
+    }
+
+
+    public void changeImage(String imagePath) {
+        Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream(imagePath)));
+        this.buttonImage.setImage(image);
     }
 }
