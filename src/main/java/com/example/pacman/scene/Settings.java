@@ -7,7 +7,11 @@ import com.example.pacman.ui.UIImageBasedButton;
 import com.example.pacman.ui.UITextBasedButton;
 import com.example.pacman.ui.UILabel;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+
+import java.util.Objects;
 
 
 public class Settings {
@@ -17,33 +21,30 @@ public class Settings {
         Application.uiLayerPane.getChildren().clear();
 
         UILabel mainLabel = new UILabel(Application.resourceBundle.getString("settings"), 40);
-        mainLabel.setTextFill(Color.WHITE);
+        mainLabel.setFill(Color.WHITE);
         mainLabel.setTranslateY(-270);
 
-        UILabel langSectLabel = new UILabel(Application.resourceBundle.getString("language"), 26);
-        langSectLabel.setTextFill(Color.GRAY);
-        langSectLabel.setTranslateY(-150);
+        ImageView langIconView = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/UI/lang_icon.jpg"))));
+        langIconView.setPreserveRatio(true);
+        langIconView.setTranslateY(-145);
+        langIconView.setFitWidth(67);
 
-        UILabel rusLangLabel = new UILabel(Application.resourceBundle.getString("russian"), 15);
-        rusLangLabel.setTextFill(Color.GRAY);
+        UILabel rusLangLabel = new UILabel("РУССКИЙ", 15);
+        rusLangLabel.setFill(Color.WHITE);
         rusLangLabel.setTranslateY(-60);
         rusLangLabel.setTranslateX(-169);
-        rusLangLabel.setAlignment(Pos.CENTER);
 
-        UILabel engLangLabel = new UILabel(Application.resourceBundle.getString("english"), 15);
-        engLangLabel.setTextFill(Color.GRAY);
+        UILabel engLangLabel = new UILabel("ENGLISH", 15);
+        engLangLabel.setFill(Color.WHITE);
         engLangLabel.setTranslateY(-60);
-        engLangLabel.setAlignment(Pos.CENTER);
 
-        UILabel czeLangLabel = new UILabel(Application.resourceBundle.getString("czech"), 15);
-        czeLangLabel.setTextFill(Color.GRAY);
+        UILabel czeLangLabel = new UILabel("ČEŠTINA", 15);
+        czeLangLabel.setFill(Color.WHITE);
         czeLangLabel.setTranslateX(169);
         czeLangLabel.setTranslateY(-60);
-        czeLangLabel.setAlignment(Pos.CENTER);
 
         UILabel soundsLabel = new UILabel(Application.resourceBundle.getString("sounds"), 26);
-        soundsLabel.setTextFill(Color.GRAY);
-        soundsLabel.setAlignment(Pos.CENTER);
+        soundsLabel.setFill(Color.WHITE);
         soundsLabel.setTranslateX(220);
         soundsLabel.setTranslateY(270);
 
@@ -62,7 +63,6 @@ public class Settings {
             reloadUI();
         });
         rusLangButton.setTranslateX(-169);
-        //rusLangButton.setTranslateY(-130);
         rusLangButton.setButtonSize(130, 130);
 
         UIImageBasedButton engLangButton = new UIImageBasedButton("Images/Flags/eng.png");
@@ -71,7 +71,6 @@ public class Settings {
             ConfigHandler.setLanguageSettings("en", "EN");
             reloadUI();
         });
-        //engLangButton.setTranslateY(-130);
         engLangButton.setButtonSize(130, 130);
 
         UIImageBasedButton czeLangButton = new UIImageBasedButton("Images/Flags/cze.png");
@@ -81,7 +80,6 @@ public class Settings {
             reloadUI();
         });
         czeLangButton.setTranslateX(169);
-        //czeLangButton.setTranslateY(-130);
         czeLangButton.setButtonSize(130, 130);
 
         this.muteButton = new UIImageBasedButton(SoundHandler.isMuted() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
@@ -93,7 +91,7 @@ public class Settings {
         Application.uiLayerPane.getChildren().addAll(czeLangLabel, engLangLabel,
                 this.muteButton, soundsLabel,
                 rusLangLabel, czeLangButton, engLangButton,
-                rusLangButton, langSectLabel, mainLabel, backButton);
+                rusLangButton, langIconView, mainLabel, backButton);
     }
 
 

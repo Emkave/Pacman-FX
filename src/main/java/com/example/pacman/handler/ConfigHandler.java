@@ -69,4 +69,19 @@ public class ConfigHandler {
 
         return (score != null) ? score : "";
     }
+
+
+    public static String getLevel() {
+        Properties properties = new Properties();
+        String level = null;
+
+        try (FileInputStream in = new FileInputStream("config.properties")) {
+            properties.load(in);
+            level = properties.getProperty("level");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return (level != null) ? level : "";
+    }
 }

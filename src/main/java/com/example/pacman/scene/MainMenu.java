@@ -5,10 +5,10 @@ import com.example.pacman.handler.ConfigHandler;
 import com.example.pacman.ui.UILabel;
 import com.example.pacman.ui.UITextBasedButton;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.util.Objects;
 
@@ -19,6 +19,7 @@ public class MainMenu {
         UITextBasedButton playButton = new UITextBasedButton(Application.resourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
+            var play_regime = new PlayRegime();
         });
         playButton.setTranslateY(90);
 
@@ -79,7 +80,7 @@ public class MainMenu {
 
         UILabel scoreLabel = new UILabel(Application.resourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
         scoreLabel.setTranslateY(-100);
-        scoreLabel.setAlignment(Pos.CENTER);
+        scoreLabel.setFill(Color.WHITE);
 
         Application.uiLayerPane.getChildren().addAll(clydeGIFImageView,
                 pinkyGIFImageView, inkyGIFImageView, scoreLabel,
