@@ -19,7 +19,7 @@ public class MainMenu {
         UITextBasedButton playButton = new UITextBasedButton(Application.resourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
-            var play_regime = new PlayRegime();
+            new PlayRegime();
         });
         playButton.setTranslateY(90);
 

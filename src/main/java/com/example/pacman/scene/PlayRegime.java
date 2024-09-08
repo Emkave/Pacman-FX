@@ -43,6 +43,10 @@ public class PlayRegime {
         });
         multiplayerButton.setTranslateY(160);
 
+        UILabel multiplayerDescriptionLabel = new UILabel(Application.resourceBundle.getString("multiplayer_info"), 10);
+        multiplayerDescriptionLabel.setTranslateY(190);
+        multiplayerDescriptionLabel.setFill(Color.WHITE);
+
 
         UITextBasedButton backButton = new UITextBasedButton(Application.resourceBundle.getString("back"));
         backButton.setOnAction(event -> {
@@ -55,7 +59,7 @@ public class PlayRegime {
 
         Application.uiLayerPane.getChildren().addAll(
                 playLabel, backButton, continueButton, multiplayerButton, newGameButton,
-                newGameWarningLabel, continueLevelLabel
+                newGameWarningLabel, continueLevelLabel, multiplayerDescriptionLabel
         );
     }
 }
