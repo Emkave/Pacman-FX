@@ -4,11 +4,9 @@ import com.example.pacman.Application;
 import com.example.pacman.handler.ConfigHandler;
 import com.example.pacman.ui.UILabel;
 import com.example.pacman.ui.UITextBasedButton;
-import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.util.Objects;
 
@@ -33,6 +31,7 @@ public class MainMenu {
         UITextBasedButton statsButton = new UITextBasedButton(Application.resourceBundle.getString("stats"));
         statsButton.setOnAction(event -> {
             statsButton.getStyleClass().add("main-menu-options-pressed");
+            new Statistics();
         });
         statsButton.setTranslateY(210);
 
@@ -88,7 +87,4 @@ public class MainMenu {
                 exitButton, optionsButton
                 , playButton, statsButton);
     }
-
-
-
 }

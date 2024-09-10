@@ -11,6 +11,7 @@ module com.example.pacman {
     requires com.almasb.fxgl.all;
     requires javafx.media;
     requires jdk.compiler;
+    requires java.sql;
 
     opens com.example.pacman to javafx.fxml;
     exports com.example.pacman;

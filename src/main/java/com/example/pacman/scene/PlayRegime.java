@@ -28,11 +28,11 @@ public class PlayRegime {
 
         UITextBasedButton continueButton = new UITextBasedButton(Application.resourceBundle.getString("continue"));
         continueButton.setOnAction(event -> {
-
+            new Game();
         });
         continueButton.setTranslateY(80);
 
-        UILabel continueLevelLabel = new UILabel(Application.resourceBundle.getString("continue_level") + ConfigHandler.getLevel(), 10);
+        UILabel continueLevelLabel = new UILabel(Application.resourceBundle.getString("level") + ConfigHandler.getLevel(), 10);
         continueLevelLabel.setTranslateY(110);
         continueLevelLabel.setFill(Color.CYAN);
 
