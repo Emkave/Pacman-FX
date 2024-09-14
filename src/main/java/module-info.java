@@ -1,4 +1,4 @@
-module com.example.pacman {
+module com.emkave.pacman {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -13,12 +13,12 @@ module com.example.pacman {
     requires jdk.compiler;
     requires java.sql;
 
-    opens com.example.pacman to javafx.fxml;
-    exports com.example.pacman;
-    exports com.example.pacman.scene;
-    opens com.example.pacman.scene to javafx.fxml;
-    exports com.example.pacman.ui;
-    opens com.example.pacman.ui to javafx.fxml;
-    exports com.example.pacman.handler;
-    opens com.example.pacman.handler to javafx.fxml;
+    opens com.emkave.pacman to javafx.fxml;
+    exports com.emkave.pacman;
+    exports com.emkave.pacman.scene;
+    opens com.emkave.pacman.scene to javafx.fxml;
+    exports com.emkave.pacman.ui;
+    opens com.emkave.pacman.ui to javafx.fxml;
+    exports com.emkave.pacman.handler;
+    opens com.emkave.pacman.handler to javafx.fxml;
 }
