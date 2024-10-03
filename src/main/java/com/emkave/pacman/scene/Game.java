@@ -22,6 +22,9 @@ public class Game {
     private AnimationTimer gameLoop;
     private boolean isPaused = false;
     private long score = Long.parseLong(ConfigHandler.getScore());
+    private StackPane gamePane;
+
+
     private Pacman player;
 
 
@@ -31,12 +34,18 @@ public class Game {
         this.player = new Pacman(2, 1);
 
         ImageView mapView = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/UI/map.jpg"))));
-        mapView.setFitWidth(470.4);
-        mapView.setFitHeight(604.8);
+        mapView.setFitWidth(550);
+        mapView.setFitHeight(550);
 
+        this.gamePane = new StackPane();
+        this.gamePane.setMaxWidth(550);
+        this.gamePane.setMaxHeight(550);
+        this.gamePane.setAlignment(Pos.CENTER);
+
+        this.gamePane.getChildren().addAll(mapView, this.player.getImageView());
 
         Application.uiLayerPane.getChildren().addAll(
-                mapView, this.player.getPacmanImageView()
+                this.gamePane
         );
 
         Application.window.getScene().setOnKeyPressed(this::handleKeyPress);
@@ -78,14 +87,14 @@ public class Game {
         VBox pauseMenu = new VBox(10);
         pauseMenu.setAlignment(Pos.CENTER);
         pauseMenu.setStyle("-fx-background-color: rgba(0, 0, 0, 255);");
-        pauseMenu.setMaxWidth(Application.SCREEN_WIDHT-130);
-        pauseMenu.setMaxHeight(Application.SCREEN_HEIGHT-130);
+        pauseMenu.setMaxWidth(Application.SCREEN_WIDHT-120);
+        pauseMenu.setMaxHeight(Application.SCREEN_HEIGHT-120);
 
         UILabel pauseLabel = new UILabel(Application.resourceBundle.getString("pause"), 40);
         pauseLabel.setTranslateY(-210);
         pauseLabel.setFill(Color.WHITE);
 
-        UITextBasedButton resumeButton = new UITextBasedButton(Application.resourceBundle.getString("resume"));
+        UITextBasedButton resumeButton = new UITextBasedButton(Application.resourceBundle.getString("continue"));
         resumeButton.setOnAction(e -> {
             hidePauseMenu();
             resumeGame();
@@ -94,6 +103,7 @@ public class Game {
 
         UITextBasedButton exitButton = new UITextBasedButton(Application.resourceBundle.getString("exit"));
         exitButton.setOnAction(e -> {
+            Application.window.getScene().setOnKeyPressed(null);
             new MainMenu();
         });
         exitButton.setTranslateY(20);
@@ -132,10 +142,5 @@ public class Game {
             default:
                 break;
         }
-    }
-
-
-    private void handleKeyRelease(KeyEvent event) {
-        this.player.handleKeyRelease(event);
     }
 }

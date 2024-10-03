@@ -9,48 +9,34 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Pacman extends Entity {
-    private byte currentDirection = 1;
-
     public Pacman(double startX, double startY) throws IOException {
         super(startX, startY);
 
         this.imageView = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacman_moves_right.gif"))));
-        this.imageView.setFitWidth(Entity.Igs_y);
-        this.imageView.setFitHeight(Entity.Igs_y);
 
+        this.d_x = 1;
+        this.d_y = 0;
 
+        this.imageView.setFitWidth(Entity.Igs_x);
+        this.imageView.setFitHeight(Entity.Igs_x);
+        this.imageView.setTranslateX(-Igc_x + (Igs_x * startX));
+        this.imageView.setTranslateY(-Igc_y + (Igs_y * startY));
         super.renderOnMap();
     }
 
 
     public void updatePosition() {
         try {
-            switch (this.currentDirection) {
-                case 0:
-                    if (Entity.map[(int)super.y-1][(int)super.x] != 1) {
-                        this.y--;
-                    }
-                    break;
-
-                case 1:
-                    if (Entity.map[(int)super.y][(int)super.x+1] != 1) {
-                        this.x++;
-                    }
-                    break;
-
-                case 2:
-                    if (Entity.map[(int)super.y+1][(int)super.x] != 1) {
-                        this.y++;
-                    }
-                    break;
-
-                case 3:
-                    if (Entity.map[(int)super.y][(int)super.x-1] != 1) {
-                        this.x--;
-                    }
-                    break;
+            if (this.d_x != 0) {
+                if (this.x > 0 && this.x + 1 < 19) {
+                    this.x += this.d_x;
+                }
+            } else if (this.y > 0 && this.y + 1 < 22) {
+                this.y += this.d_y;
             }
         } catch (Exception _) {}
+
+
 
         super.renderOnMap();
 
@@ -61,54 +47,27 @@ public class Pacman extends Entity {
     public void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
             case W:
-                if (this.currentDirection != 0) {
-                    this.velocityX = 0;
-                    this.velocityY = -this.speed;
-                    this.currentDirection = 0;
-                }
+                this.d_x = 0;
+                this.d_y = -1;
                 break;
 
             case S:
-                if (this.currentDirection != 2) {
-                    this.velocityX = 0;
-                    this.velocityY = this.speed;
-                    this.currentDirection = 2;
-                }
+                this.d_x = 0;
+                this.d_y = 1;
                 break;
 
             case A:
-                if (this.currentDirection != 3) {
-                    this.velocityX = -this.speed;
-                    this.velocityY = 0;
-                    this.currentDirection = 3;
-                }
+                this.d_x = -1;
+                this.d_y = 0;
                 break;
 
             case D:
-                if (this.currentDirection != 1) {
-                    this.velocityX = this.speed;
-                    this.velocityY = 0;
-                    this.currentDirection = 1;
-                }
+                this.d_x = 1;
+                this.d_y = 0;
                 break;
 
             default:
                 break;
         }
-    }
-
-
-    public void handleKeyRelease(KeyEvent event) {
-        switch (event.getCode()) {
-            case W: case S: case A: case D:
-                velocityY = 0;
-                velocityX = 0;
-                break;
-        }
-    }
-
-
-    public ImageView getPacmanImageView() {
-        return this.imageView;
     }
 }
