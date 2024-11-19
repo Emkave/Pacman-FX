@@ -7,14 +7,16 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SoundHandler {
     private static boolean isMuted = false;
     private static Map<String, AudioClip> soundEffects = new HashMap<>();
     private static MediaPlayer backgroundMusic;
 
+
     public static void loadSoundEffect(String soundName, String filePath) {
-        AudioClip audioClip = new AudioClip(Application.class.getResource(filePath).toExternalForm());
+        AudioClip audioClip = new AudioClip(Objects.requireNonNull(Application.class.getResource(filePath)).toExternalForm());
         SoundHandler.soundEffects.put(soundName, audioClip);
     }
 
@@ -27,7 +29,7 @@ public class SoundHandler {
 
 
     public static void playBackgroundMusic(String filePath, boolean loop) {
-        Media media = new Media(SoundHandler.class.getResource(filePath).toExternalForm());
+        Media media = new Media(Objects.requireNonNull(SoundHandler.class.getResource(filePath)).toExternalForm());
         SoundHandler.backgroundMusic = new MediaPlayer(media);
 
         if (loop) {

@@ -14,28 +14,28 @@ public class MainMenu {
     public MainMenu() {
         Application.uiLayerPane.getChildren().clear();
 
-        UITextBasedButton playButton = new UITextBasedButton(Application.resourceBundle.getString("play"));
+        UITextBasedButton playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
             new PlayRegime();
         });
         playButton.setTranslateY(90);
 
-        UITextBasedButton optionsButton = new UITextBasedButton(Application.resourceBundle.getString("settings"));
+        UITextBasedButton optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
         optionsButton.setOnAction(event -> {
             optionsButton.getStyleClass().add("main-menu-options-pressed");
             new Settings();
         });
         optionsButton.setTranslateY(150);
 
-        UITextBasedButton statsButton = new UITextBasedButton(Application.resourceBundle.getString("stats"));
+        UITextBasedButton statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
         statsButton.setOnAction(event -> {
             statsButton.getStyleClass().add("main-menu-options-pressed");
             new Statistics();
         });
         statsButton.setTranslateY(210);
 
-        UITextBasedButton exitButton = new UITextBasedButton(Application.resourceBundle.getString("exit"));
+        UITextBasedButton exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(event -> {
             exitButton.getStyleClass().remove("main-menu-button");
             exitButton.getStyleClass().add("main-menu-exit-pressed");
@@ -77,7 +77,7 @@ public class MainMenu {
         mainLabelView.setPreserveRatio(true);
         mainLabelView.setTranslateY(-290);
 
-        UILabel scoreLabel = new UILabel(Application.resourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
+        UILabel scoreLabel = new UILabel(Application.localeResourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
         scoreLabel.setTranslateY(-100);
         scoreLabel.setFill(Color.WHITE);
 

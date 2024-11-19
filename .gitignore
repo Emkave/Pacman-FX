@@ -10,6 +10,7 @@ target/
 *.ipr
 .mvn
 javafx-sdk-22.0.2
+javafx-sdk-21.0.2
 
 ### Eclipse ###
 .apt_generated

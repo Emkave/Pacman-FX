@@ -52,7 +52,7 @@ public class ConfigHandler {
         }
 
         Locale.setDefault(ConfigHandler.loadLanguageSettings());
-        Application.resourceBundle = ResourceBundle.getBundle("com.emkave.pacman.Langs.messages", Locale.getDefault());
+        Application.localeResourceBundle = ResourceBundle.getBundle("com.emkave.pacman.Langs.messages", Locale.getDefault());
     }
 
 

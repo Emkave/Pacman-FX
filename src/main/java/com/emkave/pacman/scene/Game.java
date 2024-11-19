@@ -1,85 +1,66 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.entity.Pacman;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.MapHandler;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import java.io.IOException;
-import java.util.Objects;
+
 
 public class Game {
-    private AnimationTimer gameLoop;
-    private boolean isPaused = false;
-    private long score = Long.parseLong(ConfigHandler.getScore());
-    private StackPane gamePane;
-
-
-    private Pacman player;
+    private long score;
+    private byte level;
+    private final UILabel scoreLabel;
 
 
     public Game() throws IOException {
         Application.uiLayerPane.getChildren().clear();
 
-        this.player = new Pacman(2, 1);
+        if (REGISTRY_KEYS.GET_ISCONTINUED()) {
+            this.score = Long.parseLong(ConfigHandler.getScore());
+        }
 
-        ImageView mapView = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/UI/map.jpg"))));
-        mapView.setFitWidth(550);
-        mapView.setFitHeight(550);
+        this.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + this.score, 22);
+        scoreLabel.setTranslateY(-310);
+        scoreLabel.setTranslateX(-130);
+        scoreLabel.setFill(Color.WHITE);
 
-        this.gamePane = new StackPane();
-        this.gamePane.setMaxWidth(550);
-        this.gamePane.setMaxHeight(550);
-        this.gamePane.setAlignment(Pos.CENTER);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + this.level, 22);
+        levelLabel.setTranslateY(-310);
+        levelLabel.setTranslateX(110);
+        levelLabel.setFill(Color.WHITE);
 
-        this.gamePane.getChildren().addAll(mapView, this.player.getImageView());
+        MapHandler.loadGameMap();
 
         Application.uiLayerPane.getChildren().addAll(
-                this.gamePane
+                MapHandler.getGameMapFramePane(), this.scoreLabel, levelLabel
         );
 
         Application.window.getScene().setOnKeyPressed(this::handleKeyPress);
 
-        startGameLoop();
+        this.startGameLoop();
     }
 
 
     public void startGameLoop() {
-        this.gameLoop = new AnimationTimer() {
-
-            @Override public void handle(long now) {
-                if (!isPaused) {
+        AnimationTimer gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     updateGame(now);
                 }
             }
         };
 
-        this.gameLoop.start();
-    }
-
-
-    private void updateGame(long now) {
-        this.player.updatePosition();
-    }
-
-
-    public void pauseGame() {
-        this.isPaused = true;
-    }
-
-
-    public void resumeGame() {
-        this.isPaused = false;
+        gameLoop.start();
     }
 
 
@@ -87,21 +68,21 @@ public class Game {
         VBox pauseMenu = new VBox(10);
         pauseMenu.setAlignment(Pos.CENTER);
         pauseMenu.setStyle("-fx-background-color: rgba(0, 0, 0, 255);");
-        pauseMenu.setMaxWidth(Application.SCREEN_WIDHT-120);
-        pauseMenu.setMaxHeight(Application.SCREEN_HEIGHT-120);
+        pauseMenu.setMaxWidth(REGISTRY_KEYS.GET_SCREEN_WIDTH()-120);
+        pauseMenu.setMaxHeight(REGISTRY_KEYS.GET_SCREEN_HEIGHT()-120);
 
-        UILabel pauseLabel = new UILabel(Application.resourceBundle.getString("pause"), 40);
+        UILabel pauseLabel = new UILabel(Application.localeResourceBundle.getString("pause"), 40);
         pauseLabel.setTranslateY(-210);
         pauseLabel.setFill(Color.WHITE);
 
-        UITextBasedButton resumeButton = new UITextBasedButton(Application.resourceBundle.getString("continue"));
+        UITextBasedButton resumeButton = new UITextBasedButton(Application.localeResourceBundle.getString("continue"));
         resumeButton.setOnAction(e -> {
             hidePauseMenu();
             resumeGame();
         });
         resumeButton.setTranslateY(10);
 
-        UITextBasedButton exitButton = new UITextBasedButton(Application.resourceBundle.getString("exit"));
+        UITextBasedButton exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
             new MainMenu();
@@ -126,21 +107,38 @@ public class Game {
             case A:
             case S:
             case D:
-                this.player.handleKeyPress(event);
+                //this.player.handleKeyPress(event);
                 break;
 
             case ESCAPE:
-                if (!isPaused) {
-                    pauseGame();
-                    showPauseMenu();
+                if (!REGISTRY_KEYS.GET_ISPAUSED()) {
+                    this.pauseGame();
+                    this.showPauseMenu();
                 } else {
-                    hidePauseMenu();
-                    resumeGame();
+                    this.hidePauseMenu();
+                    this.resumeGame();
                 }
                 break;
 
             default:
                 break;
         }
+    }
+
+
+    private void updateGame(long now) {
+        this.score += 1;
+        this.scoreLabel.setText(Application.localeResourceBundle.getString("score") + this.score);
+        //this.player.updatePosition();
+    }
+
+
+    public void pauseGame() {
+        REGISTRY_KEYS.SET_ISPAUSED(true);
+    }
+
+
+    public void resumeGame() {
+        REGISTRY_KEYS.SET_ISPAUSED(false);
     }
 }

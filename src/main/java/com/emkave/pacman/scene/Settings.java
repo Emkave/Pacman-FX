@@ -19,7 +19,7 @@ public class Settings {
     public Settings() {
         Application.uiLayerPane.getChildren().clear();
 
-        UILabel mainLabel = new UILabel(Application.resourceBundle.getString("settings"), 40);
+        UILabel mainLabel = new UILabel(Application.localeResourceBundle.getString("settings"), 40);
         mainLabel.setFill(Color.WHITE);
         mainLabel.setTranslateY(-270);
 
@@ -42,12 +42,12 @@ public class Settings {
         czeLangLabel.setTranslateX(169);
         czeLangLabel.setTranslateY(-60);
 
-        UILabel soundsLabel = new UILabel(Application.resourceBundle.getString("sounds"), 26);
+        UILabel soundsLabel = new UILabel(Application.localeResourceBundle.getString("sounds"), 26);
         soundsLabel.setFill(Color.WHITE);
         soundsLabel.setTranslateX(220);
         soundsLabel.setTranslateY(270);
 
-        UITextBasedButton backButton = new UITextBasedButton(Application.resourceBundle.getString("back"));
+        UITextBasedButton backButton = new UITextBasedButton(Application.localeResourceBundle.getString("back"));
         backButton.setOnAction(event -> {
             backButton.getStyleClass().add("settings-back-pressed");
             new MainMenu();

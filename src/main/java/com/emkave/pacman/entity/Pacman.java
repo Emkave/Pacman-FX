@@ -4,8 +4,9 @@ import com.emkave.pacman.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-
+import com.emkave.pacman.handler.MapHandler;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 public class Pacman extends Entity {
@@ -13,30 +14,22 @@ public class Pacman extends Entity {
         super(startX, startY);
 
         this.imageView = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacman_moves_right.gif"))));
-
-        this.d_x = 1;
-        this.d_y = 0;
-
-        this.imageView.setFitWidth(Entity.Igs_x);
-        this.imageView.setFitHeight(Entity.Igs_x);
-        this.imageView.setTranslateX(-Igc_x + (Igs_x * startX));
-        this.imageView.setTranslateY(-Igc_y + (Igs_y * startY));
-        super.renderOnMap();
+        this.d_x = 1; this.d_y = 0;
+        this.imageView.setFitWidth(MapHandler.GetImgXcellSize());
+        this.imageView.setFitHeight(MapHandler.GetImgYcellSize());
     }
 
 
     public void updatePosition() {
         try {
-            if (this.d_x != 0) {
-                if (this.x > 0 && this.x + 1 < 19) {
-                    this.x += this.d_x;
-                }
-            } else if (this.y > 0 && this.y + 1 < 22) {
+            if (this.x + this.d_x > 0 && this.x + this.d_x < 19) {
+                this.x += this.d_x;
+            }
+
+            if (this.y + this.d_y > 0 && this.y + this.d_y < 22) {
                 this.y += this.d_y;
             }
         } catch (Exception _) {}
-
-
 
         super.renderOnMap();
 
@@ -69,5 +62,7 @@ public class Pacman extends Entity {
             default:
                 break;
         }
+
+        this.updatePosition();
     }
 }
