@@ -1,7 +1,9 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.entity.Entity;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.ui.UILabel;
@@ -13,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 public class Game {
@@ -39,6 +42,7 @@ public class Game {
         levelLabel.setFill(Color.WHITE);
 
         MapHandler.loadGameMap();
+        MapHandler.loadEntities();
 
         Application.uiLayerPane.getChildren().addAll(
                 MapHandler.getGameMapFramePane(), this.scoreLabel, levelLabel
@@ -52,8 +56,7 @@ public class Game {
 
     public void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
+            @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     updateGame(now);
                 }
@@ -103,10 +106,8 @@ public class Game {
         KeyCode code = event.getCode();
 
         switch (code) {
-            case W:
-            case A:
-            case S:
-            case D:
+            case W: case A:
+            case S: case D:
                 //this.player.handleKeyPress(event);
                 break;
 
@@ -127,9 +128,7 @@ public class Game {
 
 
     private void updateGame(long now) {
-        this.score += 1;
-        this.scoreLabel.setText(Application.localeResourceBundle.getString("score") + this.score);
-        //this.player.updatePosition();
+        MapHandler.renderEntities();
     }
 
 

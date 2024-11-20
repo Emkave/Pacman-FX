@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SoundHandler {
-    private static boolean isMuted = false;
     private static Map<String, AudioClip> soundEffects = new HashMap<>();
     private static MediaPlayer backgroundMusic;
 
@@ -22,7 +21,7 @@ public class SoundHandler {
 
 
     public static void playSoundEffect(String soundName) {
-        if (!SoundHandler.isMuted && SoundHandler.soundEffects.containsKey(soundName)) {
+        if (!REGISTRY_KEYS.GET_ISMUTED() && SoundHandler.soundEffects.containsKey(soundName)) {
             SoundHandler.soundEffects.get(soundName).play();
         }
     }
@@ -36,7 +35,7 @@ public class SoundHandler {
             SoundHandler.backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
         }
 
-        if (!SoundHandler.isMuted) {
+        if (!REGISTRY_KEYS.GET_ISMUTED()) {
             SoundHandler.backgroundMusic.play();
         }
     }
@@ -50,17 +49,12 @@ public class SoundHandler {
 
 
     public static void toggleMute() {
-        SoundHandler.isMuted = !SoundHandler.isMuted;
+        REGISTRY_KEYS.SET_ISMUTED(!REGISTRY_KEYS.GET_ISMUTED());
 
-        if (SoundHandler.isMuted && SoundHandler.backgroundMusic != null) {
+        if (REGISTRY_KEYS.GET_ISMUTED() && SoundHandler.backgroundMusic != null) {
             SoundHandler.backgroundMusic.pause();
         } else if (SoundHandler.backgroundMusic != null) {
             SoundHandler.backgroundMusic.play();
         }
-    }
-
-
-    public static boolean isMuted() {
-        return isMuted;
     }
 }

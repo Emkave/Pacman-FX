@@ -2,21 +2,21 @@ package com.emkave.pacman.entity;
 import javafx.scene.image.ImageView;
 import kotlin.Pair;
 
-import java.io.IOException;
 
-public class Entity {
-    protected double x, y;
-    protected double d_x, d_y;
-    protected ImageView imageView;
+public abstract class Entity {
+    protected double x, y; // Every entity has its own position
+    protected ImageView imageView; // Every entity has its own image view
 
 
-    public Entity(double startX, double startY) throws IOException {
-        this.x = startX;
-        this.y = startY;
+    Entity(ImageView __imageView) {
+        this.imageView = __imageView;
     }
 
 
-    public Pair<Double, Double> getSize() {
+    protected abstract void render();
+
+
+    public Pair<Double, Double> getSize() { // Every entity has its size
         if (this.imageView.getImage() == null) {
             return null;
         }
@@ -25,12 +25,12 @@ public class Entity {
     }
 
 
-    public ImageView getImageView() {
+    public ImageView getImageView() { // Every entity can return its image view
         return (this.imageView.getImage() == null) ? null : this.imageView;
     }
 
 
-    public boolean setSize(double width, double height) {
+    public boolean setSize(double width, double height) { // Every entity is sizeable
         if (this.imageView.getImage() != null) {
             this.imageView.setFitWidth(width);
             this.imageView.setFitHeight(height);
@@ -41,22 +41,12 @@ public class Entity {
     }
 
 
-    public boolean setPosition(double x, double y) {
+    public boolean setPosition(double x, double y) { // Every entity able to set position
         if (this.imageView.getImage() != null && x >= 0 && y >= 0 && x < 19 && y < 22) {
-            this.imageView.setTranslateX(x);
-            this.imageView.setTranslateY(y);
+            this.x = x; this.y = y;
             return true;
         }
 
         return false;
-    }
-
-
-    public void renderOnMap() {
-        this.imageView.setTranslateX((470.4 / 19 - 7) * this.x);
-        this.imageView.setTranslateY((604.8 / 22 + 7) * this.y);
-
-        this.d_x = 0;
-        this.d_y = 0;
     }
 }

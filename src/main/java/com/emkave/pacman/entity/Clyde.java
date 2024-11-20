@@ -1,9 +1,13 @@
 package com.emkave.pacman.entity;
 
-import java.io.IOException;
+import com.emkave.pacman.Application;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class Clyde extends Entity {
-    public Clyde(double startX, double startY) throws IOException {
-        super(startX, startY);
+import java.util.Objects;
+
+public class Clyde extends Mob {
+    public Clyde() {
+        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/clyde_moves_right.gif")))));
     }
 }

@@ -2,6 +2,7 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SoundHandler;
 import com.emkave.pacman.ui.UIImageBasedButton;
 import com.emkave.pacman.ui.UITextBasedButton;
@@ -81,7 +82,7 @@ public class Settings {
         czeLangButton.setTranslateX(169);
         czeLangButton.setButtonSize(130, 130);
 
-        this.muteButton = new UIImageBasedButton(SoundHandler.isMuted() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
+        this.muteButton = new UIImageBasedButton(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
         this.muteButton.setOnAction(actionEvent -> this.toggleMute());
         this.muteButton.setTranslateY(320);
         this.muteButton.setTranslateX(220);
@@ -96,7 +97,7 @@ public class Settings {
 
     private void toggleMute() {
         SoundHandler.toggleMute();
-        this.muteButton.changeImage(SoundHandler.isMuted() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
+        this.muteButton.changeImage(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
     }
 
 

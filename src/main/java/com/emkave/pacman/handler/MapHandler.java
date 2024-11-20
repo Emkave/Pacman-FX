@@ -1,7 +1,8 @@
 package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.entity.Entity;
+import com.emkave.pacman.entity.Collectible;
+import com.emkave.pacman.entity.Mob;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,8 +10,8 @@ import javafx.scene.layout.StackPane;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Vector;
 
 
 public class MapHandler {
@@ -18,9 +19,6 @@ public class MapHandler {
     private static StackPane gameMapPane;
     private static ImageView mapImage;
     private static int[][] map;
-    private static Vector<Entity> entities = new Vector<Entity>();
-    private static final double ImgXcellSize = 470.4 / 19;
-    private static final double ImgYcellSize = 604.8 / 22;
 
 
     public static void loadGameMap() throws IOException {
@@ -33,12 +31,12 @@ public class MapHandler {
 
         MapHandler.gameMapPane = new StackPane();
         MapHandler.gameMapPane.setAlignment(Pos.TOP_LEFT);
-        MapHandler.gameMapPane.setMaxWidth(470.4);
-        MapHandler.gameMapPane.setMaxHeight(604.8);
+        MapHandler.gameMapPane.setMaxWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
+        MapHandler.gameMapPane.setMaxHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
 
         MapHandler.mapImage = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/UI/map.jpg"))));
-        MapHandler.mapImage.setFitWidth(470.4);
-        MapHandler.mapImage.setFitHeight(604.8);
+        MapHandler.mapImage.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
+        MapHandler.mapImage.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
 
         MapHandler.gameMapPane.getChildren().addAll(MapHandler.mapImage);
         MapHandler.gameMapFramePane.getChildren().addAll(MapHandler.gameMapPane);
@@ -65,19 +63,29 @@ public class MapHandler {
     }
 
 
-    public static double GetImgXcellSize() {
-        return MapHandler.ImgXcellSize;
+    public static void renderEntities() {
+        final LinkedList<Collectible> collectibles = EntityHandler.getCollectibles();
+        final LinkedList<Mob> mobs = EntityHandler.getMobs();
+
+        for (Mob mob : mobs) {
+            mob.render();
+        }
     }
 
 
-    public static double GetImgYcellSize() {
-        return MapHandler.ImgYcellSize;
-    }
+    public static void loadEntities() {
+        EntityHandler.loadEntities();
 
+        final LinkedList<Collectible> collectibles = EntityHandler.getCollectibles();
+        final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
-    public static void emplaceEntity(Entity entity) {
-        MapHandler.gameMapPane.getChildren().add(entity.getImageView());
-        MapHandler.entities.add(entity);
+        for (Mob mob : mobs) {
+            MapHandler.gameMapPane.getChildren().add(mob.getImageView());
+        }
+
+        for (Collectible collectible : collectibles) {
+            MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
+        }
     }
 
 
