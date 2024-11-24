@@ -1,7 +1,10 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.entity.Collectible;
 import com.emkave.pacman.entity.Entity;
+import com.emkave.pacman.entity.Mob;
+import com.emkave.pacman.entity.Pacman;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
@@ -19,16 +22,18 @@ import java.util.LinkedList;
 
 
 public class Game {
+    private long lastUpdateTime = 0;
     private long score;
-    private byte level;
-    private final UILabel scoreLabel;
+    private UILabel scoreLabel;
 
 
     public Game() throws IOException {
         Application.uiLayerPane.getChildren().clear();
 
         if (REGISTRY_KEYS.GET_ISCONTINUED()) {
-            this.score = Long.parseLong(ConfigHandler.getScore());
+            this.score = REGISTRY_KEYS.GET_GAME_SCORE();
+        } else {
+            this.score = 0;
         }
 
         this.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + this.score, 22);
@@ -36,7 +41,7 @@ public class Game {
         scoreLabel.setTranslateX(-130);
         scoreLabel.setFill(Color.WHITE);
 
-        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + this.level, 22);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_GAME_LEVEL(), 22);
         levelLabel.setTranslateY(-310);
         levelLabel.setTranslateX(110);
         levelLabel.setFill(Color.WHITE);
@@ -57,8 +62,9 @@ public class Game {
     public void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override public void handle(long now) {
-                if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    updateGame(now);
+                if (!REGISTRY_KEYS.GET_ISPAUSED() && now - lastUpdateTime >= REGISTRY_KEYS.GET_GAME_MOVE_INTERVAL()) {
+                    updateGame();
+                    lastUpdateTime = now;
                 }
             }
         };
@@ -108,7 +114,7 @@ public class Game {
         switch (code) {
             case W: case A:
             case S: case D:
-                //this.player.handleKeyPress(event);
+                ((Pacman)EntityHandler.getMobs().getFirst()).handleKeyPress(event);
                 break;
 
             case ESCAPE:
@@ -127,7 +133,7 @@ public class Game {
     }
 
 
-    private void updateGame(long now) {
+    private void updateGame() {
         MapHandler.renderEntities();
     }
 

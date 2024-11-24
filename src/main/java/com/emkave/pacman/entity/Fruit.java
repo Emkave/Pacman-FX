@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class Fruit extends Collectible {
     Fruit() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/fruit.png")))));
-        this.amount = 0;
+        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/fruit.png")))), 0, 0);
     }
 }

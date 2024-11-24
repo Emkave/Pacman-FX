@@ -1,4 +1,5 @@
 package com.emkave.pacman.entity;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import javafx.scene.image.ImageView;
 import kotlin.Pair;
 
@@ -8,8 +9,16 @@ public abstract class Entity {
     protected ImageView imageView; // Every entity has its own image view
 
 
-    Entity(ImageView __imageView) {
+    Entity(ImageView __imageView, final double __x, final double __y) {
+        this.x = __x;
+        this.y = __y;
         this.imageView = __imageView;
+        this.imageView.setSmooth(false);
+        this.imageView.setPreserveRatio(true);
+        this.imageView.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+        this.imageView.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+        this.imageView.setTranslateX(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() * this.x + 1);
+        this.imageView.setTranslateY(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() * this.y + 2);
     }
 
 
@@ -30,19 +39,8 @@ public abstract class Entity {
     }
 
 
-    public boolean setSize(double width, double height) { // Every entity is sizeable
-        if (this.imageView.getImage() != null) {
-            this.imageView.setFitWidth(width);
-            this.imageView.setFitHeight(height);
-            return true;
-        }
-
-        return false;
-    }
-
-
     public boolean setPosition(double x, double y) { // Every entity able to set position
-        if (this.imageView.getImage() != null && x >= 0 && y >= 0 && x < 19 && y < 22) {
+        if (this.imageView.getImage() != null && x >= 0 && y >= 0 && x < REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() && y < REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()) {
             this.x = x; this.y = y;
             return true;
         }

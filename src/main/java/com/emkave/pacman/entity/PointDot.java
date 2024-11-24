@@ -7,8 +7,9 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 public class PointDot extends Collectible {
+    private static byte amount;
+
     PointDot() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/dot.png")))));
-        this.amount = 10;
+        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/dot.png")))), 1, 2);
     }
 }

@@ -9,6 +9,6 @@ import java.util.Objects;
 
 public class Inky extends Mob {
     public Inky() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/inky_moves_down.gif")))));
+        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/inky_moves_down.gif")))), 0, 0);
     }
 }
