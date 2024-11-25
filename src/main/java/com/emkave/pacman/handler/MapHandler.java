@@ -19,30 +19,21 @@ import java.util.Optional;
 
 
 public class MapHandler {
-    private static StackPane gameMapFramePane;
-    private static GridPane gameMapPane;
-    private static StackPane gameMapEntityPane;
+    private static StackPane gameMapPane;
     private static int[][] map;
 
 
     public static void loadGameMap() throws IOException {
         MapHandler.map = MapHandler.loadMapFile();
 
-        MapHandler.gameMapFramePane = new StackPane();
-        MapHandler.gameMapFramePane.setAlignment(Pos.CENTER);
-        MapHandler.gameMapFramePane.setMaxWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
-        MapHandler.gameMapFramePane.setMaxHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
+        MapHandler.gameMapPane = new StackPane();
+        MapHandler.gameMapPane.setAlignment(Pos.TOP_LEFT);
+        MapHandler.gameMapPane.setMinWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
+        MapHandler.gameMapPane.setMinHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
+        MapHandler.gameMapPane.setTranslateX(100);
+        MapHandler.gameMapPane.setTranslateY(150);
 
-        MapHandler.gameMapPane = MapHandler.loadGameTiles();
-        MapHandler.gameMapPane.setTranslateY(20);
-
-        MapHandler.gameMapEntityPane = new StackPane();
-        MapHandler.gameMapEntityPane.setPickOnBounds(false);
-        MapHandler.gameMapEntityPane.setAlignment(Pos.TOP_LEFT);
-        MapHandler.gameMapEntityPane.setMinWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
-        MapHandler.gameMapEntityPane.setMinHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
-
-        MapHandler.gameMapFramePane.getChildren().addAll(MapHandler.gameMapPane, MapHandler.gameMapEntityPane);
+        MapHandler.loadGameTiles();
     }
 
 
@@ -67,17 +58,21 @@ public class MapHandler {
         final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
         for (Mob mob : mobs) {
-            MapHandler.gameMapEntityPane.getChildren().add(mob.getImageView());
+            mob.getImageView().setTranslateX(mob.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+            mob.getImageView().setTranslateY(mob.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+            MapHandler.gameMapPane.getChildren().add(mob.getImageView());
         }
 
         for (Collectible collectible : collectibles) {
-            MapHandler.gameMapEntityPane.getChildren().add(collectible.getImageView());
+            collectible.getImageView().setTranslateX(collectible.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+            collectible.getImageView().setTranslateY(collectible.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+            MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
         }
     }
 
 
-    public static StackPane getGameMapFramePane() {
-        return MapHandler.gameMapFramePane;
+    public static StackPane getGameMapPane() {
+        return MapHandler.gameMapPane;
     }
 
 
@@ -87,6 +82,9 @@ public class MapHandler {
 
 
     private static ImageView createTileImageView(final int tileType) {
+        if (tileType == 0) {
+            return null;
+        }
         try {
             InputStream imageStream = Application.class.getResourceAsStream("Images/Tiles/"+tileType+".png");
 
@@ -122,9 +120,7 @@ public class MapHandler {
     }
 
 
-    private static GridPane loadGameTiles() {
-        GridPane gridPane = new GridPane();
-
+    private static void loadGameTiles() {
         for (int row = 0; row < REGISTRY_KEYS.GET_MAP_HEIGHT(); row++) {
             for (int column = 0; column < REGISTRY_KEYS.GET_MAP_WIDTH(); column++) {
                 int tileType = MapHandler.map[row][column];
@@ -133,11 +129,11 @@ public class MapHandler {
                 if (tileImage != null) {
                     tileImage.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
                     tileImage.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
-                    gridPane.add(tileImage, column, row);
+                    tileImage.setTranslateX(column * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+                    tileImage.setTranslateY(row * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+                    MapHandler.gameMapPane.getChildren().add(tileImage);
                 }
             }
         }
-
-        return gridPane;
     }
 }

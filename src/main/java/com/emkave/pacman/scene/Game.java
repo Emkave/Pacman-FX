@@ -1,11 +1,7 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.entity.Collectible;
-import com.emkave.pacman.entity.Entity;
-import com.emkave.pacman.entity.Mob;
 import com.emkave.pacman.entity.Pacman;
-import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
@@ -18,11 +14,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import java.io.IOException;
-import java.util.LinkedList;
 
 
 public class Game {
-    private long lastUpdateTime = 0;
+    private long lastEntityUpdateTime = 0;
     private long score;
     private UILabel scoreLabel;
 
@@ -50,7 +45,7 @@ public class Game {
         MapHandler.loadEntities();
 
         Application.uiLayerPane.getChildren().addAll(
-                MapHandler.getGameMapFramePane(), this.scoreLabel, levelLabel
+                MapHandler.getGameMapPane(), this.scoreLabel, levelLabel
         );
 
         Application.window.getScene().setOnKeyPressed(this::handleKeyPress);
@@ -62,9 +57,11 @@ public class Game {
     public void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override public void handle(long now) {
-                if (!REGISTRY_KEYS.GET_ISPAUSED() && now - lastUpdateTime >= REGISTRY_KEYS.GET_GAME_MOVE_INTERVAL()) {
-                    updateGame();
-                    lastUpdateTime = now;
+                if (!REGISTRY_KEYS.GET_ISPAUSED()) {
+                    if ((now - lastEntityUpdateTime) >= 300000000) {
+                        MapHandler.renderEntities();
+                        lastEntityUpdateTime = now;
+                    }
                 }
             }
         };
@@ -130,11 +127,6 @@ public class Game {
             default:
                 break;
         }
-    }
-
-
-    private void updateGame() {
-        MapHandler.renderEntities();
     }
 
 

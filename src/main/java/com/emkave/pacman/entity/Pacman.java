@@ -13,38 +13,37 @@ import java.util.Objects;
 public class Pacman extends Mob {
     public Pacman() {
         super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacman_moves_right.gif")))), 1, 1);
-        this.d_x = 1; this.d_y = 0;
-
     }
 
 
     public void handleKeyPress(KeyEvent event) { // Pacman should be able to be controlled
         switch (event.getCode()) { // Pacman's direction vector should be assigned
-            case W:
-                this.d_x = 0; this.d_y = -1; break;
-            case S:
-                this.d_x = 0; this.d_y = 1; break;
-            case A:
-                this.d_x = -1; this.d_y = 0; break;
+            case W: this.d_x = 0;
+                    this.d_y = -1;
+                    break;
+            case S: this.d_x = 0;
+                    this.d_y = 1;
+                    break;
+            case A: this.d_x = -1;
+                    this.d_y = 0;
+                    break;
             case D:
-                this.d_x = 1; this.d_y = 0; break;
+                this.d_x = 1;
+                this.d_y = 0;
+                break;
             default: break;
         }
     }
 
 
     @Override public void render() {
-        this.updatePosition();
-    }
-
-
-    private void updatePosition() {
         try {
-            int tileType = MapHandler.getGameMap()[(int)(this.y + this.d_y)][(int)(this.x + this.d_x)];
+            int tileType = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
 
             if (tileType != 1 && tileType != 2 && tileType != 3 && tileType != 4 && tileType != 7 && tileType != 8) {
                 this.x += this.d_x;
                 this.y += this.d_y;
+                this.moveToCell();
             }
         } catch (Exception _) {}
 

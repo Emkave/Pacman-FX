@@ -10,8 +10,8 @@ public abstract class REGISTRY_KEYS {
 
     private static final double SCREEN_WIDTH = 672.0;
     private static final double SCREEN_HEIGHT = 864.0;
-    private static final double MAP_WIDTH = 28;
-    private static final double MAP_HEIGHT = 31;
+    private static final int MAP_WIDTH = 28;
+    private static final int MAP_HEIGHT = 31;
     private static final double GAME_MAP_WIDTH = REGISTRY_KEYS.SCREEN_WIDTH * 0.7;
     private static final double GAME_MAP_HEIGHT = REGISTRY_KEYS.SCREEN_HEIGHT * 0.7;
     private static final double GAME_MAP_CELL_WIDTH = GAME_MAP_WIDTH / REGISTRY_KEYS.MAP_WIDTH;
@@ -78,11 +78,11 @@ public abstract class REGISTRY_KEYS {
         return REGISTRY_KEYS.GAME_MAP_CELL_HEIGHT;
     }
 
-    public static double GET_MAP_WIDTH() {
+    public static int GET_MAP_WIDTH() {
         return REGISTRY_KEYS.MAP_WIDTH;
     }
 
-    public static double GET_MAP_HEIGHT() {
+    public static int GET_MAP_HEIGHT() {
         return REGISTRY_KEYS.MAP_HEIGHT;
     }
 
