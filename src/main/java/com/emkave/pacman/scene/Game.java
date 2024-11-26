@@ -5,33 +5,36 @@ import com.emkave.pacman.entity.Pacman;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
 
 public class Game {
-    private long lastEntityUpdateTime = 0;
-    private long score;
-    private UILabel scoreLabel;
+    private static long lastEntityUpdateTime = 0;
+    private static long score;
+    private static UILabel scoreLabel;
+    private static VBox pauseLayer;
 
 
-    public Game() throws IOException {
-        Application.uiLayerPane.getChildren().clear();
+    public static StackPane load() throws IOException {
+        StackPane uiLayer = new StackPane();
 
         if (REGISTRY_KEYS.GET_ISCONTINUED()) {
-            this.score = REGISTRY_KEYS.GET_GAME_SCORE();
+            Game.score = REGISTRY_KEYS.GET_GAME_SCORE();
         } else {
-            this.score = 0;
+            Game.score = 0;
         }
 
-        this.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + this.score, 22);
+        Game.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + Game.score, 22);
         scoreLabel.setTranslateY(-310);
         scoreLabel.setTranslateX(-130);
         scoreLabel.setFill(Color.WHITE);
@@ -44,23 +47,23 @@ public class Game {
         MapHandler.loadGameMap();
         MapHandler.loadEntities();
 
-        Application.uiLayerPane.getChildren().addAll(
-                MapHandler.getGameMapPane(), this.scoreLabel, levelLabel
+        uiLayer.getChildren().addAll(
+                MapHandler.getGameMapPane(), Game.scoreLabel, levelLabel
         );
 
-        Application.window.getScene().setOnKeyPressed(this::handleKeyPress);
+        Application.window.getScene().setOnKeyPressed(Game::handleKeyPress);
 
-        this.startGameLoop();
+        return uiLayer;
     }
 
 
-    public void startGameLoop() {
+    public static void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    if ((now - lastEntityUpdateTime) >= 300000000) {
+                    if ((now - Game.lastEntityUpdateTime) >= 300000000) {
                         MapHandler.renderEntities();
-                        lastEntityUpdateTime = now;
+                        Game.lastEntityUpdateTime = now;
                     }
                 }
             }
@@ -70,7 +73,9 @@ public class Game {
     }
 
 
-    private void showPauseMenu() {
+    private static void showPauseMenu() {
+        REGISTRY_KEYS.SET_ISPAUSED(true);
+
         VBox pauseMenu = new VBox(10);
         pauseMenu.setAlignment(Pos.CENTER);
         pauseMenu.setStyle("-fx-background-color: rgba(0, 0, 0, 255);");
@@ -83,29 +88,33 @@ public class Game {
 
         UITextBasedButton resumeButton = new UITextBasedButton(Application.localeResourceBundle.getString("continue"));
         resumeButton.setOnAction(e -> {
-            hidePauseMenu();
-            resumeGame();
+            Game.hidePauseMenu();
+            Game.resumeGame();
+            REGISTRY_KEYS.SET_ISPAUSED(false);
         });
         resumeButton.setTranslateY(10);
 
         UITextBasedButton exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
-            new MainMenu();
+            EntityHandler.getMobs().clear();
+            EntityHandler.getCollectibles().clear();
+            REGISTRY_KEYS.SET_ISPAUSED(false);
+            SceneHandler.exitScene();
         });
         exitButton.setTranslateY(20);
 
         pauseMenu.getChildren().addAll(pauseLabel, resumeButton, exitButton);
-        Application.uiLayerPane.getChildren().add(pauseMenu);
+        SceneHandler.getFrameStack().peek().getChildren().add(pauseMenu);
     }
 
 
-    public void hidePauseMenu() {
-        Application.uiLayerPane.getChildren().removeIf(node -> node instanceof VBox);
+    public static void hidePauseMenu() {
+        SceneHandler.getFrameStack().peek().getChildren().removeIf(node -> node instanceof VBox);
     }
 
 
-    private void handleKeyPress(KeyEvent event) {
+    private static void handleKeyPress(KeyEvent event) {
         KeyCode code = event.getCode();
 
         switch (code) {
@@ -116,11 +125,11 @@ public class Game {
 
             case ESCAPE:
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    this.pauseGame();
-                    this.showPauseMenu();
+                    Game.pauseGame();
+                    Game.showPauseMenu();
                 } else {
-                    this.hidePauseMenu();
-                    this.resumeGame();
+                    Game.hidePauseMenu();
+                    Game.resumeGame();
                 }
                 break;
 
@@ -130,12 +139,17 @@ public class Game {
     }
 
 
-    public void pauseGame() {
+    public static void pauseGame() {
         REGISTRY_KEYS.SET_ISPAUSED(true);
     }
 
 
-    public void resumeGame() {
+    public static void resumeGame() {
         REGISTRY_KEYS.SET_ISPAUSED(false);
+    }
+
+
+    public static VBox getPauseLayer() {
+        return Game.pauseLayer;
     }
 }

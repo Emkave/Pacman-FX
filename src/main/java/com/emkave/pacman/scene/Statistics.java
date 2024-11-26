@@ -1,14 +1,16 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 public class Statistics {
-    public Statistics() {
-        Application.uiLayerPane.getChildren().clear();
+    public static StackPane load() {
+        StackPane uiLayer = new StackPane();
 
         UILabel statisticsLabel = new UILabel(Application.localeResourceBundle.getString("stats"), 40);
         statisticsLabel.setFill(Color.WHITE);
@@ -21,13 +23,15 @@ public class Statistics {
         UITextBasedButton backButton = new UITextBasedButton(Application.localeResourceBundle.getString("back"));
         backButton.setOnAction(event -> {
             backButton.getStyleClass().add("settings-back-pressed");
-            new MainMenu();
+            SceneHandler.exitScene();
         });
         backButton.setTranslateY(320);
         backButton.setTranslateX(-140);
 
-        Application.uiLayerPane.getChildren().addAll(
+        uiLayer.getChildren().addAll(
                 statisticsLabel, backButton, cannotConnectLabel
         );
+
+        return uiLayer;
     }
 }

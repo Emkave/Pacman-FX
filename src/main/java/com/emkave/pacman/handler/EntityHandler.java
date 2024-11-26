@@ -32,17 +32,4 @@ public class EntityHandler {
     public static LinkedList<Mob> getMobs() {
         return EntityHandler.mobs;
     }
-
-
-    public static boolean emplaceEntity(Entity entity) {
-        if (entity instanceof Mob) {
-            EntityHandler.mobs.add((Mob)entity);
-            return true;
-        } else if (entity instanceof Collectible) {
-            EntityHandler.collectibles.add((Collectible)entity);
-            return true;
-        }
-
-        return false;
-    }
 }

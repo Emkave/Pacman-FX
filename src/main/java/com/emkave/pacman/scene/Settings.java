@@ -3,22 +3,25 @@ package com.emkave.pacman.scene;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.handler.SoundHandler;
 import com.emkave.pacman.ui.UIImageBasedButton;
 import com.emkave.pacman.ui.UITextBasedButton;
 import com.emkave.pacman.ui.UILabel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import java.util.Objects;
 
 
 public class Settings {
-    private final UIImageBasedButton muteButton;
+    private static UIImageBasedButton muteButton;
 
-    public Settings() {
-        Application.uiLayerPane.getChildren().clear();
+
+    public static StackPane load() {
+        StackPane uiLayer = new StackPane();
 
         UILabel mainLabel = new UILabel(Application.localeResourceBundle.getString("settings"), 40);
         mainLabel.setFill(Color.WHITE);
@@ -38,7 +41,7 @@ public class Settings {
         engLangLabel.setFill(Color.WHITE);
         engLangLabel.setTranslateY(-60);
 
-        UILabel czeLangLabel = new UILabel("ČEŠTINA", 15);
+        UILabel czeLangLabel = new UILabel("ČESKOSLOVENSKÝ", 15);
         czeLangLabel.setFill(Color.WHITE);
         czeLangLabel.setTranslateX(169);
         czeLangLabel.setTranslateY(-60);
@@ -51,7 +54,7 @@ public class Settings {
         UITextBasedButton backButton = new UITextBasedButton(Application.localeResourceBundle.getString("back"));
         backButton.setOnAction(event -> {
             backButton.getStyleClass().add("settings-back-pressed");
-            new MainMenu();
+            SceneHandler.exitScene();
         });
         backButton.setTranslateY(320);
         backButton.setTranslateX(-140);
@@ -60,7 +63,7 @@ public class Settings {
         rusLangButton.setOnAction(event -> {
             rusLangButton.getStyleClass().add("rus-lang-options-pressed");
             ConfigHandler.setLanguageSettings("ru", "RU");
-            reloadUI();
+            Settings.reloadUI();
         });
         rusLangButton.setTranslateX(-169);
         rusLangButton.setButtonSize(130, 130);
@@ -69,7 +72,7 @@ public class Settings {
         engLangButton.setOnAction(event -> {
             engLangButton.getStyleClass().add("eng-lang-options-pressed");
             ConfigHandler.setLanguageSettings("en", "EN");
-            reloadUI();
+            Settings.reloadUI();
         });
         engLangButton.setButtonSize(130, 130);
 
@@ -77,32 +80,34 @@ public class Settings {
         czeLangButton.setOnAction(event -> {
             czeLangButton.getStyleClass().add("cze-lang-options-pressed");
             ConfigHandler.setLanguageSettings("cz", "CZ");
-            reloadUI();
+            Settings.reloadUI();
         });
         czeLangButton.setTranslateX(169);
         czeLangButton.setButtonSize(130, 130);
 
-        this.muteButton = new UIImageBasedButton(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
-        this.muteButton.setOnAction(actionEvent -> this.toggleMute());
-        this.muteButton.setTranslateY(320);
-        this.muteButton.setTranslateX(220);
-        this.muteButton.setButtonSize(60, 60);
+        Settings.muteButton = new UIImageBasedButton(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
+        Settings.muteButton.setOnAction(actionEvent -> Settings.toggleMute());
+        Settings.muteButton.setTranslateY(320);
+        Settings.muteButton.setTranslateX(220);
+        Settings.muteButton.setButtonSize(60, 60);
 
-        Application.uiLayerPane.getChildren().addAll(czeLangLabel, engLangLabel,
-                this.muteButton, soundsLabel,
+        uiLayer.getChildren().addAll(czeLangLabel, engLangLabel,
+                Settings.muteButton, soundsLabel,
                 rusLangLabel, czeLangButton, engLangButton,
                 rusLangButton, langIconView, mainLabel, backButton);
+
+        return uiLayer;
     }
 
 
-    private void toggleMute() {
+    private static void toggleMute() {
         SoundHandler.toggleMute();
-        this.muteButton.changeImage(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
+        Settings.muteButton.changeImage(REGISTRY_KEYS.GET_ISMUTED() ? "Images/UI/mute.png" : "Images/UI/unmute.png");
     }
 
 
-    private void reloadUI() {
-        Application.uiLayerPane.getChildren().clear();
-        new Settings();
+    private static void reloadUI() {
+        SceneHandler.exitScene();
+        SceneHandler.loadSettings();
     }
 }

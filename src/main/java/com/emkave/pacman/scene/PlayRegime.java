@@ -2,15 +2,17 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
 public class PlayRegime {
-    public PlayRegime() {
-        Application.uiLayerPane.getChildren().clear();
+    public static StackPane load() {
+        StackPane uiLayer = new StackPane();
 
         UILabel playLabel = new UILabel(Application.localeResourceBundle.getString("game_regime"), 40);
         playLabel.setFill(Color.WHITE);
@@ -28,7 +30,7 @@ public class PlayRegime {
         UITextBasedButton continueButton = new UITextBasedButton(Application.localeResourceBundle.getString("continue"));
         continueButton.setOnAction(event -> {
             try {
-                var game = new Game();
+                SceneHandler.loadGame();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -43,15 +45,17 @@ public class PlayRegime {
         UITextBasedButton backButton = new UITextBasedButton(Application.localeResourceBundle.getString("back"));
         backButton.setOnAction(event -> {
             backButton.getStyleClass().add("settings-back-pressed");
-            new MainMenu();
+            SceneHandler.exitScene();
         });
         backButton.setTranslateY(320);
         backButton.setTranslateX(-140);
 
 
-        Application.uiLayerPane.getChildren().addAll(
+        uiLayer.getChildren().addAll(
                 playLabel, backButton, continueButton, newGameButton,
                 newGameWarningLabel, continueLevelLabel
         );
+
+        return uiLayer;
     }
 }

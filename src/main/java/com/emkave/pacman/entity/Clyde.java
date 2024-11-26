@@ -8,6 +8,6 @@ import java.util.Objects;
 
 public class Clyde extends Mob {
     public Clyde() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/clyde_moves_right.gif")))), 0, 0);
+        super("clyde");
     }
 }

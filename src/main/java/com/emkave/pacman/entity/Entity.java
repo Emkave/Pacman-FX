@@ -6,13 +6,10 @@ import kotlin.Pair;
 
 public abstract class Entity {
     protected int x, y; // Every entity has its own position
-    protected ImageView imageView; // Every entity has its own image view
+    protected ImageView imageView = new ImageView(); // Every entity has its own image view
 
 
-    Entity(ImageView __imageView, final int __x, final int __y) {
-        this.x = __x;
-        this.y = __y;
-        this.imageView = __imageView;
+    Entity() {
         this.imageView.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()+7);
         this.imageView.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()+6);
     }

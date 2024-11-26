@@ -8,6 +8,6 @@ import java.util.Objects;
 
 public class Blinky extends Mob {
     public Blinky() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/blinky_moves_right.gif")))), 0, 0);
+        super("blinky");
     }
 }

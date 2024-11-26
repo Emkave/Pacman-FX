@@ -2,6 +2,7 @@ package com.emkave.pacman;
 
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.handler.SoundHandler;
 import com.emkave.pacman.scene.MainMenu;
 import javafx.scene.Scene;
@@ -15,11 +16,11 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Stack;
 
 
 public class Application extends javafx.application.Application {
     public static StackPane frameLayerPane = new StackPane();
-    public static StackPane uiLayerPane = new StackPane();
     public static Stage window;
     public static ResourceBundle localeResourceBundle;
 
@@ -47,7 +48,6 @@ public class Application extends javafx.application.Application {
         frameView.fitHeightProperty().bind(frameLayerPane.heightProperty());
 
         Application.frameLayerPane.getChildren().add(frameView); // Place frame of the application
-        Application.frameLayerPane.getChildren().add(Application.uiLayerPane); // Place another stack layer on top for UI and other game elements
 
         Application.frameLayerPane.setOnMousePressed(event -> { // If you press left mouse button, get the coordinates of the press
             this.xOffset = event.getSceneX();
@@ -67,8 +67,7 @@ public class Application extends javafx.application.Application {
         Application.window.setWidth(REGISTRY_KEYS.GET_SCREEN_WIDTH()); // Set window size
         Application.window.setHeight(REGISTRY_KEYS.GET_SCREEN_HEIGHT());
 
-        new MainMenu(); // Create Main Menu scene
-
+        SceneHandler.loadMainMenu();
         Application.window.show(); // Render the window
     }
 

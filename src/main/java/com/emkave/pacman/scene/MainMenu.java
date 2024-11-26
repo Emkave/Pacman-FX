@@ -2,36 +2,38 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import java.util.Objects;
 
 public class MainMenu {
-    public MainMenu() {
-        Application.uiLayerPane.getChildren().clear();
+    public static StackPane load() {
+        StackPane uiLayer = new StackPane();
 
         UITextBasedButton playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
-            new PlayRegime();
+            SceneHandler.loadGameRegimes();
         });
         playButton.setTranslateY(90);
 
         UITextBasedButton optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
         optionsButton.setOnAction(event -> {
             optionsButton.getStyleClass().add("main-menu-options-pressed");
-            new Settings();
+            SceneHandler.loadSettings();
         });
         optionsButton.setTranslateY(150);
 
         UITextBasedButton statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
         statsButton.setOnAction(event -> {
             statsButton.getStyleClass().add("main-menu-options-pressed");
-            new Statistics();
+            SceneHandler.loadStatistics();
         });
         statsButton.setTranslateY(210);
 
@@ -81,10 +83,13 @@ public class MainMenu {
         scoreLabel.setTranslateY(-100);
         scoreLabel.setFill(Color.WHITE);
 
-        Application.uiLayerPane.getChildren().addAll(clydeGIFImageView,
+        uiLayer.getChildren().addAll(clydeGIFImageView,
                 pinkyGIFImageView, inkyGIFImageView, scoreLabel,
                 blinkyGIFImageView, mainLabelView,
                 exitButton, optionsButton
                 , playButton, statsButton);
+
+
+        return uiLayer;
     }
 }

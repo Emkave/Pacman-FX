@@ -12,7 +12,9 @@ import java.util.Objects;
 
 public class Pacman extends Mob {
     public Pacman() {
-        super(new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacman_moves_right.gif")))), 1, 1);
+        super("pacman");
+        this.x = 1;
+        this.y = 1;
     }
 
 
