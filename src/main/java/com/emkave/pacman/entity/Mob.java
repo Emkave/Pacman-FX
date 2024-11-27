@@ -30,41 +30,57 @@ public abstract class Mob extends Entity { // Every mob is an entity
 
 
     protected void moveToCell() {
-        // Calculate delta movements
-        final double currentX = this.imageView.getTranslateX() / REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH();
-        final double currentY = this.imageView.getTranslateY() / REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT();
+        boolean wrapped = false;
 
-        final double deltaX = this.x - currentX;
-        final double deltaY = this.y - currentY;
-
-        // Determine direction based on deltas
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal movement
-            if (deltaX > 0) {
-                this.imageView.setImage(this.dirRightImg);
-            } else {
-                this.imageView.setImage(this.dirLeftImg);
-            }
-        } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
-            // Vertical movement
-            if (deltaY > 0) {
-                this.imageView.setImage(this.dirDownImg);
-            } else {
-                this.imageView.setImage(this.dirUpImg);
-            }
+        if (this.x == 0) {
+            this.x = REGISTRY_KEYS.GET_MAP_WIDTH() - 1;
+            wrapped = true;
+        } else if (this.x >= REGISTRY_KEYS.GET_MAP_WIDTH() - 1) {
+            this.x = 0;
+            wrapped = true;
         }
 
-        TranslateTransition transition = new TranslateTransition(Duration.millis(300), this.imageView);
 
-        transition.setToX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()-2);
-        transition.setToY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
-        transition.setInterpolator(Interpolator.LINEAR);
-        transition.setOnFinished(event -> {
-            this.imageView.setTranslateX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()-2);
-            this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
-        });
+        if (wrapped) {
+            this.imageView.setTranslateX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() - 2);
+            this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() - 2);
+        } else {
+            // Calculate delta movements
+            final double currentX = this.imageView.getTranslateX() / REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH();
+            final double currentY = this.imageView.getTranslateY() / REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT();
 
-        transition.play();
+            final double deltaX = this.x - currentX;
+            final double deltaY = this.y - currentY;
+
+            // Determine direction based on deltas
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal movement
+                if (deltaX > 0) {
+                    this.imageView.setImage(this.dirRightImg);
+                } else {
+                    this.imageView.setImage(this.dirLeftImg);
+                }
+            } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                // Vertical movement
+                if (deltaY > 0) {
+                    this.imageView.setImage(this.dirDownImg);
+                } else {
+                    this.imageView.setImage(this.dirUpImg);
+                }
+            }
+
+            TranslateTransition transition = new TranslateTransition(Duration.millis(300), this.imageView);
+
+            transition.setToX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()-2);
+            transition.setToY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
+            transition.setInterpolator(Interpolator.LINEAR);
+            transition.setOnFinished(event -> {
+                this.imageView.setTranslateX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()-2);
+                this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
+            });
+
+            transition.play();
+        }
     }
 }
 
