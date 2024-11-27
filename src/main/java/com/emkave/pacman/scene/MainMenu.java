@@ -13,37 +13,44 @@ import javafx.scene.paint.Color;
 import java.util.Objects;
 
 public class MainMenu {
+    private static UILabel scoreLabel;
+    private static UITextBasedButton playButton, optionsButton, statsButton, exitButton;
+
     public static StackPane load() {
         StackPane uiLayer = new StackPane();
 
-        UITextBasedButton playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
+        MainMenu.playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
             SceneHandler.loadGameRegimes();
         });
         playButton.setTranslateY(90);
 
-        UITextBasedButton optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
+        MainMenu.optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
         optionsButton.setOnAction(event -> {
             optionsButton.getStyleClass().add("main-menu-options-pressed");
             SceneHandler.loadSettings();
         });
         optionsButton.setTranslateY(150);
 
-        UITextBasedButton statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
+        MainMenu.statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
         statsButton.setOnAction(event -> {
             statsButton.getStyleClass().add("main-menu-options-pressed");
             SceneHandler.loadStatistics();
         });
         statsButton.setTranslateY(210);
 
-        UITextBasedButton exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
+        MainMenu.exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(event -> {
             exitButton.getStyleClass().remove("main-menu-button");
             exitButton.getStyleClass().add("main-menu-exit-pressed");
             Application.window.close();
         });
         exitButton.setTranslateY(270);
+
+        MainMenu.scoreLabel = new UILabel(Application.localeResourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
+        scoreLabel.setTranslateY(-100);
+        scoreLabel.setFill(Color.WHITE);
 
         Image blinkyGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/blinky_moves_right.gif")));
         ImageView blinkyGIFImageView = new ImageView(blinkyGIF);
@@ -79,17 +86,23 @@ public class MainMenu {
         mainLabelView.setPreserveRatio(true);
         mainLabelView.setTranslateY(-290);
 
-        UILabel scoreLabel = new UILabel(Application.localeResourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
-        scoreLabel.setTranslateY(-100);
-        scoreLabel.setFill(Color.WHITE);
-
         uiLayer.getChildren().addAll(clydeGIFImageView,
-                pinkyGIFImageView, inkyGIFImageView, scoreLabel,
+                pinkyGIFImageView, inkyGIFImageView, MainMenu.scoreLabel,
                 blinkyGIFImageView, mainLabelView,
-                exitButton, optionsButton
-                , playButton, statsButton);
+                MainMenu.exitButton, MainMenu.optionsButton
+                , MainMenu.playButton, MainMenu.statsButton);
 
 
         return uiLayer;
+    }
+
+
+    public static void reloadUI() {
+        MainMenu.playButton.setButtonText(Application.localeResourceBundle.getString("play"));
+        MainMenu.optionsButton.setButtonText(Application.localeResourceBundle.getString("settings"));
+        MainMenu.statsButton.setButtonText(Application.localeResourceBundle.getString("stats"));
+        MainMenu.exitButton.setButtonText(Application.localeResourceBundle.getString("exit"));
+        MainMenu.scoreLabel.setText(Application.localeResourceBundle.getString("your_top_score")
+                + ConfigHandler.getTopScore());
     }
 }

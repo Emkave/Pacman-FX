@@ -24,21 +24,21 @@ public class UITextBasedButton extends Button {
         this.setPrefSize(200, 50);
 
         initializePacmanImage();
-        initializeButtonText(text);
+        setButtonText(text);
         setupHoverEffect();
         setupClickEffect();
     }
 
 
-    private void initializeButtonText(String text) {
+    public void setButtonText(String text) {
         Font arcadeFont = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/arcade_font.ttf")), 30);
-        buttonText = new Text(text);
-        buttonText.setFont(arcadeFont);
-        buttonText.setFill(Color.BLUE);
-        buttonText.setStroke(null);
-        buttonText.setTranslateX(-20);
+        this.buttonText = new Text(text);
+        this.buttonText.setFont(arcadeFont);
+        this.buttonText.setFill(Color.BLUE);
+        this.buttonText.setStroke(null);
+        this.buttonText.setTranslateX(-20);
 
-        HBox hBox = new HBox(pacmanImageView, buttonText);
+        HBox hBox = new HBox(this.pacmanImageView, this.buttonText);
         hBox.setAlignment(Pos.CENTER);
         this.setGraphic(hBox);
     }
@@ -46,11 +46,11 @@ public class UITextBasedButton extends Button {
 
     private void initializePacmanImage() {
         Image pacManImage = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacman_moves_right.gif")));
-        pacmanImageView = new ImageView(pacManImage);
-        pacmanImageView.setFitWidth(50);
-        pacmanImageView.setPreserveRatio(true);
-        pacmanImageView.setVisible(false);
-        pacmanImageView.setTranslateX(-40);
+        this.pacmanImageView = new ImageView(pacManImage);
+        this.pacmanImageView.setFitWidth(50);
+        this.pacmanImageView.setPreserveRatio(true);
+        this.pacmanImageView.setVisible(false);
+        this.pacmanImageView.setTranslateX(-40);
     }
 
 
@@ -61,16 +61,16 @@ public class UITextBasedButton extends Button {
         dropShadow.setSpread(0.5);
 
         this.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-            buttonText.setStroke(Color.WHITE);
-            buttonText.setStrokeWidth(1.3);
-            pacmanImageView.setVisible(true);
+            this.buttonText.setStroke(Color.WHITE);
+            this.buttonText.setStrokeWidth(1.3);
+            this.pacmanImageView.setVisible(true);
             SoundHandler.playSoundEffect("hover");
         });
 
         this.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-            buttonText.setEffect(null);
-            buttonText.setStrokeWidth(0);
-            pacmanImageView.setVisible(false);
+            this.buttonText.setEffect(null);
+            this.buttonText.setStrokeWidth(0);
+            this.pacmanImageView.setVisible(false);
         });
     }
 
@@ -78,11 +78,11 @@ public class UITextBasedButton extends Button {
     private void setupClickEffect() {
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             SoundHandler.playSoundEffect("click");
-            buttonText.setFill(Color.DARKBLUE);
+            this.buttonText.setFill(Color.DARKBLUE);
         });
 
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
-            buttonText.setFill(Color.BLUE);
+            this.buttonText.setFill(Color.BLUE);
         });
 
         this.setOnAction(e -> {

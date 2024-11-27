@@ -64,6 +64,7 @@ public class Settings {
             rusLangButton.getStyleClass().add("rus-lang-options-pressed");
             ConfigHandler.setLanguageSettings("ru", "RU");
             Settings.reloadUI();
+            MainMenu.reloadUI();
         });
         rusLangButton.setTranslateX(-169);
         rusLangButton.setButtonSize(130, 130);
@@ -73,6 +74,7 @@ public class Settings {
             engLangButton.getStyleClass().add("eng-lang-options-pressed");
             ConfigHandler.setLanguageSettings("en", "EN");
             Settings.reloadUI();
+            MainMenu.reloadUI();
         });
         engLangButton.setButtonSize(130, 130);
 
@@ -81,6 +83,7 @@ public class Settings {
             czeLangButton.getStyleClass().add("cze-lang-options-pressed");
             ConfigHandler.setLanguageSettings("cz", "CZ");
             Settings.reloadUI();
+            MainMenu.reloadUI();
         });
         czeLangButton.setTranslateX(169);
         czeLangButton.setButtonSize(130, 130);

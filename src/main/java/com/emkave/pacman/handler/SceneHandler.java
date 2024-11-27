@@ -4,8 +4,6 @@ import com.emkave.pacman.Application;
 import com.emkave.pacman.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.util.Stack;
 
