@@ -1,11 +1,11 @@
-package com.emkave.pacman.entity;
+package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.entity.Entity;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.util.Objects;
@@ -16,6 +16,7 @@ public abstract class Mob extends Entity { // Every mob is an entity
     protected Image dirUpImg, dirRightImg, dirDownImg, dirLeftImg;
 
     Mob(final String mobName) {
+        super();
         this.dirUpImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_up.gif")));
         this.dirRightImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_right.gif")));
         this.dirDownImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_down.gif")));

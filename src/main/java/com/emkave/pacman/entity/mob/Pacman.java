@@ -1,13 +1,7 @@
-package com.emkave.pacman.entity;
+package com.emkave.pacman.entity.mob;
 
-import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.MapHandler;
-import com.emkave.pacman.handler.REGISTRY_KEYS;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-
-import java.util.Objects;
 
 
 public class Pacman extends Mob {
@@ -40,9 +34,9 @@ public class Pacman extends Mob {
 
     @Override public void render() {
         try {
-            int tileType = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
+            char tileType = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
 
-            if (tileType != 1 && tileType != 2 && tileType != 3 && tileType != 4 && tileType != 7 && tileType != 8) {
+            if (tileType != '1' && tileType != '2' && tileType != '3' && tileType != '4' && tileType != '7' && tileType != '8') {
                 this.x += this.d_x;
                 this.y += this.d_y;
                 this.moveToCell();

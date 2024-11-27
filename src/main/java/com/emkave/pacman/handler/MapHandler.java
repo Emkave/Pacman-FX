@@ -1,8 +1,8 @@
 package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.entity.Collectible;
-import com.emkave.pacman.entity.Mob;
+import com.emkave.pacman.entity.collectible.Collectible;
+import com.emkave.pacman.entity.mob.Mob;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,13 +11,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Objects;
 
 
 public class MapHandler {
+    private static Map<String, ImageView> tileImageMap = new HashMap<>();
     private static StackPane gameMapPane;
-    private static int[][] map;
+    private static char[][] map;
+
 
 
     public static void loadGameMap() throws IOException {
@@ -66,14 +70,14 @@ public class MapHandler {
             MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
         }
 
-        ImageView bl1 = MapHandler.createTileImageView(0, true);
+        ImageView bl1 = MapHandler.createTileImageView('0', true);
         assert bl1 != null;
         bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
         bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
         bl1.setTranslateX(-10);
         bl1.setTranslateY(250);
 
-        ImageView bl2 = MapHandler.createTileImageView(0, true);
+        ImageView bl2 = MapHandler.createTileImageView('0', true);
         assert bl2 != null;
         bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
         bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
@@ -89,12 +93,12 @@ public class MapHandler {
     }
 
 
-    public static int[][] getGameMap() {
+    public static char[][] getGameMap() {
         return MapHandler.map;
     }
 
 
-    private static ImageView createTileImageView(final int tileType, final boolean __p) {
+    private static ImageView createTileImageView(final char tileType, final boolean __p) {
         if (tileType == 0 && !__p) {
             return null;
         }
@@ -113,8 +117,8 @@ public class MapHandler {
     }
 
 
-    private static int[][] loadMapFile() throws IOException {
-        int[][] map = new int[(int)REGISTRY_KEYS.GET_MAP_HEIGHT()][(int)REGISTRY_KEYS.GET_MAP_WIDTH()];
+    private static char[][] loadMapFile() throws IOException {
+        char[][] map = new char[(int)REGISTRY_KEYS.GET_MAP_HEIGHT()][(int)REGISTRY_KEYS.GET_MAP_WIDTH()];
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Application.class.getResourceAsStream("Map/map.txt"))))) {
             String line;
@@ -122,7 +126,7 @@ public class MapHandler {
 
             while ((line = reader.readLine()) != null) {
                 for (int col = 0; col < line.length(); col++) {
-                    map[row][col] = line.charAt(col) - '0';
+                    map[row][col] = line.charAt(col);
                 }
 
                 row++;
@@ -136,7 +140,7 @@ public class MapHandler {
     private static void loadGameTiles() {
         for (int row = 0; row < REGISTRY_KEYS.GET_MAP_HEIGHT(); row++) {
             for (int column = 0; column < REGISTRY_KEYS.GET_MAP_WIDTH(); column++) {
-                int tileType = MapHandler.map[row][column];
+                char tileType = MapHandler.map[row][column];
                 ImageView tileImage = MapHandler.createTileImageView(tileType, false);
 
                 if (tileImage != null) {
@@ -145,8 +149,16 @@ public class MapHandler {
                     tileImage.setTranslateX(column * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
                     tileImage.setTranslateY(row * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
                     MapHandler.gameMapPane.getChildren().add(tileImage);
+
+                    String key = row + "," + column;
+                    MapHandler.tileImageMap.put(key, tileImage);
                 }
             }
         }
+    }
+
+
+    public static ImageView getTileImage(final int row, final int column) {
+        return MapHandler.tileImageMap.get(row+","+column);
     }
 }

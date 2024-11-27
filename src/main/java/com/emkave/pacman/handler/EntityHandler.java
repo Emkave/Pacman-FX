@@ -1,6 +1,8 @@
 package com.emkave.pacman.handler;
 
-import com.emkave.pacman.entity.*;
+import com.emkave.pacman.entity.collectible.Collectible;
+import com.emkave.pacman.entity.mob.Mob;
+import com.emkave.pacman.entity.mob.Pacman;
 
 import java.util.Collections;
 import java.util.LinkedList;

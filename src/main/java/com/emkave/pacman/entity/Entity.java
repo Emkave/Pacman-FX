@@ -1,7 +1,6 @@
 package com.emkave.pacman.entity;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import javafx.scene.image.ImageView;
-import kotlin.Pair;
 
 
 public abstract class Entity {
@@ -9,7 +8,7 @@ public abstract class Entity {
     protected ImageView imageView = new ImageView(); // Every entity has its own image view
 
 
-    Entity() {
+    protected Entity() {
         this.imageView.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()+7);
         this.imageView.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()+6);
     }

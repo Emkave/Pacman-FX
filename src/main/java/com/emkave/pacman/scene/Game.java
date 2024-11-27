@@ -1,7 +1,7 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.entity.Pacman;
+import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
