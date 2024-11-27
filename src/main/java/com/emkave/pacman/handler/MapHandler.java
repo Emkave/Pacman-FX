@@ -6,8 +6,6 @@ import com.emkave.pacman.entity.Mob;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Optional;
 
 
 public class MapHandler {
@@ -68,6 +65,22 @@ public class MapHandler {
             collectible.getImageView().setTranslateY(collectible.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
             MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
         }
+
+        ImageView bl1 = MapHandler.createTileImageView(0, true);
+        assert bl1 != null;
+        bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl1.setTranslateX(-10);
+        bl1.setTranslateY(250);
+
+        ImageView bl2 = MapHandler.createTileImageView(0, true);
+        assert bl2 != null;
+        bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl2.setTranslateX(430);
+        bl2.setTranslateY(250);
+
+        MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
     }
 
 
@@ -81,8 +94,8 @@ public class MapHandler {
     }
 
 
-    private static ImageView createTileImageView(final int tileType) {
-        if (tileType == 0) {
+    private static ImageView createTileImageView(final int tileType, final boolean __p) {
+        if (tileType == 0 && !__p) {
             return null;
         }
         try {
@@ -124,7 +137,7 @@ public class MapHandler {
         for (int row = 0; row < REGISTRY_KEYS.GET_MAP_HEIGHT(); row++) {
             for (int column = 0; column < REGISTRY_KEYS.GET_MAP_WIDTH(); column++) {
                 int tileType = MapHandler.map[row][column];
-                ImageView tileImage = MapHandler.createTileImageView(tileType);
+                ImageView tileImage = MapHandler.createTileImageView(tileType, false);
 
                 if (tileImage != null) {
                     tileImage.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
