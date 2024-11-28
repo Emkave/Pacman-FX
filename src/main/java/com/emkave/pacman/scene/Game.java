@@ -22,7 +22,6 @@ public class Game {
     private static long lastEntityUpdateTime = 0;
     private static long score;
     private static UILabel scoreLabel;
-    private static VBox pauseLayer;
 
 
     public static StackPane load() throws IOException {
@@ -45,7 +44,6 @@ public class Game {
         levelLabel.setFill(Color.WHITE);
 
         MapHandler.loadGameMap();
-        MapHandler.loadEntities();
 
         uiLayer.getChildren().addAll(
                 MapHandler.getGameMapPane(), Game.scoreLabel, levelLabel
@@ -98,7 +96,7 @@ public class Game {
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
             EntityHandler.getMobs().clear();
-            EntityHandler.getCollectibles().clear();
+            EntityHandler.getCollectibleMap().clear();
             REGISTRY_KEYS.SET_ISPAUSED(false);
             SceneHandler.exitScene();
         });
@@ -146,10 +144,5 @@ public class Game {
 
     public static void resumeGame() {
         REGISTRY_KEYS.SET_ISPAUSED(false);
-    }
-
-
-    public static VBox getPauseLayer() {
-        return Game.pauseLayer;
     }
 }

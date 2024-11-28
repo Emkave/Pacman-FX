@@ -30,4 +30,16 @@ public abstract class Entity {
     public int getY() {
         return this.y;
     }
+
+
+    public void setX(final int x) {
+        this.x = x;
+        this.imageView.setTranslateX(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() * this.x);
+    }
+
+
+    public void setY(final int y) {
+        this.y = y;
+        this.imageView.setTranslateY(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() * this.y);
+    }
 }

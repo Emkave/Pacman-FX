@@ -4,16 +4,15 @@ import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.mob.Mob;
 import com.emkave.pacman.entity.mob.Pacman;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 
 
 public class EntityHandler {
-    private static LinkedList<Collectible> collectibles = new LinkedList<>();
+    private static Map<TileKey, Collectible> collectibleMap = new HashMap<>();
     private static LinkedList<Mob> mobs = new LinkedList<>();
 
 
-    public static void loadEntities() {
+    public static void loadMobs() {
         Mob pacman = new Pacman();
 
 
@@ -26,12 +25,12 @@ public class EntityHandler {
     }
 
 
-    public static LinkedList<Collectible> getCollectibles() {
-        return EntityHandler.collectibles;
+    public static LinkedList<Mob> getMobs() {
+        return EntityHandler.mobs;
     }
 
 
-    public static LinkedList<Mob> getMobs() {
-        return EntityHandler.mobs;
+    public static Map<TileKey, Collectible> getCollectibleMap() {
+        return EntityHandler.collectibleMap;
     }
 }

@@ -1,10 +1,13 @@
 package com.emkave.pacman.entity.mob;
 
+import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.handler.MapHandler;
 import javafx.scene.input.KeyEvent;
 
 
 public class Pacman extends Mob {
+    private static byte lives = 3;
+
     public Pacman() {
         super("pacman");
         this.x = 1;
@@ -40,9 +43,26 @@ public class Pacman extends Mob {
                 this.x += this.d_x;
                 this.y += this.d_y;
                 this.moveToCell();
+                Collectible tile = MapHandler.getCollectible(tileType, this.x, this.y);
+
+                if (tile != null) {
+                    tile.effect();
+                }
             }
-        } catch (Exception _) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Pacman pos: " + this.x + " " + this.y);
+    }
+
+
+    public static void decreaseLives() {
+        Pacman.lives--;
+    }
+
+
+    public static void increaseLives() {
+        Pacman.lives++;
     }
 }

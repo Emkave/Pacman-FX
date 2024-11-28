@@ -1,8 +1,8 @@
 package com.emkave.pacman.entity.collectible;
 
-public class Orange extends Collectible {
-    Orange() {
-        super('O');
+public class Fighter extends Collectible {
+    Fighter() {
+        super('F');
     }
 
 
