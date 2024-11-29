@@ -1,7 +1,7 @@
 package com.emkave.pacman.entity.collectible;
 
 public class Pill extends Collectible {
-    Pill() {
+    public Pill() {
         super('P');
     }
 

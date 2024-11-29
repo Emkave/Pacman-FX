@@ -1,7 +1,7 @@
 package com.emkave.pacman.entity.collectible;
 
 public class Fighter extends Collectible {
-    Fighter() {
+    public Fighter() {
         super('F');
     }
 

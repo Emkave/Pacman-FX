@@ -1,7 +1,7 @@
 package com.emkave.pacman.entity.collectible;
 
 public class Orange extends Collectible {
-    Orange() {
+    public Orange() {
         super('O');
     }
 
