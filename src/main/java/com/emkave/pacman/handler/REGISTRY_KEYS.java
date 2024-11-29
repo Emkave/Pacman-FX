@@ -9,8 +9,8 @@ public abstract class REGISTRY_KEYS {
     private static boolean IS_PAUSED = false;
     private static boolean IS_HOSTER = false;
     private static boolean IS_MUTED = false;
-    private static long GAME_SCORE = Long.parseLong(ConfigHandler.getScore());
-    private static byte GAME_LEVEL = Byte.parseByte(ConfigHandler.getLevel());
+    private static long LAST_GAME_SCORE = Long.parseLong(ConfigHandler.getScore());
+    private static byte LAST_GAME_LEVEL = Byte.parseByte(ConfigHandler.getLevel());
     private static Map<Character, Function<Character, String>> CLASS_NAME_RESOLVER = new HashMap<>();
 
     private static final double SCREEN_WIDTH = 672.0;
@@ -40,11 +40,11 @@ public abstract class REGISTRY_KEYS {
 
 
     public static void SET_GAME_SCORE(final long __score) {
-        REGISTRY_KEYS.GAME_SCORE = __score;
+        REGISTRY_KEYS.LAST_GAME_SCORE = __score;
     }
 
     public static void SET_GAME_LEVEL(final byte __level) {
-        REGISTRY_KEYS.GAME_LEVEL = __level;
+        REGISTRY_KEYS.LAST_GAME_LEVEL = __level;
     }
 
     public static void SET_CONTINUED(final boolean __B) {
@@ -115,12 +115,12 @@ public abstract class REGISTRY_KEYS {
         return REGISTRY_KEYS.GAME_MOVE_INTERVAL;
     }
 
-    public static byte GET_GAME_LEVEL() {
-        return REGISTRY_KEYS.GAME_LEVEL;
+    public static byte GET_LAST_GAME_LEVEL() {
+        return REGISTRY_KEYS.LAST_GAME_LEVEL;
     }
 
-    public static long GET_GAME_SCORE() {
-        return REGISTRY_KEYS.GAME_SCORE;
+    public static long GET_LAST_GAME_SCORE() {
+        return REGISTRY_KEYS.LAST_GAME_SCORE;
     }
 
     public static Map<Character, Function<Character, String>> GET_CLASS_NAME_RESOLVER() {

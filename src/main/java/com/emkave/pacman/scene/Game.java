@@ -28,7 +28,7 @@ public class Game {
         StackPane uiLayer = new StackPane();
 
         if (REGISTRY_KEYS.GET_ISCONTINUED()) {
-            Game.score = REGISTRY_KEYS.GET_GAME_SCORE();
+            Game.score = REGISTRY_KEYS.GET_LAST_GAME_SCORE();
         } else {
             Game.score = 0;
         }
@@ -38,7 +38,7 @@ public class Game {
         scoreLabel.setTranslateX(-130);
         scoreLabel.setFill(Color.WHITE);
 
-        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_GAME_LEVEL(), 22);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), 22);
         levelLabel.setTranslateY(-310);
         levelLabel.setTranslateX(110);
         levelLabel.setFill(Color.WHITE);
@@ -62,6 +62,7 @@ public class Game {
                     if ((now - Game.lastEntityUpdateTime) >= 300000000) {
                         MapHandler.renderEntities();
                         Game.lastEntityUpdateTime = now;
+                        Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.score);
                     }
                 }
             }
@@ -144,5 +145,10 @@ public class Game {
 
     public static void resumeGame() {
         REGISTRY_KEYS.SET_ISPAUSED(false);
+    }
+
+
+    public static void addScore(final long p) {
+        Game.score += p;
     }
 }

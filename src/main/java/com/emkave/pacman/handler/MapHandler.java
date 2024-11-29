@@ -3,6 +3,7 @@ package com.emkave.pacman.handler;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.mob.Mob;
+import eu.hansolo.tilesfx.Tile;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -53,14 +54,14 @@ public class MapHandler {
 
 
     public static void renderEntities() {
-        final Map<TileKey, Collectible> collectibles = EntityHandler.getCollectibleMap();
+        final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
         final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
         for (Mob mob : mobs) {
             mob.render();
         }
 
-        for (Map.Entry<TileKey, Collectible> entry : collectibles.entrySet()) {
+        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
             entry.getValue().render();
         }
     }
@@ -69,10 +70,10 @@ public class MapHandler {
     public static void loadGameMobs() {
         EntityHandler.loadMobs();
 
-        final Map<TileKey, Collectible> collectibles = EntityHandler.getCollectibleMap();
+        final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
         final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
-        for (Map.Entry<TileKey, Collectible> entry : collectibles.entrySet()) {
+        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
             Collectible collectible = entry.getValue();
             collectible.getImageView().setTranslateX(collectible.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
             collectible.getImageView().setTranslateY(collectible.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
@@ -151,7 +152,7 @@ public class MapHandler {
                         instance.setY(row);
 
                         TileKey key = new TileKey(tileType, column, row);
-                        EntityHandler.getCollectibleMap().put(key, instance);
+                        EntityHandler.getCollectibleMap().put(key.hashCode(), instance);
                     } catch (Exception e) {
                         System.err.println("Failed to create instance for tileType '" + tileType + "': " + e.getMessage());
                     }
@@ -175,6 +176,7 @@ public class MapHandler {
 
 
     public static Collectible getCollectible(char tileType, int x, int y) {
-        return EntityHandler.getCollectibleMap().get(new TileKey(tileType, x, y));
+        TileKey tileKey = new TileKey(tileType, x, y);
+        return EntityHandler.getCollectibleMap().get(tileKey.hashCode());
     }
 }

@@ -8,7 +8,7 @@ import java.util.*;
 
 
 public class EntityHandler {
-    private static Map<TileKey, Collectible> collectibleMap = new HashMap<>();
+    private static Map<Integer, Collectible> collectibleMap = new HashMap<>();
     private static LinkedList<Mob> mobs = new LinkedList<>();
 
 
@@ -30,7 +30,7 @@ public class EntityHandler {
     }
 
 
-    public static Map<TileKey, Collectible> getCollectibleMap() {
+    public static Map<Integer, Collectible> getCollectibleMap() {
         return EntityHandler.collectibleMap;
     }
 }

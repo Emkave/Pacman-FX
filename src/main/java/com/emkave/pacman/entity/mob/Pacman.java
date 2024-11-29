@@ -1,7 +1,9 @@
 package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.entity.collectible.Collectible;
+import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
+import com.emkave.pacman.handler.TileKey;
 import javafx.scene.input.KeyEvent;
 
 
@@ -39,15 +41,16 @@ public class Pacman extends Mob {
         try {
             char tileType = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
 
+            Collectible tile = MapHandler.getCollectible(MapHandler.getGameMap()[this.y][this.x], this.x, this.y);
+
+            if (tile != null) {
+                tile.effect();
+            }
+
             if (tileType != '1' && tileType != '2' && tileType != '3' && tileType != '4' && tileType != '7' && tileType != '8') {
                 this.x += this.d_x;
                 this.y += this.d_y;
                 this.moveToCell();
-                Collectible tile = MapHandler.getCollectible(tileType, this.x, this.y);
-
-                if (tile != null) {
-                    tile.effect();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,5 +67,10 @@ public class Pacman extends Mob {
 
     public static void increaseLives() {
         Pacman.lives++;
+    }
+
+
+    public static int getLives() {
+        return Pacman.lives;
     }
 }
