@@ -1,6 +1,7 @@
 package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.scene.Game;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -14,6 +15,16 @@ public class SoundHandler {
     private static MediaPlayer backgroundMusic;
 
 
+    public static void loadSounds() {
+        SoundHandler.loadSoundEffect("click", "Audio/click.mp3");
+        SoundHandler.loadSoundEffect("hover", "Audio/hover.wav");
+        SoundHandler.loadSoundEffect("eatdot", "Audio/eatingdot.mp3");
+        SoundHandler.loadSoundEffect("eatfruit", "Audio/eatfruit.wav");
+        SoundHandler.loadSoundEffect("extrapac", "Audio/extrapac.wav");
+        SoundHandler.loadSoundEffect("interm", "Audio/intermission.wav");
+    }
+
+
     public static void loadSoundEffect(String soundName, String filePath) {
         AudioClip audioClip = new AudioClip(Objects.requireNonNull(Application.class.getResource(filePath)).toExternalForm());
         SoundHandler.soundEffects.put(soundName, audioClip);
@@ -24,6 +35,23 @@ public class SoundHandler {
         if (!REGISTRY_KEYS.GET_ISMUTED() && SoundHandler.soundEffects.containsKey(soundName)) {
             SoundHandler.soundEffects.get(soundName).play();
         }
+    }
+
+
+    public static void playIntroMusic() {
+        if (REGISTRY_KEYS.GET_ISMUTED()) {
+            return;
+        }
+
+        Media introMedia = new Media(Objects.requireNonNull(Application.class.getResource("Audio/pacman_beginning.wav")).toExternalForm());
+        MediaPlayer introMusicPlayer = new MediaPlayer(introMedia);
+
+        introMusicPlayer.setOnEndOfMedia(() -> {
+            MapHandler.loadGameMobs();
+            Game.startGameLoop();
+        });
+
+        introMusicPlayer.play();
     }
 
 

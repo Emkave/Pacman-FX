@@ -1,5 +1,7 @@
 package com.emkave.pacman.entity.collectible;
 
+import com.emkave.pacman.handler.SoundHandler;
+
 public class Strawberry extends Collectible {
     Strawberry() {
         super('S');
@@ -7,6 +9,7 @@ public class Strawberry extends Collectible {
 
 
     @Override public void effect() {
-
+        super.deleteCollectible();
+        SoundHandler.playSoundEffect("eatfruit");
     }
 }

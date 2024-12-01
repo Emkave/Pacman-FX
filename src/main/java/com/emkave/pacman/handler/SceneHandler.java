@@ -32,7 +32,7 @@ public class SceneHandler {
     public static void loadGame() throws IOException {
         SceneHandler.frameStack.add(Game.load());
         SceneHandler.triggerChange();
-        Game.startGameLoop();
+        SoundHandler.playIntroMusic();
     }
 
 

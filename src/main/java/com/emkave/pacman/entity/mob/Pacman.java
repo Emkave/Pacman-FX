@@ -1,9 +1,7 @@
 package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.entity.collectible.Collectible;
-import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
-import com.emkave.pacman.handler.TileKey;
 import javafx.scene.input.KeyEvent;
 
 
@@ -12,9 +10,14 @@ public class Pacman extends Mob {
 
     public Pacman() {
         super("pacman");
-        this.x = 1;
-        this.y = 1;
+        this.x = 13;
+        this.y = 17;
+        this.d_y = -1;
+        this.d_x = 0;
     }
+
+
+    @Override public void autopilot() {}
 
 
     public void handleKeyPress(KeyEvent event) { // Pacman should be able to be controlled

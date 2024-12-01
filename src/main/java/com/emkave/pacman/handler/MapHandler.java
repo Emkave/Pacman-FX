@@ -3,7 +3,6 @@ package com.emkave.pacman.handler;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.mob.Mob;
-import eu.hansolo.tilesfx.Tile;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,23 +32,6 @@ public class MapHandler {
         MapHandler.gameMapPane.setTranslateY(150);
 
         MapHandler.loadGameTiles();
-        MapHandler.loadGameMobs();
-
-        ImageView bl1 = MapHandler.createTileImageView('v');
-        assert bl1 != null;
-        bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
-        bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
-        bl1.setTranslateX(-10);
-        bl1.setTranslateY(250);
-
-        ImageView bl2 = MapHandler.createTileImageView('v');
-        assert bl2 != null;
-        bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
-        bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
-        bl2.setTranslateX(430);
-        bl2.setTranslateY(250);
-
-        MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
     }
 
 
@@ -85,6 +67,23 @@ public class MapHandler {
             mob.getImageView().setTranslateY(mob.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
             MapHandler.gameMapPane.getChildren().add(mob.getImageView());
         }
+
+
+        ImageView bl1 = MapHandler.createTileImageView('v');
+        assert bl1 != null;
+        bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl1.setTranslateX(-10);
+        bl1.setTranslateY(250);
+
+        ImageView bl2 = MapHandler.createTileImageView('v');
+        assert bl2 != null;
+        bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl2.setTranslateX(430);
+        bl2.setTranslateY(250);
+
+        MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
     }
 
 

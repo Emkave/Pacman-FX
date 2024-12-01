@@ -9,6 +9,7 @@ public abstract class REGISTRY_KEYS {
     private static boolean IS_PAUSED = false;
     private static boolean IS_HOSTER = false;
     private static boolean IS_MUTED = false;
+    private static boolean IS_INTERMISSION = false;
     private static long LAST_GAME_SCORE = Long.parseLong(ConfigHandler.getScore());
     private static byte LAST_GAME_LEVEL = Byte.parseByte(ConfigHandler.getLevel());
     private static Map<Character, Function<Character, String>> CLASS_NAME_RESOLVER = new HashMap<>();
@@ -63,6 +64,10 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.IS_MUTED = __B;
     }
 
+    public static void SET_ISINTERMISSION(final boolean __B) {
+        REGISTRY_KEYS.IS_INTERMISSION = __B;
+    }
+
     public static boolean GET_ISCONTINUED() {
         return REGISTRY_KEYS.IS_CONTINUED;
     }
@@ -109,6 +114,10 @@ public abstract class REGISTRY_KEYS {
 
     public static boolean GET_ISMUTED() {
         return REGISTRY_KEYS.IS_MUTED;
+    }
+
+    public static boolean GET_ISINTERMISSION() {
+        return REGISTRY_KEYS.IS_INTERMISSION;
     }
 
     public static long GET_GAME_MOVE_INTERVAL() {

@@ -1,5 +1,10 @@
 package com.emkave.pacman.entity.collectible;
 
+import com.emkave.pacman.handler.EntityHandler;
+import com.emkave.pacman.handler.MapHandler;
+import com.emkave.pacman.handler.SoundHandler;
+import com.emkave.pacman.handler.TileKey;
+
 public class Pill extends Collectible {
     public Pill() {
         super('P');
@@ -7,6 +12,7 @@ public class Pill extends Collectible {
 
 
     @Override public void effect() {
-
+        super.deleteCollectible();
+        SoundHandler.playSoundEffect("interm");
     }
 }

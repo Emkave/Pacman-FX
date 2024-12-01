@@ -1,5 +1,7 @@
 package com.emkave.pacman.entity.collectible;
 
+import com.emkave.pacman.handler.SoundHandler;
+
 public class Key extends Collectible {
     public Key() {
         super('K');
@@ -7,6 +9,7 @@ public class Key extends Collectible {
 
 
     @Override public void effect() {
-
+        super.deleteCollectible();
+        SoundHandler.playSoundEffect("eatfruit");
     }
 }

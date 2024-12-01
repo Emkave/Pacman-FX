@@ -1,5 +1,6 @@
 package com.emkave.pacman;
 
+import com.almasb.fxgl.audio.Sound;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SceneHandler;
@@ -37,8 +38,7 @@ public class Application extends javafx.application.Application {
         Locale.setDefault(ConfigHandler.loadLanguageSettings());
         Application.localeResourceBundle = ResourceBundle.getBundle("com.emkave.pacman.Langs.messages", Locale.getDefault()); // Pick the words from langs messages to render
 
-        SoundHandler.loadSoundEffect("click", "Audio/click.mp3");
-        SoundHandler.loadSoundEffect("hover", "Audio/hover.wav");
+        SoundHandler.loadSounds();
 
         Image frameImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Images/appframe.png"))); // Load the image frame
         ImageView frameView = new ImageView(frameImage);
