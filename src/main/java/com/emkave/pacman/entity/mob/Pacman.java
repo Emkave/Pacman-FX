@@ -1,12 +1,20 @@
 package com.emkave.pacman.entity.mob;
 
+import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.handler.MapHandler;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+
+import java.util.Objects;
+import java.util.Stack;
 
 
 public class Pacman extends Mob {
-    private static byte lives = 3;
+    private Stack<ImageView> lives = new Stack<>();
 
     public Pacman() {
         super("pacman");
@@ -14,10 +22,13 @@ public class Pacman extends Mob {
         this.y = 17;
         this.d_y = -1;
         this.d_x = 0;
+        this.mobSymbol = '!';
     }
 
 
-    @Override public void autopilot() {}
+    @Override public void autopilot() {
+        this.render();
+    }
 
 
     public void handleKeyPress(KeyEvent event) { // Pacman should be able to be controlled
@@ -51,29 +62,39 @@ public class Pacman extends Mob {
             }
 
             if (tileType != '1' && tileType != '2' && tileType != '3' && tileType != '4' && tileType != '7' && tileType != '8') {
+                //this.clearFromMap();
                 this.x += this.d_x;
                 this.y += this.d_y;
+                //this.placeInMap();
                 this.moveToCell();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("Pacman pos: " + this.x + " " + this.y);
+        //System.out.println("Pacman pos: " + this.x + " " + this.y);
     }
 
 
-    public static void decreaseLives() {
-        Pacman.lives--;
+    public void decreaseLives() {
+        MapHandler.getGameMapPane().getChildren().remove(this.lives.peek());
+        this.lives.pop();
     }
 
 
-    public static void increaseLives() {
-        Pacman.lives++;
+    public void increaseLives() {
+        ImageView img = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Tiles/pacmanhp.png"))));
+        img.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() + 20);
+        img.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() + 20);
+        img.setTranslateY(600);
+        img.setTranslateX(this.getLives().size() * img.getFitWidth());
+
+        this.lives.add(img);
+        MapHandler.getGameMapPane().getChildren().add(img);
     }
 
 
-    public static int getLives() {
-        return Pacman.lives;
+    public Stack<ImageView> getLives() {
+        return this.lives;
     }
 }

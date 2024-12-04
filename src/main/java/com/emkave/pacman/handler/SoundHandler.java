@@ -39,12 +39,10 @@ public class SoundHandler {
 
 
     public static void playIntroMusic() {
-        if (REGISTRY_KEYS.GET_ISMUTED()) {
-            return;
-        }
-
         Media introMedia = new Media(Objects.requireNonNull(Application.class.getResource("Audio/pacman_beginning.wav")).toExternalForm());
         MediaPlayer introMusicPlayer = new MediaPlayer(introMedia);
+
+        introMusicPlayer.setVolume(REGISTRY_KEYS.GET_ISMUTED() ? 0.0 : 1.0);
 
         introMusicPlayer.setOnEndOfMedia(() -> {
             MapHandler.loadGameMobs();

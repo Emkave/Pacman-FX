@@ -29,8 +29,6 @@ public class Game {
 
         if (REGISTRY_KEYS.GET_ISCONTINUED()) {
             Game.score = REGISTRY_KEYS.GET_LAST_GAME_SCORE();
-        } else {
-            Game.score = 0;
         }
 
         Game.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + Game.score, 22);
@@ -38,7 +36,7 @@ public class Game {
         scoreLabel.setTranslateX(-130);
         scoreLabel.setFill(Color.WHITE);
 
-        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), 22);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_GAME_LEVEL(), 22);
         levelLabel.setTranslateY(-310);
         levelLabel.setTranslateX(110);
         levelLabel.setFill(Color.WHITE);
@@ -49,20 +47,25 @@ public class Game {
                 MapHandler.getGameMapPane(), Game.scoreLabel, levelLabel
         );
 
-        Application.window.getScene().setOnKeyPressed(Game::handleKeyPress);
 
         return uiLayer;
     }
 
 
     public static void startGameLoop() {
+        Application.window.getScene().setOnKeyPressed(Game::handleKeyPress);
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    if ((now - Game.lastEntityUpdateTime) >= 300000000) {
-                        MapHandler.renderEntities();
-                        Game.lastEntityUpdateTime = now;
-                        Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.score);
+                    if (REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() == 0) {
+                        this.stop();
+                        SceneHandler.loadNewLevelTransition();
+                    } else {
+                        if ((now - Game.lastEntityUpdateTime) >= 300000000) {
+                            MapHandler.renderEntities();
+                            Game.lastEntityUpdateTime = now;
+                            Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.score);
+                        }
                     }
                 }
             }
@@ -96,6 +99,7 @@ public class Game {
         UITextBasedButton exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
+            EntityHandler.stopAllThreads();
             EntityHandler.getMobs().clear();
             EntityHandler.getCollectibleMap().clear();
             REGISTRY_KEYS.SET_ISPAUSED(false);
@@ -130,6 +134,14 @@ public class Game {
                     Game.hidePauseMenu();
                     Game.resumeGame();
                 }
+                break;
+
+            case T:
+                //Pacman.decreaseLives();
+                break;
+
+            case Y:
+                //Pacman.increaseLives();
                 break;
 
             default:

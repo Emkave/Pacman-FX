@@ -1,7 +1,10 @@
 package com.emkave.pacman.handler;
 
+import com.emkave.pacman.Application;
+import javafx.scene.text.Font;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 public abstract class REGISTRY_KEYS {
@@ -13,6 +16,9 @@ public abstract class REGISTRY_KEYS {
     private static long LAST_GAME_SCORE = Long.parseLong(ConfigHandler.getScore());
     private static byte LAST_GAME_LEVEL = Byte.parseByte(ConfigHandler.getLevel());
     private static Map<Character, Function<Character, String>> CLASS_NAME_RESOLVER = new HashMap<>();
+    private static int GAME_DOTS = 0;
+    private static int GAME_LEVEL = 1;
+    private static Font UI_FONT;
 
     private static final double SCREEN_WIDTH = 672.0;
     private static final double SCREEN_HEIGHT = 864.0;
@@ -39,12 +45,33 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('W', TILE -> "Watermelon");
     }
 
+    public static void SET_UI_FONT(final String __font, final int __size) {
+        REGISTRY_KEYS.UI_FONT = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/"+__font+".ttf")), __size);
+    }
+
+    public static void SET_UI_FONT() {
+        String lang = Application.localeResourceBundle.getLocale().getLanguage();
+
+        if (Objects.equals(lang, "cz") || Objects.equals(lang, "en") || Objects.equals(lang, "ru")) {
+            REGISTRY_KEYS.SET_UI_FONT("arcade_font", 30);
+        } else if (Objects.equals(lang, "ko")) {
+            REGISTRY_KEYS.SET_UI_FONT("HBIOS-SYS", 35);
+        }
+    }
+
+    public static void SET_GAME_LEVEL(final int __level) {
+        REGISTRY_KEYS.GAME_LEVEL = __level;
+    }
+
+    public static void SET_AMOUNT_GAME_DOTS(final int __amount) {
+        REGISTRY_KEYS.GAME_DOTS = __amount;
+    }
 
     public static void SET_GAME_SCORE(final long __score) {
         REGISTRY_KEYS.LAST_GAME_SCORE = __score;
     }
 
-    public static void SET_GAME_LEVEL(final byte __level) {
+    public static void SET_LAST_GAME_LEVEL(final byte __level) {
         REGISTRY_KEYS.LAST_GAME_LEVEL = __level;
     }
 
@@ -134,5 +161,17 @@ public abstract class REGISTRY_KEYS {
 
     public static Map<Character, Function<Character, String>> GET_CLASS_NAME_RESOLVER() {
         return REGISTRY_KEYS.CLASS_NAME_RESOLVER;
+    }
+
+    public static int GET_AMOUNT_GAME_DOTS() {
+        return REGISTRY_KEYS.GAME_DOTS;
+    }
+
+    public static int GET_GAME_LEVEL() {
+        return REGISTRY_KEYS.GAME_LEVEL;
+    }
+
+    public static Font GET_UI_FONT() {
+        return REGISTRY_KEYS.UI_FONT;
     }
 }

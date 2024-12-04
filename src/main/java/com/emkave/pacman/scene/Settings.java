@@ -1,5 +1,6 @@
 package com.emkave.pacman.scene;
 
+import com.almasb.fxgl.ui.UI;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.Objects;
 
@@ -110,6 +112,7 @@ public class Settings {
 
 
     private static void reloadUI() {
+        REGISTRY_KEYS.SET_UI_FONT();
         SceneHandler.exitScene();
         SceneHandler.loadSettings();
     }

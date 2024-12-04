@@ -20,7 +20,11 @@ public class PlayRegime {
 
         UITextBasedButton newGameButton = new UITextBasedButton(Application.localeResourceBundle.getString("new_game"));
         newGameButton.setOnAction(event -> {
-
+            try {
+                SceneHandler.loadGame();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         UILabel newGameWarningLabel = new UILabel(Application.localeResourceBundle.getString("new_game_warning"), 10);

@@ -1,6 +1,7 @@
 package com.emkave.pacman.ui;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SoundHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -31,9 +32,8 @@ public class UITextBasedButton extends Button {
 
 
     public void setButtonText(String text) {
-        Font arcadeFont = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/arcade_font.ttf")), 30);
         this.buttonText = new Text(text);
-        this.buttonText.setFont(arcadeFont);
+        this.buttonText.setFont(REGISTRY_KEYS.GET_UI_FONT());
         this.buttonText.setFill(Color.BLUE);
         this.buttonText.setStroke(null);
         this.buttonText.setTranslateX(-20);

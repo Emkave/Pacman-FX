@@ -7,6 +7,7 @@ import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.handler.SoundHandler;
 import com.emkave.pacman.scene.MainMenu;
 import javafx.scene.Scene;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -39,15 +40,15 @@ public class Application extends javafx.application.Application {
         Application.localeResourceBundle = ResourceBundle.getBundle("com.emkave.pacman.Langs.messages", Locale.getDefault()); // Pick the words from langs messages to render
 
         SoundHandler.loadSounds();
+        REGISTRY_KEYS.SET_UI_FONT();
 
-        Image frameImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("Images/appframe.png"))); // Load the image frame
-        ImageView frameView = new ImageView(frameImage);
+        ImageView frameView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("Images/appframe.png")))); // Load the image frame
         frameView.setFitWidth(REGISTRY_KEYS.GET_SCREEN_WIDTH());
         frameView.setFitHeight(REGISTRY_KEYS.GET_SCREEN_HEIGHT());
         frameView.fitWidthProperty().bind(frameLayerPane.widthProperty());
         frameView.fitHeightProperty().bind(frameLayerPane.heightProperty());
 
-        Application.frameLayerPane.getChildren().add(frameView); // Place frame of the application
+        Application.frameLayerPane.getChildren().addAll(frameView); // Place frame of the application
 
         Application.frameLayerPane.setOnMousePressed(event -> { // If you press left mouse button, get the coordinates of the press
             this.xOffset = event.getSceneX();

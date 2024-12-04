@@ -2,7 +2,9 @@ package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
+import com.emkave.pacman.entity.collectible.Dot;
 import com.emkave.pacman.entity.mob.Mob;
+import com.emkave.pacman.entity.mob.Pacman;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +20,6 @@ public class MapHandler {
     private static Map<String, ImageView> tileImageMap = new HashMap<>();
     private static StackPane gameMapPane;
     private static char[][] map;
-
 
 
     public static void loadGameMap() throws IOException {
@@ -37,10 +38,9 @@ public class MapHandler {
 
     public static void renderEntities() {
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
-        final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
-        for (Mob mob : mobs) {
-            mob.render();
+        if (!EntityHandler.getMobs().isEmpty()) {
+            EntityHandler.getMobs().getFirst().render();
         }
 
         for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
@@ -68,22 +68,21 @@ public class MapHandler {
             MapHandler.gameMapPane.getChildren().add(mob.getImageView());
         }
 
+        MapHandler.loadTheRest();
+    }
 
-        ImageView bl1 = MapHandler.createTileImageView('v');
-        assert bl1 != null;
-        bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
-        bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
-        bl1.setTranslateX(-10);
-        bl1.setTranslateY(250);
 
-        ImageView bl2 = MapHandler.createTileImageView('v');
-        assert bl2 != null;
-        bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
-        bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
-        bl2.setTranslateX(430);
-        bl2.setTranslateY(250);
+    public static void unloadEntities() {
+        final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
+        final LinkedList<Mob> mobs = EntityHandler.getMobs();
 
-        MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
+        for (Mob mob : mobs) {
+            MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
+        }
+
+        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
+            MapHandler.getGameMapPane().getChildren().remove(entry.getValue().getImageView());
+        }
     }
 
 
@@ -147,6 +146,11 @@ public class MapHandler {
 
                     try {
                         Collectible instance = (Collectible)Class.forName(colName).getDeclaredConstructor().newInstance();
+
+                        if (instance instanceof Dot) {
+                            REGISTRY_KEYS.SET_AMOUNT_GAME_DOTS(REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() + 1);
+                        }
+
                         instance.setX(column);
                         instance.setY(row);
 
@@ -177,5 +181,28 @@ public class MapHandler {
     public static Collectible getCollectible(char tileType, int x, int y) {
         TileKey tileKey = new TileKey(tileType, x, y);
         return EntityHandler.getCollectibleMap().get(tileKey.hashCode());
+    }
+
+
+    public static void loadTheRest() {
+        ImageView bl1 = MapHandler.createTileImageView('v');
+        assert bl1 != null;
+        bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl1.setTranslateX(-10);
+        bl1.setTranslateY(250);
+
+        ImageView bl2 = MapHandler.createTileImageView('v');
+        assert bl2 != null;
+        bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
+        bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
+        bl2.setTranslateX(430);
+        bl2.setTranslateY(250);
+
+        MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
+
+        for (byte i=0; i<3; i++) {
+            ((Pacman)EntityHandler.getMobs().getFirst()).increaseLives();
+        }
     }
 }
