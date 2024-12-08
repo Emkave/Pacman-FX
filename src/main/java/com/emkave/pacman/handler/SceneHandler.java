@@ -6,6 +6,8 @@ import com.emkave.pacman.entity.mob.Mob;
 import com.emkave.pacman.scene.*;
 import com.emkave.pacman.ui.UILabel;
 import javafx.animation.PauseTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,6 +15,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 
 public class SceneHandler {
@@ -62,7 +65,7 @@ public class SceneHandler {
     }
 
 
-    public static void loadNewLevelTransition() {
+    public static void loadLevelTransition() {
         REGISTRY_KEYS.SET_ISPAUSED(true);
         Application.window.getScene().setOnKeyPressed(null);
 
@@ -71,7 +74,7 @@ public class SceneHandler {
             MapHandler.getGameMapPane().getChildren().remove(entry.getValue().getImageView());
         }
 
-        for (Mob mob : EntityHandler.getMobs()) {
+        for (Mob mob : EntityHandler.getMobs().values()) {
             MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
         }
         EntityHandler.getMobs().clear();
@@ -79,10 +82,9 @@ public class SceneHandler {
 
         SceneHandler.frameStack.pop();
 
-        REGISTRY_KEYS.SET_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL()+1);
-
         PauseTransition preTransitionDelay = new PauseTransition(Duration.seconds(3));
         preTransitionDelay.setOnFinished(event -> {
+            MapHandler.getGameMapPane().getChildren().clear();
             StackPane transitionStage = new StackPane();
             transitionStage.setStyle("-fx-background-color: black;");
             transitionStage.setMaxWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
@@ -111,6 +113,86 @@ public class SceneHandler {
         });
 
         preTransitionDelay.play();
+    }
+
+
+    public static void loadDeathScene(final int x, final int y) {
+        REGISTRY_KEYS.SET_ISPAUSED(true);
+        Application.window.getScene().setOnKeyPressed(null);
+
+        EntityHandler.stopAllThreads();
+        for (Map.Entry<Integer, Collectible> entry : EntityHandler.getCollectibleMap().entrySet()) {
+            MapHandler.getGameMapPane().getChildren().remove(entry.getValue().getImageView());
+        }
+
+        for (Mob mob : EntityHandler.getMobs().values()) {
+            MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
+        }
+
+        EntityHandler.getMobs().clear();
+        EntityHandler.getCollectibleMap().clear();
+
+        ImageView deathAnimation = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/pacdeath.gif"))));
+        deathAnimation.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+        deathAnimation.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+        deathAnimation.setTranslateX(x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+        deathAnimation.setTranslateY(y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+
+        MapHandler.getGameMapPane().getChildren().add(deathAnimation);
+
+        PauseTransition deathAnimationDuration = new PauseTransition(Duration.seconds(3));
+        deathAnimationDuration.setOnFinished(event -> {
+            MapHandler.getGameMapPane().getChildren().remove(deathAnimation);
+            REGISTRY_KEYS.SET_PACLIVES(REGISTRY_KEYS.GET_PACLIVES()-1);
+            REGISTRY_KEYS.SET_ISPAUSED(false);
+
+            if (REGISTRY_KEYS.GET_PACLIVES() == 0) {
+                REGISTRY_KEYS.SET_LAST_GAME_LEVEL(1);
+                SceneHandler.loadEndOfGameScene();
+            } else {
+                SceneHandler.loadLevelTransition();
+            }
+        });
+
+        SoundHandler.playSoundEffect("death");
+        deathAnimationDuration.play();
+    }
+
+
+    public static void loadEndOfGameScene() {
+        REGISTRY_KEYS.SET_ISPAUSED(true);
+        Application.window.getScene().setOnKeyPressed(null);
+
+        StackPane gameOverStage = new StackPane();
+        gameOverStage.setStyle("-fx-background-color: black;");
+        gameOverStage.setMaxWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
+        gameOverStage.setMaxHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
+
+        UILabel gameOverLabel = new UILabel(Application.localeResourceBundle.getString("game_over"), 40);
+        gameOverLabel.setFill(Color.WHITE);
+        gameOverLabel.setTranslateY(-50);
+
+        UILabel scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + REGISTRY_KEYS.GET_LAST_GAME_SCORE(), 20);
+        scoreLabel.setFill(Color.WHITE);
+        scoreLabel.setTranslateY(30);
+
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), 20);
+        levelLabel.setFill(Color.WHITE);
+        levelLabel.setTranslateY(70);
+
+        gameOverStage.getChildren().addAll(gameOverLabel, scoreLabel, levelLabel);
+        SceneHandler.frameStack.add(gameOverStage);
+        SceneHandler.triggerChange();
+
+        DatabaseHandler.saveFinalResult(REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), REGISTRY_KEYS.GET_LAST_GAME_SCORE());
+
+        PauseTransition gameOverPause = new PauseTransition(Duration.seconds(5));
+        gameOverPause.setOnFinished(event -> {
+            SceneHandler.frameStack.clear();
+            SceneHandler.loadMainMenu();
+        });
+
+        gameOverPause.play();
     }
 
 

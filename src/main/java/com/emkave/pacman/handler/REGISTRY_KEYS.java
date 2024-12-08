@@ -14,11 +14,12 @@ public abstract class REGISTRY_KEYS {
     private static boolean IS_MUTED = false;
     private static boolean IS_INTERMISSION = false;
     private static long LAST_GAME_SCORE = Long.parseLong(ConfigHandler.getScore());
-    private static byte LAST_GAME_LEVEL = Byte.parseByte(ConfigHandler.getLevel());
+    private static int LAST_GAME_LEVEL = Integer.parseInt(ConfigHandler.getLevel());
     private static Map<Character, Function<Character, String>> CLASS_NAME_RESOLVER = new HashMap<>();
     private static int GAME_DOTS = 0;
     private static int GAME_LEVEL = 1;
     private static Font UI_FONT;
+    private static int PAC_LIVES = 3;
 
     private static final double SCREEN_WIDTH = 672.0;
     private static final double SCREEN_HEIGHT = 864.0;
@@ -45,6 +46,10 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('W', TILE -> "Watermelon");
     }
 
+    public static void SET_PACLIVES(final int __l) {
+        REGISTRY_KEYS.PAC_LIVES = __l;
+    }
+
     public static void SET_UI_FONT(final String __font, final int __size) {
         REGISTRY_KEYS.UI_FONT = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/"+__font+".ttf")), __size);
     }
@@ -67,11 +72,11 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.GAME_DOTS = __amount;
     }
 
-    public static void SET_GAME_SCORE(final long __score) {
+    public static void SET_LAST_GAME_SCORE(final long __score) {
         REGISTRY_KEYS.LAST_GAME_SCORE = __score;
     }
 
-    public static void SET_LAST_GAME_LEVEL(final byte __level) {
+    public static void SET_LAST_GAME_LEVEL(final int __level) {
         REGISTRY_KEYS.LAST_GAME_LEVEL = __level;
     }
 
@@ -94,6 +99,7 @@ public abstract class REGISTRY_KEYS {
     public static void SET_ISINTERMISSION(final boolean __B) {
         REGISTRY_KEYS.IS_INTERMISSION = __B;
     }
+
 
     public static boolean GET_ISCONTINUED() {
         return REGISTRY_KEYS.IS_CONTINUED;
@@ -151,7 +157,7 @@ public abstract class REGISTRY_KEYS {
         return REGISTRY_KEYS.GAME_MOVE_INTERVAL;
     }
 
-    public static byte GET_LAST_GAME_LEVEL() {
+    public static int GET_LAST_GAME_LEVEL() {
         return REGISTRY_KEYS.LAST_GAME_LEVEL;
     }
 
@@ -173,5 +179,9 @@ public abstract class REGISTRY_KEYS {
 
     public static Font GET_UI_FONT() {
         return REGISTRY_KEYS.UI_FONT;
+    }
+
+    public static int GET_PACLIVES() {
+        return REGISTRY_KEYS.PAC_LIVES;
     }
 }

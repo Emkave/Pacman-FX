@@ -22,6 +22,7 @@ public class SoundHandler {
         SoundHandler.loadSoundEffect("eatfruit", "Audio/eatfruit.wav");
         SoundHandler.loadSoundEffect("extrapac", "Audio/extrapac.wav");
         SoundHandler.loadSoundEffect("interm", "Audio/intermission.wav");
+        SoundHandler.loadSoundEffect("death", "Audio/pacdeath.wav");
     }
 
 

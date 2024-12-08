@@ -40,7 +40,7 @@ public class MapHandler {
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
 
         if (!EntityHandler.getMobs().isEmpty()) {
-            EntityHandler.getMobs().getFirst().render();
+            EntityHandler.getMobs().get('!').render();
         }
 
         for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
@@ -53,7 +53,7 @@ public class MapHandler {
         EntityHandler.loadMobs();
 
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
-        final LinkedList<Mob> mobs = EntityHandler.getMobs();
+        final Map<Character, Mob> mobs = EntityHandler.getMobs();
 
         for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
             Collectible collectible = entry.getValue();
@@ -62,7 +62,7 @@ public class MapHandler {
             MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
         }
 
-        for (Mob mob : mobs) {
+        for (Mob mob : mobs.values()) {
             mob.getImageView().setTranslateX(mob.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
             mob.getImageView().setTranslateY(mob.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
             MapHandler.gameMapPane.getChildren().add(mob.getImageView());
@@ -74,9 +74,9 @@ public class MapHandler {
 
     public static void unloadEntities() {
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
-        final LinkedList<Mob> mobs = EntityHandler.getMobs();
+        final Map<Character, Mob> mobs = EntityHandler.getMobs();
 
-        for (Mob mob : mobs) {
+        for (Mob mob : mobs.values()) {
             MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
         }
 
@@ -201,8 +201,8 @@ public class MapHandler {
 
         MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
 
-        for (byte i=0; i<3; i++) {
-            ((Pacman)EntityHandler.getMobs().getFirst()).increaseLives();
+        for (int i=0; i<REGISTRY_KEYS.GET_PACLIVES(); i++) {
+            ((Pacman)EntityHandler.getMobs().get('!')).increaseLives();
         }
     }
 }

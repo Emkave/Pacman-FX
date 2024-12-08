@@ -1,13 +1,10 @@
 package com.emkave.pacman.ui;
 
-import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import java.util.Objects;
 
 public class UILabel extends Text {
 

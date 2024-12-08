@@ -30,6 +30,20 @@ public abstract class Mob extends Entity { // Every mob is an entity
     }
 
 
+    protected void placeInMap(final int x, final int y) {
+        synchronized (MapHandler.getGameMap()) {
+            MapHandler.getGameMap()[y][x] = this.mobSymbol;
+        }
+    }
+
+
+    protected void clearFromMap() {
+        synchronized (MapHandler.getGameMap()) {
+            MapHandler.getGameMap()[this.y][this.x] = this.stepOnTile;
+        }
+    }
+
+
     protected void moveToCell() {
         boolean wrapped = false;
 

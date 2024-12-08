@@ -15,6 +15,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+
 import java.io.IOException;
 
 
@@ -47,7 +49,6 @@ public class Game {
                 MapHandler.getGameMapPane(), Game.scoreLabel, levelLabel
         );
 
-
         return uiLayer;
     }
 
@@ -58,8 +59,9 @@ public class Game {
             @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     if (REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() == 0) {
+                        REGISTRY_KEYS.SET_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL()+1);
                         this.stop();
-                        SceneHandler.loadNewLevelTransition();
+                        SceneHandler.loadLevelTransition();
                     } else {
                         if ((now - Game.lastEntityUpdateTime) >= 300000000) {
                             MapHandler.renderEntities();
@@ -107,7 +109,13 @@ public class Game {
         });
         exitButton.setTranslateY(20);
 
-        pauseMenu.getChildren().addAll(pauseLabel, resumeButton, exitButton);
+        UILabel warningLabel = new UILabel(Application.localeResourceBundle.getString("pause_exit_warning"), 10);
+        warningLabel.setFill(Color.RED);
+        warningLabel.setTranslateY(30);
+        warningLabel.setTextAlignment(TextAlignment.CENTER);
+        warningLabel.setLineSpacing(4.0);
+
+        pauseMenu.getChildren().addAll(pauseLabel, resumeButton, exitButton, warningLabel);
         SceneHandler.getFrameStack().peek().getChildren().add(pauseMenu);
     }
 
@@ -123,7 +131,7 @@ public class Game {
         switch (code) {
             case W: case A:
             case S: case D:
-                ((Pacman)EntityHandler.getMobs().getFirst()).handleKeyPress(event);
+                ((Pacman)EntityHandler.getMobs().get('!')).handleKeyPress(event);
                 break;
 
             case ESCAPE:
