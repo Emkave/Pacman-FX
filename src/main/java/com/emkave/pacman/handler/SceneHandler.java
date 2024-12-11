@@ -40,7 +40,7 @@ public class SceneHandler {
     }
 
 
-    public static void loadGame() throws IOException {
+    public static void loadGame() {
         REGISTRY_KEYS.SET_ISPAUSED(false);
         SceneHandler.frameStack.add(Game.load());
         SceneHandler.triggerChange();
@@ -83,7 +83,7 @@ public class SceneHandler {
         SceneHandler.frameStack.pop();
 
         PauseTransition preTransitionDelay = new PauseTransition(Duration.seconds(3));
-        preTransitionDelay.setOnFinished(event -> {
+        preTransitionDelay.setOnFinished(_ -> {
             MapHandler.getGameMapPane().getChildren().clear();
             StackPane transitionStage = new StackPane();
             transitionStage.setStyle("-fx-background-color: black;");
@@ -104,8 +104,8 @@ public class SceneHandler {
 
                 try {
                     SceneHandler.loadGame();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new RuntimeException("SceneHandler::loadLevelTransition() -> " + e.getMessage());
                 }
             });
 
@@ -189,7 +189,11 @@ public class SceneHandler {
         PauseTransition gameOverPause = new PauseTransition(Duration.seconds(5));
         gameOverPause.setOnFinished(event -> {
             SceneHandler.frameStack.clear();
-            SceneHandler.loadMainMenu();
+            try {
+                SceneHandler.loadMainMenu();
+            } catch (Exception e) {
+                throw new RuntimeException("SceneHandler::loadEndOfGameScene() -> " + e.getMessage());
+            }
         });
 
         gameOverPause.play();

@@ -54,42 +54,27 @@ public class Pacman extends Mob {
 
     @Override public void render() {
         try {
-            if (this.stepOnTile != '0') {
-                Collectible tile = MapHandler.getCollectible(this.stepOnTile, this.x, this.y);
+            Collectible collectible = EntityHandler.getCollectible(this.x, this.y);
 
-                if (tile != null) {
-                    tile.effect();
-                    this.stepOnTile = '0';
-                }
+            if (collectible != null) {
+                collectible.effect();
+            }
 
-                Mob mob = EntityHandler.getMobs().get(this.stepOnTile);
-
-                if (mob != null) {
-                    SceneHandler.loadDeathScene(this.x, this.y);
-                    return;
-                }
+            if (this.caughtByGhost()) {
+                SceneHandler.loadDeathScene(this.x, this.y);
+                return;
             }
 
             char nextTile = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
             if (nextTile != '1' && nextTile != '2' && nextTile != '3' && nextTile != '4' && nextTile != '7' && nextTile != '8') {
-                this.clearFromMap();
-                this.stepOnTile = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
-                this.placeInMap(this.x + this.d_x, this.y + this.d_y);
                 this.x += this.d_x;
                 this.y += this.d_y;
                 this.moveToCell();
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Pacman::render() -> " + e.getMessage());
         }
-    }
-
-
-    public void decreaseLives() {
-        MapHandler.getGameMapPane().getChildren().remove(this.lives.peek());
-        this.lives.pop();
-        REGISTRY_KEYS.SET_PACLIVES(REGISTRY_KEYS.GET_PACLIVES()-1);
     }
 
 
@@ -110,12 +95,13 @@ public class Pacman extends Mob {
     }
 
 
-    public void resetPosition() {
-        this.clearFromMap();
-        this.x = 13;
-        this.y = 17;
-        this.stepOnTile = '0';
-        this.placeInMap(this.x, this.y);
-        this.moveToCell();
+    private boolean caughtByGhost() {
+        for (Mob mob : EntityHandler.getMobs().values()) {
+            if (!(mob instanceof Pacman) && this.x == mob.getX() && this.y == mob.getY()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

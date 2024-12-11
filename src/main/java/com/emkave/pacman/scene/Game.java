@@ -2,10 +2,7 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.mob.Pacman;
-import com.emkave.pacman.handler.EntityHandler;
-import com.emkave.pacman.handler.MapHandler;
-import com.emkave.pacman.handler.REGISTRY_KEYS;
-import com.emkave.pacman.handler.SceneHandler;
+import com.emkave.pacman.handler.*;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.animation.AnimationTimer;
@@ -26,7 +23,7 @@ public class Game {
     private static UILabel scoreLabel;
 
 
-    public static StackPane load() throws IOException {
+    public static StackPane load() {
         StackPane uiLayer = new StackPane();
 
         if (REGISTRY_KEYS.GET_ISCONTINUED()) {
@@ -64,6 +61,7 @@ public class Game {
                         SceneHandler.loadLevelTransition();
                     } else {
                         if ((now - Game.lastEntityUpdateTime) >= 300000000) {
+                            FruitHandler.placeFruit();
                             MapHandler.renderEntities();
                             Game.lastEntityUpdateTime = now;
                             Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.score);
@@ -102,6 +100,18 @@ public class Game {
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
             EntityHandler.stopAllThreads();
+            try {
+                JSONHandler.saveGameState(
+                        Game.score,
+                        REGISTRY_KEYS.GET_PACLIVES(),
+                        REGISTRY_KEYS.GET_GAME_LEVEL(),
+                        ConfigHandler.getUsername(),
+                        EntityHandler.getCollectibleMap(),
+                        EntityHandler.getMobs()
+                );
+            } catch (Exception e) {
+                throw new RuntimeException("Game::showPauseMenu() -> " + e.getMessage());
+            }
             EntityHandler.getMobs().clear();
             EntityHandler.getCollectibleMap().clear();
             REGISTRY_KEYS.SET_ISPAUSED(false);

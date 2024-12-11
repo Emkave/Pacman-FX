@@ -6,6 +6,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -46,7 +47,11 @@ public class SoundHandler {
         introMusicPlayer.setVolume(REGISTRY_KEYS.GET_ISMUTED() ? 0.0 : 1.0);
 
         introMusicPlayer.setOnEndOfMedia(() -> {
-            MapHandler.loadGameMobs();
+            try {
+                MapHandler.loadGameEntities();
+            } catch (Exception e) {
+                throw new RuntimeException("SoundHandler::playIntroMusic() -> " + e.getMessage());
+            }
             Game.startGameLoop();
         });
 

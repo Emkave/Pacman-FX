@@ -2,6 +2,7 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
@@ -21,9 +22,12 @@ public class PlayRegime {
         UITextBasedButton newGameButton = new UITextBasedButton(Application.localeResourceBundle.getString("new_game"));
         newGameButton.setOnAction(event -> {
             try {
+                REGISTRY_KEYS.SET_LAST_GAME_LEVEL(1);
+                REGISTRY_KEYS.SET_LAST_GAME_SCORE(0);
+                REGISTRY_KEYS.SET_PACLIVES(3);
                 SceneHandler.loadGame();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException("PlayRegime::load() -> " + e.getMessage());
             }
         });
 
@@ -35,8 +39,8 @@ public class PlayRegime {
         continueButton.setOnAction(event -> {
             try {
                 SceneHandler.loadGame();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException("PlayRegime::load() -> " + e.getMessage());
             }
         });
         continueButton.setTranslateY(80);

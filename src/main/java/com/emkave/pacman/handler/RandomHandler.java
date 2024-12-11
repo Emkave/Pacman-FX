@@ -6,17 +6,21 @@ public class RandomHandler {
     private static final SecureRandom secureRandom = new SecureRandom();
 
 
-    public static double getRandom() {
-        long entropy = 0;
+    public static int generateEntropyBasedRandomLong() {
+        int entropy = 0;
 
         for (int i=0; i<64; i++) {
             long t1 = System.nanoTime();
-            while (System.nanoTime() == t1) {
-                long t2 = System.nanoTime();
-                entropy ^= t2 - t1;
-            }
+            while (System.nanoTime() == t1);
+            long t2 = System.nanoTime();
+            entropy ^= (int)((t2 - t1) * secureRandom.nextInt());
         }
 
-        return 1.00 + Math.abs(entropy % 100000) / 100.0;
+        return Math.abs(entropy);
+    }
+
+
+    public static int getRandomInt() {
+        return RandomHandler.generateEntropyBasedRandomLong() % 100001;
     }
 }

@@ -17,12 +17,11 @@ import java.util.*;
 
 
 public class MapHandler {
-    private static Map<String, ImageView> tileImageMap = new HashMap<>();
     private static StackPane gameMapPane;
     private static char[][] map;
 
 
-    public static void loadGameMap() throws IOException {
+    public static void loadGameMap() {
         MapHandler.map = MapHandler.loadMapFile();
 
         MapHandler.gameMapPane = new StackPane();
@@ -49,7 +48,7 @@ public class MapHandler {
     }
 
 
-    public static void loadGameMobs() {
+    public static void loadGameEntities() throws IOException {
         EntityHandler.loadMobs();
 
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
@@ -101,18 +100,17 @@ public class MapHandler {
             InputStream imageStream = Application.class.getResourceAsStream("Images/Tiles/"+tileType+".png");
 
             if (imageStream == null) {
-                throw new IllegalArgumentException("MapHandler::createTileImage() -> Tile image not found: " + tileType);
+                throw new RuntimeException("MapHandler::createTileImage() -> Tile image not found: " + tileType);
             }
 
             return new ImageView(new Image(imageStream));
         } catch (Exception e) {
-            System.err.println("MapHandler::createTileImageView() -> Error loading tile image for type: " + tileType);
-            return null;
+            throw new RuntimeException("MapHandler::createTileImageView() -> " + e.getMessage());
         }
     }
 
 
-    private static char[][] loadMapFile() throws IOException {
+    private static char[][] loadMapFile() {
         char[][] map = new char[(int)REGISTRY_KEYS.GET_MAP_HEIGHT()][(int)REGISTRY_KEYS.GET_MAP_WIDTH()];
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Application.class.getResourceAsStream("Map/map.txt"))))) {
@@ -126,18 +124,22 @@ public class MapHandler {
 
                 row++;
             }
+        } catch (Exception e) {
+            throw new RuntimeException("MapHandler::loadMapFile() -> " + e.getMessage());
         }
 
         return map;
     }
 
 
+    private static int t = 0;
+
     private static void loadGameTiles() {
         for (int row = 0; row < REGISTRY_KEYS.GET_MAP_HEIGHT(); row++) {
             for (int column = 0; column < REGISTRY_KEYS.GET_MAP_WIDTH(); column++) {
                 char tileType = MapHandler.map[row][column];
 
-                if (tileType == '0') {
+                if (tileType == '0' || tileType == 'X') {
                     continue;
                 }
 
@@ -154,46 +156,39 @@ public class MapHandler {
                         instance.setX(column);
                         instance.setY(row);
 
-                        TileKey key = new TileKey(tileType, column, row);
+                        TileKey key = new TileKey(column, row);
                         EntityHandler.getCollectibleMap().put(key.hashCode(), instance);
                     } catch (Exception e) {
-                        System.err.println("Failed to create instance for tileType '" + tileType + "': " + e.getMessage());
+                        throw new RuntimeException("MapHandler::loadGameTiles() -> ", e);
                     }
                 } else {
                     ImageView tileImage = MapHandler.createTileImageView(tileType);
 
-                    if (tileImage != null) {
-                        tileImage.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
-                        tileImage.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
-                        tileImage.setTranslateX(column * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
-                        tileImage.setTranslateY(row * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
-                        MapHandler.gameMapPane.getChildren().add(tileImage);
-
-                        String key = row + "," + column;
-                        MapHandler.tileImageMap.put(key, tileImage);
-                    }
+                    tileImage.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+                    tileImage.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+                    tileImage.setTranslateX(column * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
+                    tileImage.setTranslateY(row * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
+                    MapHandler.gameMapPane.getChildren().add(tileImage);
                 }
             }
         }
     }
 
 
-    public static Collectible getCollectible(char tileType, int x, int y) {
-        TileKey tileKey = new TileKey(tileType, x, y);
+    public static Collectible getCollectible(int x, int y) {
+        TileKey tileKey = new TileKey(x, y);
         return EntityHandler.getCollectibleMap().get(tileKey.hashCode());
     }
 
 
     public static void loadTheRest() {
         ImageView bl1 = MapHandler.createTileImageView('v');
-        assert bl1 != null;
         bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
         bl1.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
         bl1.setTranslateX(-10);
         bl1.setTranslateY(250);
 
         ImageView bl2 = MapHandler.createTileImageView('v');
-        assert bl2 != null;
         bl2.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
         bl2.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()*3);
         bl2.setTranslateX(430);

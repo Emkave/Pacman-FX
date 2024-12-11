@@ -19,9 +19,10 @@ public abstract class Collectible extends Entity { // Every collectible is an en
 
 
     protected void deleteCollectible() {
-        TileKey tk = new TileKey(this.colType, this.x, this.y);
+        TileKey tk = new TileKey(this.x, this.y);
         EntityHandler.getCollectibleMap().remove(tk.hashCode());
         MapHandler.getGameMapPane().getChildren().remove(this.getImageView());
+        MapHandler.getGameMap()[this.y][this.x] = '0';
     }
 
 
@@ -31,5 +32,10 @@ public abstract class Collectible extends Entity { // Every collectible is an en
 
     @Override public void render() {
 
+    }
+
+
+    public char getColType() {
+        return this.colType;
     }
 }

@@ -14,5 +14,6 @@ public class Pill extends Collectible {
     @Override public void effect() {
         super.deleteCollectible();
         SoundHandler.playSoundEffect("interm");
+        MapHandler.getGameMap()[this.y][this.x] = '0';
     }
 }

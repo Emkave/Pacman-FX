@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
 import java.util.Objects;
 
 
@@ -64,9 +63,17 @@ public class Settings {
         UIImageBasedButton rusLangButton = new UIImageBasedButton("Images/Flags/sov.png");
         rusLangButton.setOnAction(event -> {
             rusLangButton.getStyleClass().add("rus-lang-options-pressed");
-            ConfigHandler.setLanguageSettings("ru", "RU");
+            try {
+                ConfigHandler.setLanguageSettings("ru", "RU");
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
             Settings.reloadUI();
-            MainMenu.reloadUI();
+            try {
+                MainMenu.reloadUI();
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
         });
         rusLangButton.setTranslateX(-169);
         rusLangButton.setButtonSize(130, 130);
@@ -74,18 +81,34 @@ public class Settings {
         UIImageBasedButton engLangButton = new UIImageBasedButton("Images/Flags/eng.png");
         engLangButton.setOnAction(event -> {
             engLangButton.getStyleClass().add("eng-lang-options-pressed");
-            ConfigHandler.setLanguageSettings("en", "EN");
+            try {
+                ConfigHandler.setLanguageSettings("en", "EN");
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
             Settings.reloadUI();
-            MainMenu.reloadUI();
+            try {
+                MainMenu.reloadUI();
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
         });
         engLangButton.setButtonSize(130, 130);
 
         UIImageBasedButton czeLangButton = new UIImageBasedButton("Images/Flags/cze.png");
         czeLangButton.setOnAction(event -> {
             czeLangButton.getStyleClass().add("cze-lang-options-pressed");
-            ConfigHandler.setLanguageSettings("cz", "CZ");
+            try {
+                ConfigHandler.setLanguageSettings("cz", "CZ");
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
             Settings.reloadUI();
-            MainMenu.reloadUI();
+            try {
+                MainMenu.reloadUI();
+            } catch (Exception e) {
+                throw new RuntimeException("Settings::load() -> " + e.getMessage());
+            }
         });
         czeLangButton.setTranslateX(169);
         czeLangButton.setButtonSize(130, 130);

@@ -2,6 +2,8 @@ package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
 import javafx.scene.text.Font;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -74,6 +76,10 @@ public abstract class REGISTRY_KEYS {
 
     public static void SET_LAST_GAME_SCORE(final long __score) {
         REGISTRY_KEYS.LAST_GAME_SCORE = __score;
+    }
+
+    public static void SET_ISCONTINUED(final boolean __b) {
+        REGISTRY_KEYS.IS_CONTINUED = __b;
     }
 
     public static void SET_LAST_GAME_LEVEL(final int __level) {

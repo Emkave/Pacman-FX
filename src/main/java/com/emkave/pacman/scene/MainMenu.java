@@ -10,11 +10,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class MainMenu {
     private static UILabel scoreLabel;
     private static UITextBasedButton playButton, optionsButton, statsButton, exitButton;
+
 
     public static StackPane load() {
         StackPane uiLayer = new StackPane();
@@ -22,7 +24,11 @@ public class MainMenu {
         MainMenu.playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
-            SceneHandler.loadGameRegimes();
+            try {
+                SceneHandler.loadGameRegimes();
+            } catch (Exception e) {
+                throw new RuntimeException("MainMenu::load() -> " + e.getMessage());
+            }
         });
         playButton.setTranslateY(90);
 

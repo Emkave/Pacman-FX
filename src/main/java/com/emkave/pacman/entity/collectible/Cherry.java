@@ -1,9 +1,10 @@
 package com.emkave.pacman.entity.collectible;
 
 import com.emkave.pacman.handler.SoundHandler;
+import com.emkave.pacman.scene.Game;
 
 public class Cherry extends Collectible {
-    Cherry() {
+    public Cherry() {
         super('C');
     }
 
@@ -11,5 +12,6 @@ public class Cherry extends Collectible {
     @Override public void effect() {
         super.deleteCollectible();
         SoundHandler.playSoundEffect("eatfruit");
+        Game.addScore(100);
     }
 }
