@@ -48,7 +48,7 @@ public class MapHandler {
     }
 
 
-    public static void loadGameEntities() throws IOException {
+    public static void loadGameEntities() {
         EntityHandler.loadMobs();
 
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
@@ -197,7 +197,11 @@ public class MapHandler {
         MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
 
         for (int i=0; i<REGISTRY_KEYS.GET_PACLIVES(); i++) {
-            ((Pacman)EntityHandler.getMobs().get('!')).increaseLives();
+            Pacman.increaseLives();
+        }
+
+        for (Collectible collectible : Pacman.getCollected()) {
+            MapHandler.getGameMapPane().getChildren().add(collectible.getImageView());
         }
     }
 }

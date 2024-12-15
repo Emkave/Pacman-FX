@@ -2,6 +2,7 @@ package com.emkave.pacman.entity.collectible;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.Entity;
+import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.TileKey;
@@ -9,8 +10,9 @@ import javafx.scene.image.Image;
 
 import java.util.Objects;
 
-public abstract class Collectible extends Entity { // Every collectible is an entity
+public class Collectible extends Entity { // Every collectible is an entity
     protected char colType;
+
 
     Collectible(final char colName) {
         this.imageView.setImage(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Tiles/"+colName+".png"))));
@@ -26,8 +28,9 @@ public abstract class Collectible extends Entity { // Every collectible is an en
     }
 
 
-    public abstract void effect();
-
+    public void effect() {
+        throw new UnsupportedOperationException("Collectible::effect() -> Subclasses must implement effect().");
+    }
 
 
     @Override public void render() {
@@ -37,5 +40,15 @@ public abstract class Collectible extends Entity { // Every collectible is an en
 
     public char getColType() {
         return this.colType;
+    }
+
+
+    public boolean isCollected() {
+        throw new UnsupportedOperationException("Collectible::isCollected() -> Subclasses must implement isCollected().");
+    }
+
+
+    public void setCollected() {
+        throw new UnsupportedOperationException("Collectible::setCollected() -> Subclasses must implement setCollected().");
     }
 }

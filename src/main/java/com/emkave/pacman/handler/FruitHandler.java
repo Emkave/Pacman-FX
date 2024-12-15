@@ -16,7 +16,7 @@ public class FruitHandler {
             "Orange", 46,
             "Strawberry", 39,
             "Watermelon", 15,
-            "Fighter", 9
+            "Fighter", 7
     );
 
 

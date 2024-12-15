@@ -15,7 +15,10 @@ import java.util.Stack;
 
 
 public class Pacman extends Mob {
-    private Stack<ImageView> lives = new Stack<>();
+    private static Stack<ImageView> lives = new Stack<>();
+
+    private static Stack<Collectible> collected = new Stack<>();
+
 
     public Pacman() {
         super("pacman");
@@ -78,20 +81,43 @@ public class Pacman extends Mob {
     }
 
 
-    public void increaseLives() {
+    public static void increaseLives() {
         ImageView img = new ImageView(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Tiles/pacmanhp.png"))));
         img.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() + 20);
         img.setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() + 20);
         img.setTranslateY(600);
-        img.setTranslateX(this.getLives().size() * img.getFitWidth());
+        img.setTranslateX(Pacman.getLives().size() * img.getFitWidth());
 
-        this.lives.add(img);
+        Pacman.lives.add(img);
         MapHandler.getGameMapPane().getChildren().add(img);
     }
 
 
-    public Stack<ImageView> getLives() {
-        return this.lives;
+    public void addCollected(Collectible collectible) {
+        try {
+
+            Collectible copel = collectible.getClass().getDeclaredConstructor().newInstance();
+
+            copel.getImageView().setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()+10);
+            copel.getImageView().setFitHeight(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()+10);
+            copel.getImageView().setTranslateY(600);
+            copel.getImageView().setTranslateX(REGISTRY_KEYS.GET_GAME_MAP_WIDTH() - (Pacman.collected.size() * copel.getImageView().getFitWidth() + 30));
+
+            Pacman.collected.add(copel);
+            MapHandler.getGameMapPane().getChildren().add(copel.getImageView());
+        } catch (Exception e) {
+            throw new RuntimeException("Pacman::addCollected() -> " + e.getMessage());
+        }
+    }
+
+
+    public static Stack<ImageView> getLives() {
+        return Pacman.lives;
+    }
+
+
+    public static Stack<Collectible> getCollected() {
+        return Pacman.collected;
     }
 
 

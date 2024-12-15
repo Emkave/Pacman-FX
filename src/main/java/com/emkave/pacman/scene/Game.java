@@ -57,6 +57,8 @@ public class Game {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     if (REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() == 0) {
                         REGISTRY_KEYS.SET_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL()+1);
+                        REGISTRY_KEYS.SET_LAST_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL());
+                        REGISTRY_KEYS.SET_LAST_GAME_SCORE(Game.score);
                         this.stop();
                         SceneHandler.loadLevelTransition();
                     } else {
@@ -109,8 +111,8 @@ public class Game {
                         EntityHandler.getCollectibleMap(),
                         EntityHandler.getMobs()
                 );
-            } catch (Exception e) {
-                throw new RuntimeException("Game::showPauseMenu() -> " + e.getMessage());
+            } catch (Exception ex) {
+                throw new RuntimeException("Game::showPauseMenu() -> " + ex.getMessage());
             }
             EntityHandler.getMobs().clear();
             EntityHandler.getCollectibleMap().clear();

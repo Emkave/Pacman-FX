@@ -3,6 +3,7 @@ package com.emkave.pacman.handler;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.mob.Mob;
+import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.scene.*;
 import com.emkave.pacman.ui.UILabel;
 import javafx.animation.PauseTransition;
@@ -12,8 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Stack;
@@ -41,10 +40,18 @@ public class SceneHandler {
 
 
     public static void loadGame() {
-        REGISTRY_KEYS.SET_ISPAUSED(false);
         SceneHandler.frameStack.add(Game.load());
         SceneHandler.triggerChange();
-        SoundHandler.playIntroMusic();
+
+        SoundHandler.playIntroMusic(() -> {
+            try {
+                MapHandler.loadGameEntities();
+                Game.startGameLoop();
+                REGISTRY_KEYS.SET_ISPAUSED(false);
+            } catch (Exception e) {
+                throw new RuntimeException("SceneHandler::loadGame() -> " + e.getMessage());
+            }
+        });
     }
 
 
@@ -73,6 +80,8 @@ public class SceneHandler {
         for (Map.Entry<Integer, Collectible> entry : EntityHandler.getCollectibleMap().entrySet()) {
             MapHandler.getGameMapPane().getChildren().remove(entry.getValue().getImageView());
         }
+
+        Pacman.getLives().clear();
 
         for (Mob mob : EntityHandler.getMobs().values()) {
             MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
@@ -119,6 +128,7 @@ public class SceneHandler {
     public static void loadDeathScene(final int x, final int y) {
         REGISTRY_KEYS.SET_ISPAUSED(true);
         Application.window.getScene().setOnKeyPressed(null);
+        REGISTRY_KEYS.SET_AMOUNT_GAME_DOTS(0);
 
         EntityHandler.stopAllThreads();
         for (Map.Entry<Integer, Collectible> entry : EntityHandler.getCollectibleMap().entrySet()) {

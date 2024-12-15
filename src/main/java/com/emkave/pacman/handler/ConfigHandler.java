@@ -24,10 +24,10 @@ public class ConfigHandler {
             if (language != null && region != null) {
                 locale = new Locale(language, region);
             } else {
-                System.out.println("ConfigLoader::loadLanguageSettings() -> Language or region is missing.");
+                throw new RuntimeException("ConfigLoader::loadLanguageSettings() -> Language or region is missing.");
             }
         } catch (IOException e) {
-            System.out.println("ConfigLoader::loadLanguageSettings() -> Could not read config.properties.");
+            throw new RuntimeException("ConfigHandler::loadLanguageSettings() -> ", e);
         }
 
         return locale;
@@ -40,7 +40,7 @@ public class ConfigHandler {
         try (FileInputStream in = new FileInputStream("config.properties")) {
             properties.load(in);
         } catch (IOException e) {
-            System.out.println("ConfigHandler::setLanguageSettings() -> config.properties file not found.");
+            throw new RuntimeException("ConfigHandler::setLanguageSettings() -> ", e);
         }
 
         try (FileOutputStream out = new FileOutputStream("config.properties")) {
@@ -48,7 +48,7 @@ public class ConfigHandler {
             properties.setProperty("region", region);
             properties.store(out, null);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("ConfigHandler::setLanguageSettings() -> ", e);
         }
 
         Locale.setDefault(ConfigHandler.loadLanguageSettings());
@@ -64,7 +64,7 @@ public class ConfigHandler {
             properties.load(in);
             score = properties.getProperty("top_score");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("ConfigHandler::getTopScore() -> ", e);
         }
 
         return (score != null) ? score : "";
@@ -79,7 +79,7 @@ public class ConfigHandler {
             properties.load(in);
             level = properties.getProperty("level");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("ConfigHandler::getLevel() -> ", e);
         }
 
         return (level != null) ? level : "";
@@ -94,7 +94,7 @@ public class ConfigHandler {
             properties.load(in);
             score = properties.getProperty("score");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("ConfigHandler::getScore() -> ", e);
         }
 
         return (score != null) ? score : "0";
