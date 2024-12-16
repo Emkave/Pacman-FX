@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Stack;
 
+
 public class SceneHandler {
     private static Stack<Pane> frameStack = new Stack<>();
 
@@ -42,8 +43,10 @@ public class SceneHandler {
     public static void loadGame() {
         SceneHandler.frameStack.add(Game.load());
         SceneHandler.triggerChange();
+        SoundHandler.playSoundEffect("intro");
 
-        SoundHandler.playIntroMusic(() -> {
+        PauseTransition intro = new PauseTransition(Duration.seconds(4.21));
+        intro.setOnFinished(event -> {
             try {
                 MapHandler.loadGameEntities();
                 Game.startGameLoop();
@@ -52,6 +55,8 @@ public class SceneHandler {
                 throw new RuntimeException("SceneHandler::loadGame() -> " + e.getMessage());
             }
         });
+
+        intro.play();
     }
 
 
@@ -72,7 +77,7 @@ public class SceneHandler {
     }
 
 
-    public static void loadLevelTransition() {
+    public static void loadLevelTransition() throws InterruptedException {
         REGISTRY_KEYS.SET_ISPAUSED(true);
         Application.window.getScene().setOnKeyPressed(null);
 
@@ -90,6 +95,7 @@ public class SceneHandler {
         EntityHandler.getCollectibleMap().clear();
 
         SceneHandler.frameStack.pop();
+
 
         PauseTransition preTransitionDelay = new PauseTransition(Duration.seconds(3));
         preTransitionDelay.setOnFinished(_ -> {
@@ -160,7 +166,11 @@ public class SceneHandler {
                 REGISTRY_KEYS.SET_LAST_GAME_LEVEL(1);
                 SceneHandler.loadEndOfGameScene();
             } else {
-                SceneHandler.loadLevelTransition();
+                try {
+                    SceneHandler.loadLevelTransition();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

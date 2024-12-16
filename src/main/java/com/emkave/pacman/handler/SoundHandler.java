@@ -2,6 +2,7 @@ package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.scene.Game;
+import javafx.application.Platform;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 public class SoundHandler {
     private static Map<String, AudioClip> soundEffects = new HashMap<>();
@@ -24,6 +26,7 @@ public class SoundHandler {
         SoundHandler.loadSoundEffect("extrapac", "Audio/extrapac.wav");
         SoundHandler.loadSoundEffect("interm", "Audio/intermission.wav");
         SoundHandler.loadSoundEffect("death", "Audio/pacdeath.wav");
+        SoundHandler.loadSoundEffect("intro", "Audio/pacman_beginning.wav");
     }
 
 
@@ -37,25 +40,6 @@ public class SoundHandler {
         if (!REGISTRY_KEYS.GET_ISMUTED() && SoundHandler.soundEffects.containsKey(soundName)) {
             SoundHandler.soundEffects.get(soundName).play();
         }
-    }
-
-
-    public static void playIntroMusic() {
-        Media introMedia = new Media(Objects.requireNonNull(Application.class.getResource("Audio/pacman_beginning.wav")).toExternalForm());
-        MediaPlayer introMusicPlayer = new MediaPlayer(introMedia);
-
-        introMusicPlayer.setVolume(REGISTRY_KEYS.GET_ISMUTED() ? 0.0 : 1.0);
-
-        introMusicPlayer.setOnEndOfMedia(() -> {
-            try {
-                MapHandler.loadGameEntities();
-            } catch (Exception e) {
-                throw new RuntimeException("SoundHandler::playIntroMusic() -> " + e.getMessage());
-            }
-            Game.startGameLoop();
-        });
-
-        introMusicPlayer.play();
     }
 
 

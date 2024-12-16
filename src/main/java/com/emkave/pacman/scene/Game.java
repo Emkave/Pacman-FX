@@ -60,7 +60,11 @@ public class Game {
                         REGISTRY_KEYS.SET_LAST_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL());
                         REGISTRY_KEYS.SET_LAST_GAME_SCORE(Game.score);
                         this.stop();
-                        SceneHandler.loadLevelTransition();
+                        try {
+                            SceneHandler.loadLevelTransition();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else {
                         if ((now - Game.lastEntityUpdateTime) >= 300000000) {
                             FruitHandler.placeFruit();
