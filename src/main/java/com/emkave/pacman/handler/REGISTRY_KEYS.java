@@ -12,6 +12,7 @@ import java.util.function.Function;
 public abstract class REGISTRY_KEYS {
     private static boolean IS_CONTINUED = false;
     private static boolean IS_PAUSED = false;
+    private static boolean IS_PLAYED = false;
     private static boolean IS_HOSTER = false;
     private static boolean IS_MUTED = false;
     private static boolean IS_INTERMISSION = false;
@@ -46,6 +47,10 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('P', TILE -> "Pill");
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('S', TILE -> "Strawberry");
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('W', TILE -> "Watermelon");
+    }
+
+    public static void SET_ISPLAYED(final boolean __b) {
+        REGISTRY_KEYS.IS_PLAYED = __b;
     }
 
     public static void SET_PACLIVES(final int __l) {
@@ -189,5 +194,9 @@ public abstract class REGISTRY_KEYS {
 
     public static int GET_PACLIVES() {
         return REGISTRY_KEYS.PAC_LIVES;
+    }
+
+    public static boolean GET_ISPLAYED() {
+        return REGISTRY_KEYS.IS_PLAYED;
     }
 }

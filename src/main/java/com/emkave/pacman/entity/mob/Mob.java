@@ -2,18 +2,31 @@ package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.Entity;
+import com.emkave.pacman.handler.EntityHandler;
+import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 
-public abstract class Mob extends Entity { // Every mob is an entity
+public abstract class Mob extends Entity implements Runnable { // Every mob is an entity
+    protected static final ReentrantLock unique_lock = new ReentrantLock();
     protected int d_x = 0, d_y = 0; // Every mob has its own direction vector (delta x, delta y)
     protected Image dirUpImg, dirRightImg, dirDownImg, dirLeftImg;
+    protected char mobSymbol;
+
+    private volatile boolean running = true;
+    private AnimationTimer timer;
+    private Thread thread;
+
 
     Mob(final String mobName) {
         super();
@@ -22,25 +35,23 @@ public abstract class Mob extends Entity { // Every mob is an entity
         this.dirDownImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_down.gif")));
         this.dirLeftImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_left.gif")));
         this.imageView.setImage(this.dirUpImg);
+
+        if (!(this instanceof Pacman)) {
+            this.thread = new Thread(this);
+            this.thread.start();
+        }
+
+        this.imageView.setTranslateX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() - 2);
+        this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() - 2);
     }
+
+
+    protected abstract void autopilot();
+
 
 
     @Override public void render() {
 
-    }
-
-
-    protected void placeInMap(final int x, final int y) {
-        synchronized (MapHandler.getGameMap()) {
-            MapHandler.getGameMap()[y][x] = this.mobSymbol;
-        }
-    }
-
-
-    protected void clearFromMap() {
-        synchronized (MapHandler.getGameMap()) {
-            MapHandler.getGameMap()[this.y][this.x] = this.stepOnTile;
-        }
     }
 
 
@@ -94,8 +105,42 @@ public abstract class Mob extends Entity { // Every mob is an entity
                 this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
             });
 
-            transition.play();
+            Platform.runLater(transition::play);
         }
+    }
+
+
+    @Override public void run() {
+        this.timer = new AnimationTimer() {
+            private long lastUpdate = 0;
+
+            @Override public void handle(long now) {
+                if (!running) {
+                    this.stop();
+                }
+                if (!REGISTRY_KEYS.GET_ISPAUSED()) {
+                    if (now - lastUpdate >= 300000000) {
+                        autopilot();
+                        lastUpdate = now;
+                    }
+                }
+            }
+        };
+        Platform.runLater(timer::start);
+    }
+
+
+    public void stop() {
+        this.running = false;
+
+        if (timer != null) {
+            Platform.runLater(timer::stop);
+        }
+    }
+
+
+    public Thread getThread() {
+        return this.thread;
     }
 }
 

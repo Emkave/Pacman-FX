@@ -56,6 +56,7 @@ public class Game {
             @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     if (REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() == 0) {
+                        REGISTRY_KEYS.SET_ISPAUSED(true);
                         REGISTRY_KEYS.SET_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL()+1);
                         REGISTRY_KEYS.SET_LAST_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL());
                         REGISTRY_KEYS.SET_LAST_GAME_SCORE(Game.score);
