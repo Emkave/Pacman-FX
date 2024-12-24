@@ -14,14 +14,16 @@ public class EntityHandler {
 
     public static void loadMobs() {
         Mob pacman = new Pacman();
-        //Mob inky = new Inky();
-        //Mob pinky = new Pinky();
-        //Mob clyde = new Clyde();
+        Mob inky = new Inky();
+        Mob pinky = new Pinky();
+        Mob clyde = new Clyde();
         Mob blinky = new Blinky();
 
         EntityHandler.mobs.put('!', pacman);
         EntityHandler.mobs.put('%', blinky);
-        //EntityHandler.mobs.put('$', clyde);
+        EntityHandler.mobs.put('$', clyde);
+        EntityHandler.mobs.put('#', inky);
+        EntityHandler.mobs.put('@', pinky);
 
         for (Mob mob : EntityHandler.mobs.values()) {
             if (!(mob instanceof Pacman)) {
@@ -48,28 +50,28 @@ public class EntityHandler {
     }
 
 
-    public static Collectible getCollectible(int x, int y) {
+    public static synchronized Collectible getCollectible(int x, int y) {
         return EntityHandler.collectibleMap.values().stream().filter(c -> c.getX() == x && c.getY() == y).findFirst().orElse(null);
     }
 
 
-    public static void removeCollectible(Collectible collectible) {
+    public static synchronized void removeCollectible(Collectible collectible) {
         MapHandler.getGameMapPane().getChildren().remove(collectible.getImageView());
         EntityHandler.collectibleMap.remove(collectible.hashCode());
     }
 
 
-    public static Map<Character, Mob> getMobs() {
+    public static synchronized Map<Character, Mob> getMobs() {
         return EntityHandler.mobs;
     }
 
 
-    public static Map<Integer, Collectible> getCollectibleMap() {
+    public static synchronized Map<Integer, Collectible> getCollectibleMap() {
         return EntityHandler.collectibleMap;
     }
 
 
-    public static List<Thread> getMobThreads() {
+    public static synchronized List<Thread> getMobThreads() {
         return EntityHandler.mobThreads;
     }
 }

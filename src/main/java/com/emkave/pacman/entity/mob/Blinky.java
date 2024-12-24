@@ -18,7 +18,17 @@ public class Blinky extends Mob {
 
 
     @Override public void autopilot() {
-        int[] path = this.pathFind(EntityHandler.getMobs().get('!').getX(), EntityHandler.getMobs().get('!').getY());
+        int targetX, targetY;
+
+        if (this.chasing) {
+            targetX = EntityHandler.getMobs().get('!').getX();
+            targetY = EntityHandler.getMobs().get('!').getY();
+        } else {
+            targetX = 15;
+            targetY = 14;
+        }
+
+        int[] path = this.pathFind(targetX, targetY);
 
         if (path != null) {
             this.d_x = path[0];

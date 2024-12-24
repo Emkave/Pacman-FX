@@ -25,54 +25,27 @@ public class Clyde extends Mob {
     @Override public void autopilot() {
         int[] step;
 
-        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        int[] pacmanPos = {EntityHandler.getMobs().get('!').getX(), EntityHandler.getMobs().get('!').getY()};
-        boolean found = false;
+        if (this.chasing) {
+            int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+            int[] pacmanPos = {EntityHandler.getMobs().get('!').getX(), EntityHandler.getMobs().get('!').getY()};
+            boolean found = false;
 
-        out:
-        for (int[] direction : directions) {
-            int[] currCell = new int[2];
-            currCell[0] = this.x;
-            currCell[1] = this.y;
-
-            while (true) {
-                currCell[0] = (currCell[0] + direction[0] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
-                currCell[1] = (currCell[1] + direction[1] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
-
-                if (pacmanPos[0] == currCell[0] && pacmanPos[1] == currCell[1]) {
-                    this.destination[0] = pacmanPos[0];
-                    this.destination[1] = pacmanPos[1];
-                    found = true;
-                    break out;
-                }
-
-                {
-                    ReentrantLock unique_lock = new ReentrantLock();
-                    unique_lock.lock();
-                    try {
-                        var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
-
-                        if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
-                            break;
-                        }
-                    } finally {
-                        unique_lock.unlock();
-                    }
-                }
-            }
-        }
-
-        if (this.destination[0] == this.x && this.destination[1] == this.y) {
-            if (!found) {
-                int[] direction = directions[new Random().nextInt(4)];
-
+            out:
+            for (int[] direction : directions) {
                 int[] currCell = new int[2];
                 currCell[0] = this.x;
                 currCell[1] = this.y;
 
                 while (true) {
-                    currCell[0] = (currCell[0] + direction[0]) % REGISTRY_KEYS.GET_MAP_WIDTH();
-                    currCell[1] = (currCell[1] + direction[1]) % REGISTRY_KEYS.GET_MAP_HEIGHT();
+                    currCell[0] = (currCell[0] + direction[0] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
+                    currCell[1] = (currCell[1] + direction[1] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
+
+                    if (pacmanPos[0] == currCell[0] && pacmanPos[1] == currCell[1]) {
+                        this.destination[0] = pacmanPos[0];
+                        this.destination[1] = pacmanPos[1];
+                        found = true;
+                        break out;
+                    }
 
                     {
                         ReentrantLock unique_lock = new ReentrantLock();
@@ -80,13 +53,8 @@ public class Clyde extends Mob {
                         try {
                             var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
 
-                            if ((cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8')) {
-                                this.destination[0] = currCell[0] - direction[0];
-                                this.destination[1] = currCell[1] - direction[1];
+                            if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
                                 break;
-                            } else if (new Random().nextInt(5) == 1) {
-                                this.destination[0] = currCell[0];
-                                this.destination[1] = currCell[1];
                             }
                         } finally {
                             unique_lock.unlock();
@@ -94,6 +62,43 @@ public class Clyde extends Mob {
                     }
                 }
             }
+
+            if (this.destination[0] == this.x && this.destination[1] == this.y) {
+                if (!found) {
+                    int[] direction = directions[new Random().nextInt(4)];
+
+                    int[] currCell = new int[2];
+                    currCell[0] = this.x;
+                    currCell[1] = this.y;
+
+                    while (true) {
+                        currCell[0] = (currCell[0] + direction[0] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
+                        currCell[1] = (currCell[1] + direction[1] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
+
+                        {
+                            ReentrantLock unique_lock = new ReentrantLock();
+                            unique_lock.lock();
+                            try {
+                                var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
+
+                                if ((cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8')) {
+                                    this.destination[0] = currCell[0] - direction[0];
+                                    this.destination[1] = currCell[1] - direction[1];
+                                    break;
+                                } else if (new Random().nextInt(5) == 1) {
+                                    this.destination[0] = currCell[0];
+                                    this.destination[1] = currCell[1];
+                                }
+                            } finally {
+                                unique_lock.unlock();
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            this.destination[0] = 12;
+            this.destination[1] = 14;
         }
 
         step = this.pathFind(this.destination[0], this.destination[1]);

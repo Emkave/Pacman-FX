@@ -121,6 +121,11 @@ public class Pacman extends Mob {
     }
 
 
+    public synchronized int[] getDirection() {
+        return new int[]{this.d_x, this.d_y};
+    }
+
+
     private boolean caughtByGhost() {
         for (Mob mob : EntityHandler.getMobs().values()) {
             if (!(mob instanceof Pacman) && this.x == mob.getX() && this.y == mob.getY()) {
