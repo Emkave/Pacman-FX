@@ -49,19 +49,19 @@ public abstract class REGISTRY_KEYS {
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('W', TILE -> "Watermelon");
     }
 
-    public static void SET_ISPLAYED(final boolean __b) {
+    public static synchronized void SET_ISPLAYED(final boolean __b) {
         REGISTRY_KEYS.IS_PLAYED = __b;
     }
 
-    public static void SET_PACLIVES(final int __l) {
+    public static synchronized void SET_PACLIVES(final int __l) {
         REGISTRY_KEYS.PAC_LIVES = __l;
     }
 
-    public static void SET_UI_FONT(final String __font, final int __size) {
+    public static synchronized void SET_UI_FONT(final String __font, final int __size) {
         REGISTRY_KEYS.UI_FONT = Font.loadFont(Objects.requireNonNull(Application.class.getResourceAsStream("Fonts/"+__font+".ttf")), __size);
     }
 
-    public static void SET_UI_FONT() {
+    public static synchronized void SET_UI_FONT() {
         String lang = Application.localeResourceBundle.getLocale().getLanguage();
 
         if (Objects.equals(lang, "cz") || Objects.equals(lang, "en") || Objects.equals(lang, "ru")) {
@@ -71,132 +71,132 @@ public abstract class REGISTRY_KEYS {
         }
     }
 
-    public static void SET_GAME_LEVEL(final int __level) {
+    public static synchronized void SET_GAME_LEVEL(final int __level) {
         REGISTRY_KEYS.GAME_LEVEL = __level;
     }
 
-    public static void SET_AMOUNT_GAME_DOTS(final int __amount) {
+    public static synchronized void SET_AMOUNT_GAME_DOTS(final int __amount) {
         REGISTRY_KEYS.GAME_DOTS = __amount;
     }
 
-    public static void SET_LAST_GAME_SCORE(final long __score) {
+    public static synchronized void SET_LAST_GAME_SCORE(final long __score) {
         REGISTRY_KEYS.LAST_GAME_SCORE = __score;
     }
 
-    public static void SET_ISCONTINUED(final boolean __b) {
+    public static synchronized void SET_ISCONTINUED(final boolean __b) {
         REGISTRY_KEYS.IS_CONTINUED = __b;
     }
 
-    public static void SET_LAST_GAME_LEVEL(final int __level) {
+    public static synchronized void SET_LAST_GAME_LEVEL(final int __level) {
         REGISTRY_KEYS.LAST_GAME_LEVEL = __level;
     }
 
-    public static void SET_CONTINUED(final boolean __B) {
+    public static synchronized void SET_CONTINUED(final boolean __B) {
         REGISTRY_KEYS.IS_CONTINUED = __B;
     }
 
-    public static void SET_ISPAUSED(final boolean __B) {
+    public static synchronized void SET_ISPAUSED(final boolean __B) {
         REGISTRY_KEYS.IS_PAUSED = __B;
     }
 
-    public static void SET_ISHOSTER(final boolean __B) {
+    public static synchronized void SET_ISHOSTER(final boolean __B) {
         REGISTRY_KEYS.IS_HOSTER = __B;
     }
 
-    public static void SET_ISMUTED(final boolean __B) {
+    public static synchronized void SET_ISMUTED(final boolean __B) {
         REGISTRY_KEYS.IS_MUTED = __B;
     }
 
-    public static void SET_ISINTERMISSION(final boolean __B) {
+    public static synchronized void SET_ISINTERMISSION(final boolean __B) {
         REGISTRY_KEYS.IS_INTERMISSION = __B;
     }
 
 
-    public static boolean GET_ISCONTINUED() {
+    public static synchronized boolean GET_ISCONTINUED() {
         return REGISTRY_KEYS.IS_CONTINUED;
     }
 
-    public static boolean GET_ISPAUSED() {
+    public static synchronized boolean GET_ISPAUSED() {
         return REGISTRY_KEYS.IS_PAUSED;
     }
 
-    public static boolean GET_ISHOSTER() {
+    public static synchronized boolean GET_ISHOSTER() {
         return REGISTRY_KEYS.IS_HOSTER;
     }
 
-    public static double GET_SCREEN_WIDTH() {
+    public static synchronized double GET_SCREEN_WIDTH() {
         return REGISTRY_KEYS.SCREEN_WIDTH;
     }
 
-    public static double GET_SCREEN_HEIGHT() {
+    public static synchronized double GET_SCREEN_HEIGHT() {
         return REGISTRY_KEYS.SCREEN_HEIGHT;
     }
 
-    public static double GET_GAME_MAP_WIDTH() {
+    public static synchronized double GET_GAME_MAP_WIDTH() {
         return REGISTRY_KEYS.GAME_MAP_WIDTH;
     }
 
-    public static double GET_GAME_MAP_HEIGHT() {
+    public static synchronized double GET_GAME_MAP_HEIGHT() {
         return REGISTRY_KEYS.GAME_MAP_HEIGHT;
     }
 
-    public static double GET_GAME_MAP_CELL_WIDTH() {
+    public static synchronized double GET_GAME_MAP_CELL_WIDTH() {
         return REGISTRY_KEYS.GAME_MAP_CELL_WIDTH;
     }
 
-    public static double GET_GAME_MAP_CELL_HEIGHT() {
+    public static synchronized double GET_GAME_MAP_CELL_HEIGHT() {
         return REGISTRY_KEYS.GAME_MAP_CELL_HEIGHT;
     }
 
-    public static int GET_MAP_WIDTH() {
+    public static synchronized int GET_MAP_WIDTH() {
         return REGISTRY_KEYS.MAP_WIDTH;
     }
 
-    public static int GET_MAP_HEIGHT() {
+    public static synchronized int GET_MAP_HEIGHT() {
         return REGISTRY_KEYS.MAP_HEIGHT;
     }
 
-    public static boolean GET_ISMUTED() {
+    public static synchronized boolean GET_ISMUTED() {
         return REGISTRY_KEYS.IS_MUTED;
     }
 
-    public static boolean GET_ISINTERMISSION() {
+    public static synchronized boolean GET_ISINTERMISSION() {
         return REGISTRY_KEYS.IS_INTERMISSION;
     }
 
-    public static long GET_GAME_MOVE_INTERVAL() {
+    public static synchronized long GET_GAME_MOVE_INTERVAL() {
         return REGISTRY_KEYS.GAME_MOVE_INTERVAL;
     }
 
-    public static int GET_LAST_GAME_LEVEL() {
+    public static synchronized int GET_LAST_GAME_LEVEL() {
         return REGISTRY_KEYS.LAST_GAME_LEVEL;
     }
 
-    public static long GET_LAST_GAME_SCORE() {
+    public static synchronized long GET_LAST_GAME_SCORE() {
         return REGISTRY_KEYS.LAST_GAME_SCORE;
     }
 
-    public static Map<Character, Function<Character, String>> GET_CLASS_NAME_RESOLVER() {
+    public static synchronized Map<Character, Function<Character, String>> GET_CLASS_NAME_RESOLVER() {
         return REGISTRY_KEYS.CLASS_NAME_RESOLVER;
     }
 
-    public static int GET_AMOUNT_GAME_DOTS() {
+    public static synchronized int GET_AMOUNT_GAME_DOTS() {
         return REGISTRY_KEYS.GAME_DOTS;
     }
 
-    public static int GET_GAME_LEVEL() {
+    public static synchronized int GET_GAME_LEVEL() {
         return REGISTRY_KEYS.GAME_LEVEL;
     }
 
-    public static Font GET_UI_FONT() {
+    public static synchronized Font GET_UI_FONT() {
         return REGISTRY_KEYS.UI_FONT;
     }
 
-    public static int GET_PACLIVES() {
+    public static synchronized int GET_PACLIVES() {
         return REGISTRY_KEYS.PAC_LIVES;
     }
 
-    public static boolean GET_ISPLAYED() {
+    public static synchronized boolean GET_ISPLAYED() {
         return REGISTRY_KEYS.IS_PLAYED;
     }
 }

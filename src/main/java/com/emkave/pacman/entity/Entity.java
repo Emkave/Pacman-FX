@@ -22,12 +22,12 @@ public abstract class Entity {
     }
 
 
-    public int getX() {
+    public synchronized int getX() {
         return this.x;
     }
 
 
-    public int getY() {
+    public synchronized int getY() {
         return this.y;
     }
 

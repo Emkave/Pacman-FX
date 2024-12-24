@@ -2,12 +2,10 @@ package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.Entity;
-import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -18,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Mob extends Entity implements Runnable { // Every mob is an entity
-    protected static final ReentrantLock unique_lock = new ReentrantLock();
+    //protected static final ReentrantLock unique_lock = new ReentrantLock();
     protected int d_x = 0, d_y = 0; // Every mob has its own direction vector (delta x, delta y)
     protected Image dirUpImg, dirRightImg, dirDownImg, dirLeftImg;
     protected char mobSymbol;
@@ -55,6 +53,66 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
     }
 
 
+    protected String coordKey(int[] coord) {
+        return coord[0] + "x" + coord[1];
+    }
+
+
+    protected int[] pathFind(int targetX, int targetY) {
+        final int[][] directions = {{0,1},{1,0},{0,-1},{-1,0}};
+
+        boolean[][] visited = new boolean[REGISTRY_KEYS.GET_MAP_HEIGHT()][REGISTRY_KEYS.GET_MAP_WIDTH()];
+        Queue<int[]> queue = new LinkedList<>();
+        Map<String, int[]> track = new HashMap<>();
+
+        queue.add(new int[]{this.y, this.x});
+        visited[this.y][this.x] = true;
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int currY = current[0];
+            int currX = current[1];
+
+
+            if (currX == targetX && currY == targetY) {
+                int[] backtrack = current;
+
+                while (track.containsKey(this.coordKey(backtrack)) && !Arrays.equals(track.get(this.coordKey(backtrack)), new int[]{this.y, this.x})) {
+                    backtrack = track.get(this.coordKey(backtrack));
+                }
+
+                int dirX = backtrack[1] - this.x;
+                int dirY = backtrack[0] - this.y;
+
+                return new int[]{dirX, dirY};
+            }
+
+
+            for (int[] direction : directions) {
+                int newY = (currY + direction[0] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
+                int newX = (currX + direction[1] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
+
+                ReentrantLock unique_lock = new ReentrantLock();
+                unique_lock.lock();
+                try {
+                    var cell = MapHandler.getGameMap()[newY][newX];
+
+                    if (!visited[newY][newX] && cell != '1' && cell != '2' && cell != '3' && cell != '4' && cell != '7' && cell != '8') {
+                        visited[newY][newX] = true;
+                        int[] next = new int[]{newY, newX};
+                        queue.add(next);
+                        track.put(this.coordKey(next), current);
+                    }
+                } finally {
+                    unique_lock.unlock();
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     protected void moveToCell() {
         boolean wrapped = false;
 
@@ -71,23 +129,19 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
             this.imageView.setTranslateX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() - 2);
             this.imageView.setTranslateY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() - 2);
         } else {
-            // Calculate delta movements
             final double currentX = this.imageView.getTranslateX() / REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH();
             final double currentY = this.imageView.getTranslateY() / REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT();
 
             final double deltaX = this.x - currentX;
             final double deltaY = this.y - currentY;
 
-            // Determine direction based on deltas
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal movement
                 if (deltaX > 0) {
                     this.imageView.setImage(this.dirRightImg);
                 } else {
                     this.imageView.setImage(this.dirLeftImg);
                 }
             } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                // Vertical movement
                 if (deltaY > 0) {
                     this.imageView.setImage(this.dirDownImg);
                 } else {
@@ -139,7 +193,7 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
     }
 
 
-    public Thread getThread() {
+    public synchronized Thread getThread() {
         return this.thread;
     }
 }
