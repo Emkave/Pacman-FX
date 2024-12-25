@@ -12,14 +12,27 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Mob extends Entity implements Runnable { // Every mob is an entity
-    //protected static final ReentrantLock unique_lock = new ReentrantLock();
-    protected int d_x = 0, d_y = 0; // Every mob has its own direction vector (delta x, delta y)
+    protected static Image eyesUp = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/eyes_up.png")));
+    protected static Image eyesRight = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/eyes_right.png")));
+    protected static Image eyesDown = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/eyes_down.png")));
+    protected static Image eyesLeft = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/eyes_left.png")));
     protected Image dirUpImg, dirRightImg, dirDownImg, dirLeftImg;
+
+    protected boolean chasing = true;
+    protected boolean respawning = false;
+    protected int d_x = 0, d_y = 0; // Every mob has its own direction vector (delta x, delta y)
     protected char mobSymbol;
+    protected int speed = 300_000_000;
+
+    private ScheduledExecutorService frightTimer = Executors.newSingleThreadScheduledExecutor();
 
     private volatile boolean running = true;
     private AnimationTimer timer;
@@ -32,6 +45,7 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
         this.dirRightImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_right.gif")));
         this.dirDownImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_down.gif")));
         this.dirLeftImg = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/"+mobName+"_moves_left.gif")));
+
         this.imageView.setImage(this.dirUpImg);
 
         if (!(this instanceof Pacman)) {
@@ -135,21 +149,37 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
             final double deltaX = this.x - currentX;
             final double deltaY = this.y - currentY;
 
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 0) {
-                    this.imageView.setImage(this.dirRightImg);
-                } else {
-                    this.imageView.setImage(this.dirLeftImg);
+            if (this.respawning) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+                        this.imageView.setImage(Mob.eyesRight);
+                    } else {
+                        this.imageView.setImage(Mob.eyesLeft);
+                    }
+                } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    if (deltaY > 0) {
+                        this.imageView.setImage(Mob.eyesDown);
+                    } else {
+                        this.imageView.setImage(Mob.eyesUp);
+                    }
                 }
-            } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                if (deltaY > 0) {
-                    this.imageView.setImage(this.dirDownImg);
-                } else {
-                    this.imageView.setImage(this.dirUpImg);
+            } else if (this.chasing) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+                        this.imageView.setImage(this.dirRightImg);
+                    } else {
+                        this.imageView.setImage(this.dirLeftImg);
+                    }
+                } else if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    if (deltaY > 0) {
+                        this.imageView.setImage(this.dirDownImg);
+                    } else {
+                        this.imageView.setImage(this.dirUpImg);
+                    }
                 }
             }
 
-            TranslateTransition transition = new TranslateTransition(Duration.millis(300), this.imageView);
+            TranslateTransition transition = new TranslateTransition(Duration.millis((double) speed / 1000000), this.imageView);
 
             transition.setToX(this.x * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()-2);
             transition.setToY(this.y * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT()-2);
@@ -173,8 +203,14 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
                     this.stop();
                 }
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    if (now - lastUpdate >= 300000000) {
+                    if (now - lastUpdate >= speed) {
                         autopilot();
+
+                        if (x == 14 && y == 14) {
+                            respawning = false;
+                            setChasing(true);
+                        }
+
                         lastUpdate = now;
                     }
                 }
@@ -190,11 +226,49 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
         if (timer != null) {
             Platform.runLater(timer::stop);
         }
+
+        this.frightTimer.shutdownNow();
+    }
+
+
+    public synchronized void respawn() {
+        this.respawning = true;
+        this.speed = 50000000;
+    }
+
+
+    public synchronized void setChasing(final boolean __b) {
+        this.chasing = __b;
+
+        if (!__b) {
+            this.speed = 600000000;
+            this.imageView.setImage(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/frighted.gif"))));
+            this.startFrightTimer();
+        } else if (!this.respawning) {
+            this.speed = 300000000;
+        }
+    }
+
+
+    private void startFrightTimer() {
+        this.frightTimer.schedule(() -> {
+            this.setChasing(true);
+        }, 7, TimeUnit.SECONDS);
     }
 
 
     public synchronized Thread getThread() {
         return this.thread;
+    }
+
+
+    public synchronized boolean getChasing() {
+        return this.chasing;
+    }
+
+
+    public synchronized char getMobSymbol() {
+        return this.mobSymbol;
     }
 }
 

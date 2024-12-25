@@ -132,8 +132,6 @@ public class MapHandler {
     }
 
 
-    private static int t = 0;
-
     private static void loadGameTiles() {
         for (int row = 0; row < REGISTRY_KEYS.GET_MAP_HEIGHT(); row++) {
             for (int column = 0; column < REGISTRY_KEYS.GET_MAP_WIDTH(); column++) {

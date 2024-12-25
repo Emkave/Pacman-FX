@@ -27,6 +27,9 @@ public class SoundHandler {
         SoundHandler.loadSoundEffect("interm", "Audio/intermission.wav");
         SoundHandler.loadSoundEffect("death", "Audio/pacdeath.wav");
         SoundHandler.loadSoundEffect("intro", "Audio/pacman_beginning.wav");
+        SoundHandler.loadSoundEffect("siren", "Audio/siren.wav");
+        SoundHandler.loadSoundEffect("fright", "Audio/fright.wav");
+        SoundHandler.loadSoundEffect("eatghost", "Audio/eatghost.wav");
     }
 
 

@@ -20,11 +20,12 @@ public class Blinky extends Mob {
     @Override public void autopilot() {
         int targetX, targetY;
 
-        if (this.chasing) {
+
+        if (!this.respawning && this.chasing) {
             targetX = EntityHandler.getMobs().get('!').getX();
             targetY = EntityHandler.getMobs().get('!').getY();
         } else {
-            targetX = 15;
+            targetX = 14;
             targetY = 14;
         }
 

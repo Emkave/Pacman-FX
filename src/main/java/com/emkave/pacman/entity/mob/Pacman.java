@@ -2,10 +2,8 @@ package com.emkave.pacman.entity.mob;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.collectible.Collectible;
-import com.emkave.pacman.handler.EntityHandler;
-import com.emkave.pacman.handler.MapHandler;
-import com.emkave.pacman.handler.REGISTRY_KEYS;
-import com.emkave.pacman.handler.SceneHandler;
+import com.emkave.pacman.handler.*;
+import com.emkave.pacman.scene.Game;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -63,9 +61,16 @@ public class Pacman extends Mob {
                 collectible.effect();
             }
 
-            if (this.caughtByGhost()) {
-                SceneHandler.loadDeathScene(this.x, this.y);
-                return;
+            Mob mob = this.caughtByGhost();
+            if (mob != null) {
+                if (!mob.chasing) {
+                    Game.addScore(400);
+                    SoundHandler.playSoundEffect("eatghost");
+                    mob.respawn();
+                } else {
+                    SceneHandler.loadDeathScene(this.x, this.y);
+                    return;
+                }
             }
 
             char nextTile = MapHandler.getGameMap()[this.y + this.d_y][this.x + this.d_x];
@@ -126,13 +131,13 @@ public class Pacman extends Mob {
     }
 
 
-    private boolean caughtByGhost() {
+    private Mob caughtByGhost() {
         for (Mob mob : EntityHandler.getMobs().values()) {
             if (!(mob instanceof Pacman) && this.x == mob.getX() && this.y == mob.getY()) {
-                return true;
+                return mob;
             }
         }
 
-        return false;
+        return null;
     }
 }

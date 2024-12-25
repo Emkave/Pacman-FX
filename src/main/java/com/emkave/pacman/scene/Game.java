@@ -1,6 +1,7 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
+import com.emkave.pacman.entity.mob.Mob;
 import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.*;
 import com.emkave.pacman.ui.UILabel;
@@ -68,6 +69,43 @@ public class Game {
                         }
                     } else {
                         if ((now - Game.lastEntityUpdateTime) >= 300000000) {
+                            byte chasing_status = 0;
+                            for (Mob mob : EntityHandler.getMobs().values()) {
+                                if (!(mob instanceof Pacman)) {
+                                    if (mob.getChasing()) {
+                                        chasing_status |= 1;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            for (Mob mob : EntityHandler.getMobs().values()) {
+                                if (!(mob instanceof Pacman)) {
+                                    if (!mob.getChasing()) {
+                                        chasing_status |= 2;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            switch (chasing_status) {
+                                case 1:
+                                    SoundHandler.playSoundEffect("siren");
+                                    break;
+
+                                case 2:
+                                    SoundHandler.playSoundEffect("fright");
+                                    break;
+
+                                case 3:
+                                    SoundHandler.playSoundEffect("siren");
+                                    SoundHandler.playSoundEffect("fright");
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
                             FruitHandler.placeFruit();
                             MapHandler.renderEntities();
                             Game.lastEntityUpdateTime = now;
@@ -159,14 +197,6 @@ public class Game {
                     Game.hidePauseMenu();
                     Game.resumeGame();
                 }
-                break;
-
-            case T:
-                //Pacman.decreaseLives();
-                break;
-
-            case Y:
-                //Pacman.increaseLives();
                 break;
 
             default:

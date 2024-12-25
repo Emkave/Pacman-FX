@@ -26,7 +26,7 @@ public class Inky extends Mob {
     @Override public void autopilot() {
         int[] step;
 
-        if (this.chasing) {
+        if (!this.respawning && this.chasing) {
             int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
             int[] pacmanPos = {EntityHandler.getMobs().get('!').getX(), EntityHandler.getMobs().get('!').getY()};
             boolean found = false;
@@ -87,7 +87,7 @@ public class Inky extends Mob {
                 }
             }
         } else {
-            this.destination[0] = 11;
+            this.destination[0] = 14;
             this.destination[1] = 14;
         }
 

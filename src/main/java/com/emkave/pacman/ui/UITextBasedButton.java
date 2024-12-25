@@ -13,12 +13,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+
 import java.util.Objects;
 
 
 public class UITextBasedButton extends Button {
     private ImageView pacmanImageView;
     private Text buttonText;
+    private HBox hBox = new HBox();
 
     public UITextBasedButton(String text) {
         this.getStyleClass().add("main-menu-button");
@@ -37,10 +40,18 @@ public class UITextBasedButton extends Button {
         this.buttonText.setFill(Color.BLUE);
         this.buttonText.setStroke(null);
         this.buttonText.setTranslateX(-20);
+        this.buttonText.setTextAlignment(TextAlignment.CENTER);
 
-        HBox hBox = new HBox(this.pacmanImageView, this.buttonText);
+        this.hBox.getChildren().addAll(this.pacmanImageView, this.buttonText);
         hBox.setAlignment(Pos.CENTER);
         this.setGraphic(hBox);
+    }
+
+
+    public void removePacmanEffect() {
+        this.hBox.getChildren().remove(this.pacmanImageView);
+        this.buttonText.setTranslateX(0);
+        this.setupHoverEffectWithoutPacman();
     }
 
 
@@ -60,17 +71,36 @@ public class UITextBasedButton extends Button {
         dropShadow.setRadius(5);
         dropShadow.setSpread(0.5);
 
-        this.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+        this.setEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             this.buttonText.setStroke(Color.WHITE);
             this.buttonText.setStrokeWidth(1.3);
             this.pacmanImageView.setVisible(true);
             SoundHandler.playSoundEffect("hover");
         });
 
-        this.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+        this.setEventHandler(MouseEvent.MOUSE_EXITED, e -> {
             this.buttonText.setEffect(null);
             this.buttonText.setStrokeWidth(0);
             this.pacmanImageView.setVisible(false);
+        });
+    }
+
+
+    private void setupHoverEffectWithoutPacman() {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.CYAN);
+        dropShadow.setRadius(5);
+        dropShadow.setSpread(0.5);
+
+        this.setEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+            this.buttonText.setStroke(Color.WHITE);
+            this.buttonText.setStrokeWidth(1.3);
+            SoundHandler.playSoundEffect("hover");
+        });
+
+        this.setEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+            this.buttonText.setEffect(null);
+            this.buttonText.setStrokeWidth(0);
         });
     }
 

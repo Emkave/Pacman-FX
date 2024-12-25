@@ -7,6 +7,7 @@ import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.scene.*;
 import com.emkave.pacman.ui.UILabel;
 import javafx.animation.PauseTransition;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -62,6 +63,12 @@ public class SceneHandler {
 
     public static void loadGameRegimes() {
         SceneHandler.frameStack.add(PlayRegime.load());
+        SceneHandler.triggerChange();
+    }
+
+
+    public static void loadUsernamePromptScene() {
+        SceneHandler.frameStack.add(UsernamePrompt.load());
         SceneHandler.triggerChange();
     }
 
@@ -210,7 +217,7 @@ public class SceneHandler {
         gameOverPause.setOnFinished(event -> {
             SceneHandler.frameStack.clear();
             try {
-                SceneHandler.loadMainMenu();
+                SceneHandler.loadUsernamePromptScene();
             } catch (Exception e) {
                 throw new RuntimeException("SceneHandler::loadEndOfGameScene() -> " + e.getMessage());
             }
