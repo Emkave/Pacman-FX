@@ -20,30 +20,28 @@ import java.util.Stack;
 
 
 public class SceneHandler {
-    private static Stack<Pane> frameStack = new Stack<>();
-
-
     public static void loadMainMenu() {
-        SceneHandler.frameStack.add(MainMenu.load());
-        SceneHandler.triggerChange();
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(MainMenu.load());
     }
 
 
     public static void loadSettings() {
-        SceneHandler.frameStack.add(Settings.load());
-        SceneHandler.triggerChange();
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(Settings.load());
     }
 
 
     public static void loadStatistics() {
-        SceneHandler.frameStack.add(Statistics.load());
-        SceneHandler.triggerChange();
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(Statistics.load());
     }
 
 
     public static void loadGame() {
-        SceneHandler.frameStack.add(Game.load());
-        SceneHandler.triggerChange();
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(Game.load());
+
         SoundHandler.playSoundEffect("intro");
 
         PauseTransition intro = new PauseTransition(Duration.seconds(4.21));
@@ -61,32 +59,16 @@ public class SceneHandler {
     }
 
 
-    public static void loadGameRegimes() {
-        SceneHandler.frameStack.add(PlayRegime.load());
-        SceneHandler.triggerChange();
-    }
-
-
     public static void loadUsernamePromptScene() {
-        SceneHandler.frameStack.add(UsernamePrompt.load());
-        SceneHandler.triggerChange();
-    }
-
-
-    public static void exitScene() {
-        SceneHandler.frameStack.pop();
-        SceneHandler.triggerChange();
-    }
-
-
-    public static Stack<Pane> getFrameStack() {
-        return SceneHandler.frameStack;
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(UsernamePrompt.load());
     }
 
 
     public static void loadLevelTransition() throws InterruptedException {
         REGISTRY_KEYS.SET_ISPAUSED(true);
         Application.window.getScene().setOnKeyPressed(null);
+
 
         EntityHandler.stopAllThreads();
         for (Map.Entry<Integer, Collectible> entry : EntityHandler.getCollectibleMap().entrySet()) {
@@ -101,9 +83,6 @@ public class SceneHandler {
         EntityHandler.getMobs().clear();
         EntityHandler.getCollectibleMap().clear();
 
-        SceneHandler.frameStack.pop();
-
-
         PauseTransition preTransitionDelay = new PauseTransition(Duration.seconds(3));
         preTransitionDelay.setOnFinished(_ -> {
             MapHandler.getGameMapPane().getChildren().clear();
@@ -112,19 +91,18 @@ public class SceneHandler {
             transitionStage.setMaxWidth(REGISTRY_KEYS.GET_GAME_MAP_WIDTH());
             transitionStage.setMaxHeight(REGISTRY_KEYS.GET_GAME_MAP_HEIGHT());
 
-            UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_GAME_LEVEL(), 40);
+            UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + Game.getGameLevel(), 40);
             levelLabel.setFill(Color.WHITE);
 
             transitionStage.getChildren().add(levelLabel);
 
-            SceneHandler.frameStack.add(transitionStage);
-            SceneHandler.triggerChange();
+            Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+            Application.frameLayerPane.getChildren().add(transitionStage);
 
             PauseTransition postTransition = new PauseTransition(Duration.seconds(3));
             postTransition.setOnFinished(postEvent -> {
-                SceneHandler.frameStack.pop();
-
                 try {
+                    Game.setGameScore(Game.getLastGameScore());
                     SceneHandler.loadGame();
                 } catch (Exception e) {
                     throw new RuntimeException("SceneHandler::loadLevelTransition() -> " + e.getMessage());
@@ -141,7 +119,7 @@ public class SceneHandler {
     public static void loadDeathScene(final int x, final int y) {
         REGISTRY_KEYS.SET_ISPAUSED(true);
         Application.window.getScene().setOnKeyPressed(null);
-        REGISTRY_KEYS.SET_AMOUNT_GAME_DOTS(0);
+        Game.setGameDots(0);
 
         EntityHandler.stopAllThreads();
         for (Map.Entry<Integer, Collectible> entry : EntityHandler.getCollectibleMap().entrySet()) {
@@ -166,11 +144,11 @@ public class SceneHandler {
         PauseTransition deathAnimationDuration = new PauseTransition(Duration.seconds(3));
         deathAnimationDuration.setOnFinished(event -> {
             MapHandler.getGameMapPane().getChildren().remove(deathAnimation);
-            REGISTRY_KEYS.SET_PACLIVES(REGISTRY_KEYS.GET_PACLIVES()-1);
+            Pacman.setLivesCount(Pacman.getLivesCount()-1);
+
             REGISTRY_KEYS.SET_ISPAUSED(false);
 
-            if (REGISTRY_KEYS.GET_PACLIVES() == 0) {
-                REGISTRY_KEYS.SET_LAST_GAME_LEVEL(1);
+            if (Pacman.getLivesCount() == 0) {
                 SceneHandler.loadEndOfGameScene();
             } else {
                 try {
@@ -199,23 +177,22 @@ public class SceneHandler {
         gameOverLabel.setFill(Color.WHITE);
         gameOverLabel.setTranslateY(-50);
 
-        UILabel scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + REGISTRY_KEYS.GET_LAST_GAME_SCORE(), 20);
+        UILabel scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + Game.getGameScore(), 20);
         scoreLabel.setFill(Color.WHITE);
         scoreLabel.setTranslateY(30);
 
-        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), 20);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + Game.getGameLevel(), 20);
         levelLabel.setFill(Color.WHITE);
         levelLabel.setTranslateY(70);
 
         gameOverStage.getChildren().addAll(gameOverLabel, scoreLabel, levelLabel);
-        SceneHandler.frameStack.add(gameOverStage);
-        SceneHandler.triggerChange();
 
-        DatabaseHandler.saveFinalResult(REGISTRY_KEYS.GET_LAST_GAME_LEVEL(), REGISTRY_KEYS.GET_LAST_GAME_SCORE());
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
+        Application.frameLayerPane.getChildren().add(gameOverStage);
 
         PauseTransition gameOverPause = new PauseTransition(Duration.seconds(5));
         gameOverPause.setOnFinished(event -> {
-            SceneHandler.frameStack.clear();
+
             try {
                 SceneHandler.loadUsernamePromptScene();
             } catch (Exception e) {
@@ -224,11 +201,5 @@ public class SceneHandler {
         });
 
         gameOverPause.play();
-    }
-
-
-    private static void triggerChange() {
-        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
-        Application.frameLayerPane.getChildren().add(SceneHandler.getFrameStack().peek());
     }
 }

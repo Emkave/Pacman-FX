@@ -2,7 +2,6 @@ package com.emkave.pacman.entity.collectible;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.Entity;
-import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.TileKey;
@@ -38,17 +37,12 @@ public class Collectible extends Entity { // Every collectible is an entity
     }
 
 
-    public char getColType() {
-        return this.colType;
-    }
-
-
-    public boolean isCollected() {
+    public synchronized boolean isCollected() {
         throw new UnsupportedOperationException("Collectible::isCollected() -> Subclasses must implement isCollected().");
     }
 
 
-    public void setCollected() {
+    public synchronized void setCollected() {
         throw new UnsupportedOperationException("Collectible::setCollected() -> Subclasses must implement setCollected().");
     }
 }

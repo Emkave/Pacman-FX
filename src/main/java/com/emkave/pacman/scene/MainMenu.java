@@ -1,62 +1,62 @@
 package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.handler.ConfigHandler;
+import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.SceneHandler;
-import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-
-import java.io.IOException;
 import java.util.Objects;
 
 public class MainMenu {
-    private static UILabel scoreLabel;
-    private static UITextBasedButton playButton, optionsButton, statsButton, exitButton;
+    private static UITextBasedButton playButton;
+    private static UITextBasedButton optionsButton;
+    private static UITextBasedButton statsButton;
+    private static UITextBasedButton exitButton;
 
 
     public static StackPane load() {
         StackPane uiLayer = new StackPane();
 
-        MainMenu.playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
+        playButton = new UITextBasedButton(Application.localeResourceBundle.getString("play"));
         playButton.setOnAction(event -> {
             playButton.getStyleClass().add("main-menu-play-pressed");
             try {
-                SceneHandler.loadGameRegimes();
+                Game.setGameDots(0);
+                Game.setGameLevel(1);
+                Game.setLastGameScore(0);
+                Game.setGameScore(0);
+                Pacman.setLivesCount(3);
+                Pacman.getCollected().clear();
+                SceneHandler.loadGame();
             } catch (Exception e) {
                 throw new RuntimeException("MainMenu::load() -> " + e.getMessage());
             }
         });
         playButton.setTranslateY(90);
 
-        MainMenu.optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
+        optionsButton = new UITextBasedButton(Application.localeResourceBundle.getString("settings"));
         optionsButton.setOnAction(event -> {
             optionsButton.getStyleClass().add("main-menu-options-pressed");
             SceneHandler.loadSettings();
         });
         optionsButton.setTranslateY(150);
 
-        MainMenu.statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
+        statsButton = new UITextBasedButton(Application.localeResourceBundle.getString("stats"));
         statsButton.setOnAction(event -> {
             statsButton.getStyleClass().add("main-menu-options-pressed");
             SceneHandler.loadStatistics();
         });
         statsButton.setTranslateY(210);
 
-        MainMenu.exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
+        exitButton = new UITextBasedButton(Application.localeResourceBundle.getString("exit"));
         exitButton.setOnAction(event -> {
             exitButton.getStyleClass().remove("main-menu-button");
             exitButton.getStyleClass().add("main-menu-exit-pressed");
             Application.window.close();
         });
         exitButton.setTranslateY(270);
-
-        MainMenu.scoreLabel = new UILabel(Application.localeResourceBundle.getString("your_top_score") + ConfigHandler.getTopScore(), 10);
-        scoreLabel.setTranslateY(-100);
-        scoreLabel.setFill(Color.WHITE);
 
         Image blinkyGIF = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("Images/Characters/blinky_moves_right.gif")));
         ImageView blinkyGIFImageView = new ImageView(blinkyGIF);
@@ -93,22 +93,20 @@ public class MainMenu {
         mainLabelView.setTranslateY(-290);
 
         uiLayer.getChildren().addAll(clydeGIFImageView,
-                pinkyGIFImageView, inkyGIFImageView, MainMenu.scoreLabel,
+                pinkyGIFImageView, inkyGIFImageView,
                 blinkyGIFImageView, mainLabelView,
-                MainMenu.exitButton, MainMenu.optionsButton
-                , MainMenu.playButton, MainMenu.statsButton);
+                exitButton, optionsButton
+                , playButton, statsButton);
 
 
         return uiLayer;
     }
 
 
-    public static void reloadUI() {
-        MainMenu.playButton.setButtonText(Application.localeResourceBundle.getString("play"));
-        MainMenu.optionsButton.setButtonText(Application.localeResourceBundle.getString("settings"));
-        MainMenu.statsButton.setButtonText(Application.localeResourceBundle.getString("stats"));
-        MainMenu.exitButton.setButtonText(Application.localeResourceBundle.getString("exit"));
-        MainMenu.scoreLabel.setText(Application.localeResourceBundle.getString("your_top_score")
-                + ConfigHandler.getTopScore());
+    public void reloadUI() {
+        playButton.setButtonText(Application.localeResourceBundle.getString("play"));
+        optionsButton.setButtonText(Application.localeResourceBundle.getString("settings"));
+        statsButton.setButtonText(Application.localeResourceBundle.getString("stats"));
+        exitButton.setButtonText(Application.localeResourceBundle.getString("exit"));
     }
 }

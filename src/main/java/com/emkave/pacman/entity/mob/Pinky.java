@@ -4,7 +4,6 @@ package com.emkave.pacman.entity.mob;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
-
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -25,6 +24,10 @@ public class Pinky extends Mob {
 
         if (!this.respawning && this.chasing) {
             final int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+            var pac = EntityHandler.getMobs().get('!');
+            if (pac == null) {
+                return;
+            }
             Pacman pacman = (Pacman) EntityHandler.getMobs().get('!');
             boolean found = false;
 
@@ -45,18 +48,10 @@ public class Pinky extends Mob {
                         break out;
                     }
 
-                    {
-                        ReentrantLock unique_lock = new ReentrantLock();
-                        unique_lock.lock();
-                        try {
-                            var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
+                    var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
 
-                            if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
-                                break;
-                            }
-                        } finally {
-                            unique_lock.unlock();
-                        }
+                    if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
+                        break;
                     }
                 }
             }

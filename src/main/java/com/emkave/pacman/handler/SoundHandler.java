@@ -1,17 +1,13 @@
 package com.emkave.pacman.handler;
 
 import com.emkave.pacman.Application;
-import com.emkave.pacman.scene.Game;
-import javafx.application.Platform;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
+
 
 public class SoundHandler {
     private static Map<String, AudioClip> soundEffects = new HashMap<>();

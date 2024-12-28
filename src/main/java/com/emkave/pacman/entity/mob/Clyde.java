@@ -5,7 +5,6 @@ import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Clyde extends Mob {
@@ -27,6 +26,10 @@ public class Clyde extends Mob {
 
         if (!this.respawning && this.chasing) {
             int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+            var pac = EntityHandler.getMobs().get('!');
+            if (pac == null) {
+                return;
+            }
             int[] pacmanPos = {EntityHandler.getMobs().get('!').getX(), EntityHandler.getMobs().get('!').getY()};
             boolean found = false;
 
@@ -47,18 +50,10 @@ public class Clyde extends Mob {
                         break out;
                     }
 
-                    {
-                        ReentrantLock unique_lock = new ReentrantLock();
-                        unique_lock.lock();
-                        try {
-                            var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
+                    var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
 
-                            if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
-                                break;
-                            }
-                        } finally {
-                            unique_lock.unlock();
-                        }
+                    if (cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8') {
+                        break;
                     }
                 }
             }
@@ -75,23 +70,15 @@ public class Clyde extends Mob {
                         currCell[0] = (currCell[0] + direction[0] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
                         currCell[1] = (currCell[1] + direction[1] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
 
-                        {
-                            ReentrantLock unique_lock = new ReentrantLock();
-                            unique_lock.lock();
-                            try {
-                                var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
+                        var cell = MapHandler.getGameMap()[currCell[1]][currCell[0]];
 
-                                if ((cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8')) {
-                                    this.destination[0] = currCell[0] - direction[0];
-                                    this.destination[1] = currCell[1] - direction[1];
-                                    break;
-                                } else if (new Random().nextInt(5) == 1) {
-                                    this.destination[0] = currCell[0];
-                                    this.destination[1] = currCell[1];
-                                }
-                            } finally {
-                                unique_lock.unlock();
-                            }
+                        if ((cell == '1' || cell == '2' || cell == '3' || cell == '4' || cell == '7' || cell == '8')) {
+                            this.destination[0] = currCell[0] - direction[0];
+                            this.destination[1] = currCell[1] - direction[1];
+                            break;
+                        } else if (new Random().nextInt(5) == 1) {
+                            this.destination[0] = currCell[0];
+                            this.destination[1] = currCell[1];
                         }
                     }
                 }

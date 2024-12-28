@@ -5,12 +5,12 @@ import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.collectible.Dot;
 import com.emkave.pacman.entity.mob.Mob;
 import com.emkave.pacman.entity.mob.Pacman;
+import com.emkave.pacman.scene.Game;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -36,14 +36,8 @@ public class MapHandler {
 
 
     public static void renderEntities() {
-        final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
-
         if (!EntityHandler.getMobs().isEmpty()) {
             EntityHandler.getMobs().get('!').render();
-        }
-
-        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
-            entry.getValue().render();
         }
     }
 
@@ -54,44 +48,19 @@ public class MapHandler {
         final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
         final Map<Character, Mob> mobs = EntityHandler.getMobs();
 
-        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
-            Collectible collectible = entry.getValue();
+        for (Collectible collectible : collectibles.values()) {
             collectible.getImageView().setTranslateX(collectible.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
             collectible.getImageView().setTranslateY(collectible.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
-            MapHandler.gameMapPane.getChildren().add(collectible.getImageView());
+            MapHandler.getGameMapPane().getChildren().add(collectible.getImageView());
         }
 
         for (Mob mob : mobs.values()) {
             mob.getImageView().setTranslateX(mob.getX() * REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH());
             mob.getImageView().setTranslateY(mob.getY() * REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT());
-            MapHandler.gameMapPane.getChildren().add(mob.getImageView());
+            MapHandler.getGameMapPane().getChildren().add(mob.getImageView());
         }
 
         MapHandler.loadTheRest();
-    }
-
-
-    public static void unloadEntities() {
-        final Map<Integer, Collectible> collectibles = EntityHandler.getCollectibleMap();
-        final Map<Character, Mob> mobs = EntityHandler.getMobs();
-
-        for (Mob mob : mobs.values()) {
-            MapHandler.getGameMapPane().getChildren().remove(mob.getImageView());
-        }
-
-        for (Map.Entry<Integer, Collectible> entry : collectibles.entrySet()) {
-            MapHandler.getGameMapPane().getChildren().remove(entry.getValue().getImageView());
-        }
-    }
-
-
-    public static StackPane getGameMapPane() {
-        return MapHandler.gameMapPane;
-    }
-
-
-    public static char[][] getGameMap() {
-        return MapHandler.map;
     }
 
 
@@ -148,7 +117,7 @@ public class MapHandler {
                         Collectible instance = (Collectible)Class.forName(colName).getDeclaredConstructor().newInstance();
 
                         if (instance instanceof Dot) {
-                            REGISTRY_KEYS.SET_AMOUNT_GAME_DOTS(REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() + 1);
+                            Game.setGameDots(Game.getGameDots()+1);
                         }
 
                         instance.setX(column);
@@ -173,12 +142,6 @@ public class MapHandler {
     }
 
 
-    public static Collectible getCollectible(int x, int y) {
-        TileKey tileKey = new TileKey(x, y);
-        return EntityHandler.getCollectibleMap().get(tileKey.hashCode());
-    }
-
-
     public static void loadTheRest() {
         ImageView bl1 = MapHandler.createTileImageView('v');
         bl1.setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()*3);
@@ -194,12 +157,22 @@ public class MapHandler {
 
         MapHandler.gameMapPane.getChildren().addAll(bl1, bl2);
 
-        for (int i=0; i<REGISTRY_KEYS.GET_PACLIVES(); i++) {
+        for (int i = 0; i<Pacman.getLivesCount(); i++) {
             Pacman.increaseLives();
         }
 
         for (Collectible collectible : Pacman.getCollected()) {
             MapHandler.getGameMapPane().getChildren().add(collectible.getImageView());
         }
+    }
+
+
+    public static synchronized StackPane getGameMapPane() {
+        return MapHandler.gameMapPane;
+    }
+
+
+    public static synchronized char[][] getGameMap() {
+        return MapHandler.map;
     }
 }

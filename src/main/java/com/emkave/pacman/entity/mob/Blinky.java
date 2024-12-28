@@ -1,12 +1,7 @@
 package com.emkave.pacman.entity.mob;
 
-
 import com.emkave.pacman.handler.EntityHandler;
-import com.emkave.pacman.handler.MapHandler;
-import com.emkave.pacman.handler.REGISTRY_KEYS;
 
-import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Blinky extends Mob {
     public Blinky() {
@@ -22,6 +17,10 @@ public class Blinky extends Mob {
 
 
         if (!this.respawning && this.chasing) {
+            var pac = EntityHandler.getMobs().get('!');
+            if (pac == null) {
+                return;
+            }
             targetX = EntityHandler.getMobs().get('!').getX();
             targetY = EntityHandler.getMobs().get('!').getY();
         } else {

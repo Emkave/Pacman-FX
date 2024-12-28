@@ -12,11 +12,9 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Mob extends Entity implements Runnable { // Every mob is an entity
@@ -106,19 +104,13 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
                 int newY = (currY + direction[0] + REGISTRY_KEYS.GET_MAP_HEIGHT()) % REGISTRY_KEYS.GET_MAP_HEIGHT();
                 int newX = (currX + direction[1] + REGISTRY_KEYS.GET_MAP_WIDTH()) % REGISTRY_KEYS.GET_MAP_WIDTH();
 
-                ReentrantLock unique_lock = new ReentrantLock();
-                unique_lock.lock();
-                try {
-                    var cell = MapHandler.getGameMap()[newY][newX];
+                var cell = MapHandler.getGameMap()[newY][newX];
 
-                    if (!visited[newY][newX] && cell != '1' && cell != '2' && cell != '3' && cell != '4' && cell != '7' && cell != '8') {
-                        visited[newY][newX] = true;
-                        int[] next = new int[]{newY, newX};
-                        queue.add(next);
-                        track.put(this.coordKey(next), current);
-                    }
-                } finally {
-                    unique_lock.unlock();
+                if (!visited[newY][newX] && cell != '1' && cell != '2' && cell != '3' && cell != '4' && cell != '7' && cell != '8') {
+                    visited[newY][newX] = true;
+                    int[] next = new int[]{newY, newX};
+                    queue.add(next);
+                    track.put(this.coordKey(next), current);
                 }
             }
         }
@@ -264,11 +256,6 @@ public abstract class Mob extends Entity implements Runnable { // Every mob is a
 
     public synchronized boolean getChasing() {
         return this.chasing;
-    }
-
-
-    public synchronized char getMobSymbol() {
-        return this.mobSymbol;
     }
 }
 

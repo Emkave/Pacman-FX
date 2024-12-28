@@ -5,7 +5,7 @@ import com.emkave.pacman.entity.mob.Pacman;
 import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.MapHandler;
 import com.emkave.pacman.handler.SoundHandler;
-import com.emkave.pacman.handler.TileKey;
+
 
 public class Pill extends Collectible {
     public Pill() {

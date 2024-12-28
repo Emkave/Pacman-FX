@@ -15,28 +15,26 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
-import java.io.IOException;
-
 
 public class Game {
+    private static int gameDots = 0;
+    private static int gameLevel = 1;
+    private static long gameScore = 0;
+    private static long lastGameScore = 0;
     private static long lastEntityUpdateTime = 0;
-    private static long score;
     private static UILabel scoreLabel;
+
 
 
     public static StackPane load() {
         StackPane uiLayer = new StackPane();
 
-        if (REGISTRY_KEYS.GET_ISCONTINUED()) {
-            Game.score = REGISTRY_KEYS.GET_LAST_GAME_SCORE();
-        }
-
-        Game.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + Game.score, 22);
+        Game.scoreLabel = new UILabel(Application.localeResourceBundle.getString("score") + Game.getGameScore(), 22);
         scoreLabel.setTranslateY(-310);
         scoreLabel.setTranslateX(-130);
         scoreLabel.setFill(Color.WHITE);
 
-        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + REGISTRY_KEYS.GET_GAME_LEVEL(), 22);
+        UILabel levelLabel = new UILabel(Application.localeResourceBundle.getString("level") + Game.getGameLevel(), 22);
         levelLabel.setTranslateY(-310);
         levelLabel.setTranslateX(110);
         levelLabel.setFill(Color.WHITE);
@@ -56,11 +54,10 @@ public class Game {
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override public void handle(long now) {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
-                    if (REGISTRY_KEYS.GET_AMOUNT_GAME_DOTS() == 0) {
+                    if (Game.gameDots == 0) {
                         REGISTRY_KEYS.SET_ISPAUSED(true);
-                        REGISTRY_KEYS.SET_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL()+1);
-                        REGISTRY_KEYS.SET_LAST_GAME_LEVEL(REGISTRY_KEYS.GET_GAME_LEVEL());
-                        REGISTRY_KEYS.SET_LAST_GAME_SCORE(Game.score);
+                        Game.setGameLevel(Game.getGameLevel()+1);
+                        Game.setLastGameScore(Game.getGameScore());
                         this.stop();
                         try {
                             SceneHandler.loadLevelTransition();
@@ -109,7 +106,7 @@ public class Game {
                             FruitHandler.placeFruit();
                             MapHandler.renderEntities();
                             Game.lastEntityUpdateTime = now;
-                            Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.score);
+                            Game.scoreLabel.setText(Application.localeResourceBundle.getString("score") + Game.gameScore);
                         }
                     }
                 }
@@ -145,22 +142,11 @@ public class Game {
         exitButton.setOnAction(e -> {
             Application.window.getScene().setOnKeyPressed(null);
             EntityHandler.stopAllThreads();
-            try {
-                JSONHandler.saveGameState(
-                        Game.score,
-                        REGISTRY_KEYS.GET_PACLIVES(),
-                        REGISTRY_KEYS.GET_GAME_LEVEL(),
-                        ConfigHandler.getUsername(),
-                        EntityHandler.getCollectibleMap(),
-                        EntityHandler.getMobs()
-                );
-            } catch (Exception ex) {
-                throw new RuntimeException("Game::showPauseMenu() -> " + ex.getMessage());
-            }
             EntityHandler.getMobs().clear();
             EntityHandler.getCollectibleMap().clear();
             REGISTRY_KEYS.SET_ISPAUSED(false);
-            SceneHandler.exitScene();
+            Game.hidePauseMenu();
+            SceneHandler.loadMainMenu();
         });
         exitButton.setTranslateY(20);
 
@@ -171,12 +157,12 @@ public class Game {
         warningLabel.setLineSpacing(4.0);
 
         pauseMenu.getChildren().addAll(pauseLabel, resumeButton, exitButton, warningLabel);
-        SceneHandler.getFrameStack().peek().getChildren().add(pauseMenu);
+        Application.frameLayerPane.getChildren().add(pauseMenu);
     }
 
 
     public static void hidePauseMenu() {
-        SceneHandler.getFrameStack().peek().getChildren().removeIf(node -> node instanceof VBox);
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof VBox);
     }
 
 
@@ -216,6 +202,46 @@ public class Game {
 
 
     public static void addScore(final long p) {
-        Game.score += p;
+        Game.gameScore += p;
+    }
+
+
+    public static void setGameLevel(final int level) {
+        Game.gameLevel = level;
+    }
+
+
+    public static void setGameDots(final int dots) {
+        Game.gameDots = dots;
+    }
+
+
+    public static void setGameScore(final long score) {
+        Game.gameScore = score;
+    }
+
+
+    public static void setLastGameScore(final long score) {
+        Game.lastGameScore = score;
+    }
+
+
+    public static int getGameLevel() {
+        return Game.gameLevel;
+    }
+
+
+    public static int getGameDots() {
+        return Game.gameDots;
+    }
+
+
+    public static long getGameScore() {
+        return Game.gameScore;
+    }
+
+
+    public static long getLastGameScore() {
+        return Game.lastGameScore;
     }
 }

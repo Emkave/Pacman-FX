@@ -2,6 +2,7 @@ package com.emkave.pacman.handler;
 
 import java.security.SecureRandom;
 
+
 public class RandomHandler {
     private static final SecureRandom secureRandom = new SecureRandom();
 

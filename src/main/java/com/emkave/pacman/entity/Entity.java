@@ -32,13 +32,13 @@ public abstract class Entity {
     }
 
 
-    public void setX(final int x) {
+    public synchronized void setX(final int x) {
         this.x = x;
         this.imageView.setTranslateX(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH() * this.x);
     }
 
 
-    public void setY(final int y) {
+    public synchronized void setY(final int y) {
         this.y = y;
         this.imageView.setTranslateY(REGISTRY_KEYS.GET_GAME_MAP_CELL_HEIGHT() * this.y);
     }

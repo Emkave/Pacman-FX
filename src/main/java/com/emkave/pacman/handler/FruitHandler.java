@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class FruitHandler {
     private static final Map<String, Integer> fruitProbabilities = Map.of(
             "Apple", 45,

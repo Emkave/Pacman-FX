@@ -2,14 +2,12 @@ package com.emkave.pacman.handler;
 
 import com.emkave.pacman.entity.collectible.Collectible;
 import com.emkave.pacman.entity.mob.*;
-
 import java.util.*;
 
 
 public class EntityHandler {
     private static Map<Integer, Collectible> collectibleMap = new HashMap<>();
     private static Map<Character, Mob> mobs = new HashMap<>();
-    private static List<Thread> mobThreads = new ArrayList<>();
 
 
     public static void loadMobs() {
@@ -24,12 +22,6 @@ public class EntityHandler {
         EntityHandler.mobs.put('$', clyde);
         EntityHandler.mobs.put('#', inky);
         EntityHandler.mobs.put('@', pinky);
-
-        for (Mob mob : EntityHandler.mobs.values()) {
-            if (!(mob instanceof Pacman)) {
-                EntityHandler.mobThreads.add(mob.getThread());
-            }
-        }
     }
 
 
@@ -37,14 +29,12 @@ public class EntityHandler {
         for (Mob mob : EntityHandler.mobs.values()) {
             if (!(mob instanceof Pacman)) {
                 mob.stop();
-            }
-        }
+                try {
+                    mob.getThread().join();
+                } catch (Exception e) {
+                    throw new RuntimeException("EntityHandler::stopAllThreads() -> " + e.getMessage());
+                }
 
-        for (Thread thread : EntityHandler.mobThreads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
         }
     }
@@ -55,12 +45,6 @@ public class EntityHandler {
     }
 
 
-    public static synchronized void removeCollectible(Collectible collectible) {
-        MapHandler.getGameMapPane().getChildren().remove(collectible.getImageView());
-        EntityHandler.collectibleMap.remove(collectible.hashCode());
-    }
-
-
     public static synchronized Map<Character, Mob> getMobs() {
         return EntityHandler.mobs;
     }
@@ -68,10 +52,5 @@ public class EntityHandler {
 
     public static synchronized Map<Integer, Collectible> getCollectibleMap() {
         return EntityHandler.collectibleMap;
-    }
-
-
-    public static synchronized List<Thread> getMobThreads() {
-        return EntityHandler.mobThreads;
     }
 }

@@ -1,13 +1,14 @@
 package com.emkave.pacman.scene;
 
-
 import com.emkave.pacman.Application;
+import com.emkave.pacman.handler.DatabaseHandler;
 import com.emkave.pacman.handler.SceneHandler;
-import com.emkave.pacman.ui.UIImageBasedButton;
 import com.emkave.pacman.ui.UILabel;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+
+import java.util.List;
 
 
 public class UsernamePrompt {
@@ -22,12 +23,15 @@ public class UsernamePrompt {
     private static UILabel userNameCh2 = new UILabel(Character.toString((char)((byte)(UsernamePrompt.counter2 + 65))), 30);
     private static UILabel userNameCh3 = new UILabel(Character.toString((char)((byte)(UsernamePrompt.counter3 + 65))), 30);
     private static UILabel promptLabel = new UILabel(Application.localeResourceBundle.getString("username_prompt"), 30);
+    private static UILabel userNameTakenLabel = new UILabel(Application.localeResourceBundle.getString("username_exists"), 20);
     private static int counter1 = 0;
     private static int counter2 = 0;
     private static int counter3 = 0;
 
 
     public static StackPane load() {
+        Application.window.getScene().setOnKeyPressed(null);
+
         StackPane uiLayer = new StackPane();
 
         UsernamePrompt.arrowDown1.setOnAction(_ -> {
@@ -87,8 +91,26 @@ public class UsernamePrompt {
         UsernamePrompt.arrowUp3.removePacmanEffect();
         UsernamePrompt.arrowUp3.setPrefSize(30, 50);
 
+        UsernamePrompt.userNameTakenLabel.setFill(Color.RED);
+        UsernamePrompt.userNameTakenLabel.setTranslateY(100);
 
         UsernamePrompt.confirm.setOnAction(_ -> {
+            String username = Character.toString((char)(counter1 + 65)) +
+                              Character.toString((char)(counter2 + 65)) +
+                              Character.toString((char)(counter3 + 65));
+
+            if (DatabaseHandler.connectToDatabase() != null) {
+                if (DatabaseHandler.checkUsernameExists(username)) {
+                    if (!uiLayer.getChildren().contains(UsernamePrompt.userNameTakenLabel)) {
+                        uiLayer.getChildren().add(UsernamePrompt.userNameTakenLabel);
+                    }
+
+                    return;
+                }
+
+                DatabaseHandler.saveFinalResult(Game.getGameLevel(), Game.getGameScore(), username);
+                DatabaseHandler.stopConnection();
+            }
             SceneHandler.loadMainMenu();
         });
         UsernamePrompt.confirm.setTranslateY(200);
@@ -96,8 +118,8 @@ public class UsernamePrompt {
         UsernamePrompt.promptLabel.setTranslateY(-270);
         UsernamePrompt.promptLabel.setFill(Color.WHITE);
 
-        UsernamePrompt.userNameCh1.setFill(Color.VIOLET);
         UsernamePrompt.userNameCh1.setTranslateX(-50);
+        UsernamePrompt.userNameCh1.setFill(Color.VIOLET);
 
         UsernamePrompt.userNameCh2.setFill(Color.VIOLET);
 

@@ -54,49 +54,4 @@ public class ConfigHandler {
         Locale.setDefault(ConfigHandler.loadLanguageSettings());
         Application.localeResourceBundle = ResourceBundle.getBundle("com.emkave.pacman.Langs.messages", Locale.getDefault());
     }
-
-
-    public static String getTopScore() {
-        Properties properties = new Properties();
-        String score = null;
-
-        try (FileInputStream in = new FileInputStream("config.properties")) {
-            properties.load(in);
-            score = properties.getProperty("top_score");
-        } catch (IOException e) {
-            throw new RuntimeException("ConfigHandler::getTopScore() -> ", e);
-        }
-
-        return (score != null) ? score : "";
-    }
-
-
-    public static String getLevel() {
-        Properties properties = new Properties();
-        String level = null;
-
-        try (FileInputStream in = new FileInputStream("config.properties")) {
-            properties.load(in);
-            level = properties.getProperty("level");
-        } catch (IOException e) {
-            throw new RuntimeException("ConfigHandler::getLevel() -> ", e);
-        }
-
-        return (level != null) ? level : "";
-    }
-
-
-    public static String getScore() {
-        Properties properties = new Properties();
-        String score = null;
-
-        try (FileInputStream in = new FileInputStream("config.properties")) {
-            properties.load(in);
-            score = properties.getProperty("score");
-        } catch (IOException e) {
-            throw new RuntimeException("ConfigHandler::getScore() -> ", e);
-        }
-
-        return (score != null) ? score : "0";
-    }
 }

@@ -1,13 +1,10 @@
 package com.emkave.pacman;
 
-import com.almasb.fxgl.audio.Sound;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.handler.SoundHandler;
-import com.emkave.pacman.scene.MainMenu;
 import javafx.scene.Scene;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 
 public class Application extends javafx.application.Application {

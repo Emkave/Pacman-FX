@@ -7,14 +7,13 @@ import com.emkave.pacman.scene.Game;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-
 import java.util.Objects;
 import java.util.Stack;
 
 
 public class Pacman extends Mob {
+    private static int lives_counter = 3;
     private static Stack<ImageView> lives = new Stack<>();
-
     private static Stack<Collectible> collected = new Stack<>();
 
 
@@ -25,6 +24,7 @@ public class Pacman extends Mob {
         this.d_y = -1;
         this.d_x = 0;
         this.mobSymbol = '!';
+        Pacman.lives.clear();
     }
 
 
@@ -98,9 +98,8 @@ public class Pacman extends Mob {
     }
 
 
-    public void addCollected(Collectible collectible) {
+    public static synchronized void addCollected(Collectible collectible) {
         try {
-
             Collectible copel = collectible.getClass().getDeclaredConstructor().newInstance();
 
             copel.getImageView().setFitWidth(REGISTRY_KEYS.GET_GAME_MAP_CELL_WIDTH()+10);
@@ -116,6 +115,27 @@ public class Pacman extends Mob {
     }
 
 
+    private Mob caughtByGhost() {
+        for (Mob mob : EntityHandler.getMobs().values()) {
+            if (!(mob instanceof Pacman) && this.x == mob.getX() && this.y == mob.getY()) {
+                return mob;
+            }
+        }
+
+        return null;
+    }
+
+
+    public static void setLivesCount(final int counter) {
+        Pacman.lives_counter = counter;
+    }
+
+
+    public static int getLivesCount() {
+        return Pacman.lives_counter;
+    }
+
+
     public static Stack<ImageView> getLives() {
         return Pacman.lives;
     }
@@ -128,16 +148,5 @@ public class Pacman extends Mob {
 
     public synchronized int[] getDirection() {
         return new int[]{this.d_x, this.d_y};
-    }
-
-
-    private Mob caughtByGhost() {
-        for (Mob mob : EntityHandler.getMobs().values()) {
-            if (!(mob instanceof Pacman) && this.x == mob.getX() && this.y == mob.getY()) {
-                return mob;
-            }
-        }
-
-        return null;
     }
 }

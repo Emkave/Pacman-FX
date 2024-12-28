@@ -2,6 +2,7 @@ package com.emkave.pacman.handler;
 
 import java.util.Objects;
 
+
 public class TileKey {
     public int x;
     public int y;

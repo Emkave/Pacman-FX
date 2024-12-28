@@ -1,6 +1,5 @@
 package com.emkave.pacman.scene;
 
-import com.almasb.fxgl.ui.UI;
 import com.emkave.pacman.Application;
 import com.emkave.pacman.handler.ConfigHandler;
 import com.emkave.pacman.handler.REGISTRY_KEYS;
@@ -13,8 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import java.util.Objects;
+import java.util.Stack;
 
 
 public class Settings {
@@ -55,7 +54,7 @@ public class Settings {
         UITextBasedButton backButton = new UITextBasedButton(Application.localeResourceBundle.getString("back"));
         backButton.setOnAction(event -> {
             backButton.getStyleClass().add("settings-back-pressed");
-            SceneHandler.exitScene();
+            SceneHandler.loadMainMenu();
         });
         backButton.setTranslateY(320);
         backButton.setTranslateX(-140);
@@ -69,11 +68,6 @@ public class Settings {
                 throw new RuntimeException("Settings::load() -> " + e.getMessage());
             }
             Settings.reloadUI();
-            try {
-                MainMenu.reloadUI();
-            } catch (Exception e) {
-                throw new RuntimeException("Settings::load() -> " + e.getMessage());
-            }
         });
         rusLangButton.setTranslateX(-169);
         rusLangButton.setButtonSize(130, 130);
@@ -87,11 +81,6 @@ public class Settings {
                 throw new RuntimeException("Settings::load() -> " + e.getMessage());
             }
             Settings.reloadUI();
-            try {
-                MainMenu.reloadUI();
-            } catch (Exception e) {
-                throw new RuntimeException("Settings::load() -> " + e.getMessage());
-            }
         });
         engLangButton.setButtonSize(130, 130);
 
@@ -104,11 +93,6 @@ public class Settings {
                 throw new RuntimeException("Settings::load() -> " + e.getMessage());
             }
             Settings.reloadUI();
-            try {
-                MainMenu.reloadUI();
-            } catch (Exception e) {
-                throw new RuntimeException("Settings::load() -> " + e.getMessage());
-            }
         });
         czeLangButton.setTranslateX(169);
         czeLangButton.setButtonSize(130, 130);
@@ -135,8 +119,7 @@ public class Settings {
 
 
     private static void reloadUI() {
-        REGISTRY_KEYS.SET_UI_FONT();
-        SceneHandler.exitScene();
+        Application.frameLayerPane.getChildren().removeIf(node -> node instanceof StackPane);
         SceneHandler.loadSettings();
     }
 }

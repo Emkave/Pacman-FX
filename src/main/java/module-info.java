@@ -11,6 +11,8 @@ module com.emkave.pacman {
     requires com.almasb.fxgl.all;
     requires javafx.media;
     requires jdk.compiler;
+    requires com.fasterxml.jackson.databind;
+    requires java.management;
     requires java.sql;
 
     opens com.emkave.pacman to javafx.fxml;

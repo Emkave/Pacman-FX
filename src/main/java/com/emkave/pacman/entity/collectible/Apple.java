@@ -1,7 +1,6 @@
 package com.emkave.pacman.entity.collectible;
 
 import com.emkave.pacman.entity.mob.Pacman;
-import com.emkave.pacman.handler.EntityHandler;
 import com.emkave.pacman.handler.SoundHandler;
 import com.emkave.pacman.scene.Game;
 
@@ -18,9 +17,9 @@ public class Apple extends Collectible {
         super.deleteCollectible();
         SoundHandler.playSoundEffect("eatfruit");
 
-        if (!collected) {
-            ((Pacman)EntityHandler.getMobs().get('!')).addCollected(this);
-            collected = true;
+        if (!Apple.collected) {
+            Pacman.addCollected(this);
+            this.setCollected();
         }
 
         Game.addScore(700);
@@ -28,11 +27,11 @@ public class Apple extends Collectible {
 
 
     @Override public boolean isCollected() {
-        return collected;
+        return Apple.collected;
     }
 
 
     @Override public void setCollected() {
-        collected = true;
+        Apple.collected = true;
     }
 }
