@@ -56,7 +56,7 @@ public class Game {
                 if (!REGISTRY_KEYS.GET_ISPAUSED()) {
                     if (Game.gameDots == 0) {
                         REGISTRY_KEYS.SET_ISPAUSED(true);
-                        Game.setGameLevel(Game.getGameLevel()+1);
+                        Game.setGameLevel((Game.getGameLevel()+1) % 256);
                         Game.setLastGameScore(Game.getGameScore());
                         this.stop();
                         try {

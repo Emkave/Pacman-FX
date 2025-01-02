@@ -22,7 +22,12 @@ public class MapHandler {
 
 
     public static void loadGameMap() {
-        MapHandler.map = MapHandler.loadMapFile();
+        if (Game.getGameLevel() == 0) {
+            MapHandler.map = MapHandler.loadBrokenMapFile();
+        } else {
+            MapHandler.map = MapHandler.loadMapFile();
+        }
+
 
         MapHandler.gameMapPane = new StackPane();
         MapHandler.gameMapPane.setAlignment(Pos.TOP_LEFT);
@@ -79,6 +84,21 @@ public class MapHandler {
     }
 
 
+    private static char[][] loadBrokenMapFile() {
+        char[][] map = new char[(int)REGISTRY_KEYS.GET_MAP_HEIGHT()][(int)REGISTRY_KEYS.GET_MAP_WIDTH()];
+
+        char[] tiles = {'1', '2', '3', '4', '7', '8', 'A', 'B', 'C', 'D', 'F', 'G', 'H', 'K', 'O', 'P', 'S', 'W', '0', 'X'};
+
+        for (int y=0; y<(int)REGISTRY_KEYS.GET_MAP_HEIGHT(); y++) {
+            for (int x=0; x<REGISTRY_KEYS.GET_MAP_WIDTH(); x++) {
+                map[y][x] = tiles[new Random().nextInt(tiles.length)];
+            }
+        }
+
+        return map;
+    }
+
+
     private static char[][] loadMapFile() {
         char[][] map = new char[(int)REGISTRY_KEYS.GET_MAP_HEIGHT()][(int)REGISTRY_KEYS.GET_MAP_WIDTH()];
 
@@ -126,7 +146,7 @@ public class MapHandler {
                         TileKey key = new TileKey(column, row);
                         EntityHandler.getCollectibleMap().put(key.hashCode(), instance);
                     } catch (Exception e) {
-                        throw new RuntimeException("MapHandler::loadGameTiles() -> ", e);
+                        throw new RuntimeException("MapHandler::loadGameTiles() -> " + e.getMessage());
                     }
                 } else {
                     ImageView tileImage = MapHandler.createTileImageView(tileType);

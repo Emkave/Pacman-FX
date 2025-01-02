@@ -2,10 +2,14 @@ package com.emkave.pacman.scene;
 
 import com.emkave.pacman.Application;
 import com.emkave.pacman.entity.mob.Pacman;
+import com.emkave.pacman.handler.EntityHandler;
+import com.emkave.pacman.handler.REGISTRY_KEYS;
 import com.emkave.pacman.handler.SceneHandler;
 import com.emkave.pacman.ui.UITextBasedButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import java.util.Objects;
 
@@ -24,8 +28,10 @@ public class MainMenu {
             playButton.getStyleClass().add("main-menu-play-pressed");
             try {
                 Game.setGameDots(0);
-                Game.setGameLevel(1);
                 Game.setLastGameScore(0);
+                if (Game.getGameLevel() != 0) {
+                    Game.setGameLevel(1);
+                }
                 Game.setGameScore(0);
                 Pacman.setLivesCount(3);
                 Pacman.getCollected().clear();
@@ -99,7 +105,23 @@ public class MainMenu {
                 , playButton, statsButton);
 
 
+        Application.window.getScene().setOnKeyPressed(MainMenu::handleKeyPress);
+
         return uiLayer;
+    }
+
+
+    private static void handleKeyPress(KeyEvent event) {
+        KeyCode code = event.getCode();
+
+        switch (code) {
+            case HOME:
+                Game.setGameLevel(0);
+                break;
+
+            default:
+                break;
+        }
     }
 
 

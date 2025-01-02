@@ -25,7 +25,7 @@ public abstract class REGISTRY_KEYS {
 
     static {
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('A', TILE -> "Apple");
-        REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('B', TILE -> "Berry");
+        REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('B', TILE -> "Bell");
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('C', TILE -> "Cherry");
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('D', TILE -> "Dot");
         REGISTRY_KEYS.CLASS_NAME_RESOLVER.put('F', TILE -> "Fighter");
