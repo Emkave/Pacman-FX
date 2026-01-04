@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.10.0</junit.version>
-    <javafx.version>21.0.2</javafx.version> <!-- Set JavaFX version compatible with Java 21 -->
+    <javafx.version>21.0.4</javafx.version> <!-- Set JavaFX version compatible with Java 21 -->
   </properties>
   <dependencies>
     <dependency>
@@ -132,9 +132,6 @@
         <configuration>
           <source>21</source>
           <target>21</target>
-          <compilerArgs>
-            <arg>--enable-preview</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -152,7 +149,6 @@
               <noManPages>true</noManPages>
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
-              <jvmArgs>--enable-preview</jvmArgs>
             </configuration>
           </execution>
         </executions>

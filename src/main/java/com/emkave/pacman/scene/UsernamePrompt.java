@@ -34,7 +34,7 @@ public class UsernamePrompt {
 
         StackPane uiLayer = new StackPane();
 
-        UsernamePrompt.arrowDown1.setOnAction(_ -> {
+        UsernamePrompt.arrowDown1.setOnAction(a -> {
             UsernamePrompt.counter1++;
             UsernamePrompt.userNameCh1.setText(Character.toString((char)((UsernamePrompt.counter1 + 65))));
         });
@@ -44,7 +44,7 @@ public class UsernamePrompt {
         UsernamePrompt.arrowDown1.setPrefSize(30, 50);
 
 
-        UsernamePrompt.arrowDown2.setOnAction(_ -> {
+        UsernamePrompt.arrowDown2.setOnAction(a -> {
             UsernamePrompt.counter2++;
             UsernamePrompt.userNameCh2.setText(Character.toString((char)((UsernamePrompt.counter2 + 65))));
         });
@@ -53,7 +53,7 @@ public class UsernamePrompt {
         UsernamePrompt.arrowDown2.setPrefSize(30, 50);
 
 
-        UsernamePrompt.arrowDown3.setOnAction(_ -> {
+        UsernamePrompt.arrowDown3.setOnAction(a -> {
             UsernamePrompt.counter3++;
             UsernamePrompt.userNameCh3.setText(Character.toString((char)((UsernamePrompt.counter3 + 65))));
         });
@@ -63,7 +63,7 @@ public class UsernamePrompt {
         UsernamePrompt.arrowDown3.setPrefSize(30, 50);
 
 
-        UsernamePrompt.arrowUp1.setOnAction(_ -> {
+        UsernamePrompt.arrowUp1.setOnAction(a -> {
             UsernamePrompt.counter1--;
             UsernamePrompt.userNameCh1.setText(Character.toString((char)((UsernamePrompt.counter1 + 65))));
         });
@@ -73,7 +73,7 @@ public class UsernamePrompt {
         UsernamePrompt.arrowUp1.setPrefSize(30, 50);
 
 
-        UsernamePrompt.arrowUp2.setOnAction(_ -> {
+        UsernamePrompt.arrowUp2.setOnAction(a -> {
             UsernamePrompt.counter2--;
             UsernamePrompt.userNameCh2.setText(Character.toString((char)((UsernamePrompt.counter2 + 65))));
         });
@@ -82,7 +82,7 @@ public class UsernamePrompt {
         UsernamePrompt.arrowUp2.setPrefSize(30, 50);
 
 
-        UsernamePrompt.arrowUp3.setOnAction(_ -> {
+        UsernamePrompt.arrowUp3.setOnAction(a -> {
             UsernamePrompt.counter3--;
             UsernamePrompt.userNameCh3.setText(Character.toString((char)((UsernamePrompt.counter3 + 65))));
         });
@@ -94,7 +94,7 @@ public class UsernamePrompt {
         UsernamePrompt.userNameTakenLabel.setFill(Color.RED);
         UsernamePrompt.userNameTakenLabel.setTranslateY(100);
 
-        UsernamePrompt.confirm.setOnAction(_ -> {
+        UsernamePrompt.confirm.setOnAction(a -> {
             String username = Character.toString((char)(counter1 + 65)) +
                               Character.toString((char)(counter2 + 65)) +
                               Character.toString((char)(counter3 + 65));

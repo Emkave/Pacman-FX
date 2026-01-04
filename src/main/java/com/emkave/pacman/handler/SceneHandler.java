@@ -84,7 +84,7 @@ public class SceneHandler {
         EntityHandler.getCollectibleMap().clear();
 
         PauseTransition preTransitionDelay = new PauseTransition(Duration.seconds(3));
-        preTransitionDelay.setOnFinished(_ -> {
+        preTransitionDelay.setOnFinished(a -> {
             MapHandler.getGameMapPane().getChildren().clear();
             StackPane transitionStage = new StackPane();
             transitionStage.setStyle("-fx-background-color: black;");
